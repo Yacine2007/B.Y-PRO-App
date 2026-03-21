@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>B.Y PRO - Admin Dashboard</title>
-    <link rel="icon" href="http://by-pro.kesug.com/B.Y%20PRO.png" type="image/png">
+    <link rel="icon" href="https://by-pro.kesug.com/B.Y%20PRO.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         :root {
             --bg: #f8fafc;
@@ -47,8 +51,12 @@
             transition: all 0.2s;
         }
 
-        .admin-wrapper { display: flex; min-height: 100vh; }
+        .admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+        }
 
+        /* Sidebar */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--surface);
@@ -62,17 +70,32 @@
         }
 
         .sidebar-header {
-            padding: 28px 24px;
+            padding: 24px 20px;
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .sidebar-header img { width: 42px; height: 42px; object-fit: contain; }
-        .sidebar-header h2 { font-size: 1.2rem; font-weight: 700; background: linear-gradient(135deg, var(--primary), #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .sidebar-header img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
 
-        .sidebar-nav { padding: 20px 16px; }
+        .sidebar-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-nav {
+            padding: 20px 16px;
+        }
+
         .nav-item {
             display: flex;
             align-items: center;
@@ -85,24 +108,39 @@
             transition: all 0.2s;
             font-weight: 500;
         }
-        .nav-item i { width: 24px; }
-        .nav-item:hover, .nav-item.active { background: var(--primary-light); color: var(--primary); }
 
+        .nav-item i {
+            width: 24px;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
-            padding: 28px 32px;
+            padding: 24px 32px;
         }
 
-        .section-page { display: none; }
-        .section-page.active-page { display: block; }
+        .section-page {
+            display: none;
+        }
 
+        .section-page.active-page {
+            display: block;
+        }
+
+        /* Cards */
         .card {
             background: var(--surface);
             border-radius: var(--card-radius);
             border: 1px solid var(--border);
-            padding: 28px;
-            margin-bottom: 32px;
+            padding: 24px;
+            margin-bottom: 28px;
             box-shadow: var(--shadow-sm);
         }
 
@@ -112,22 +150,26 @@
             align-items: center;
             margin-bottom: 24px;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 12px;
         }
 
         .card-title {
-            font-size: 1.35rem;
+            font-size: 1.25rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .card-title i { color: var(--primary); font-size: 1.4rem; }
 
+        .card-title i {
+            color: var(--primary);
+        }
+
+        /* Grid */
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
+            gap: 20px;
         }
 
         .item-card {
@@ -138,32 +180,78 @@
             transition: all 0.2s;
             position: relative;
         }
-        .item-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .drag-handle { cursor: grab; color: var(--text-muted); position: absolute; top: 16px; right: 16px; font-size: 1rem; }
-        .item-info { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
-        .item-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.85rem; color: var(--text-muted); }
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
 
-        input, select, textarea {
+        .drag-handle {
+            cursor: grab;
+            color: var(--text-muted);
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 1rem;
+        }
+
+        .item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .item-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        input,
+        select,
+        textarea {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
+            border-radius: 12px;
             color: var(--text);
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
+            transition: all 0.2s;
         }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
 
         button {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 14px;
+            padding: 10px 18px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.2s;
@@ -171,33 +259,91 @@
             align-items: center;
             gap: 8px;
         }
-        button:hover { background: var(--primary-dark); transform: translateY(-1px); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
-        .btn-outline:hover { background: var(--border); transform: none; }
-        .btn-danger { background: var(--danger); }
-        .btn-danger:hover { background: #dc2626; }
 
-        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--border);
+            transform: none;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
         .toggle-slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5e1; transition: 0.2s; border-radius: 24px;
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: 0.2s;
+            border-radius: 24px;
         }
-        .toggle-slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px;
-            background-color: white; transition: 0.2s; border-radius: 50%;
-        }
-        input:checked + .toggle-slider { background-color: var(--success); }
-        input:checked + .toggle-slider:before { transform: translateX(24px); }
 
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: var(--success);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Image Preview */
         .image-preview {
             width: 100%;
-            max-height: 160px;
+            max-height: 140px;
             object-fit: cover;
-            border-radius: 16px;
+            border-radius: 14px;
             border: 1px solid var(--border);
         }
 
+        /* Toast Notification */
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -214,50 +360,192 @@
             transform: translateX(120%);
             transition: transform 0.3s ease;
         }
-        .toast-notification.show { transform: translateX(0); }
-        .toast-icon { width: 28px; height: 28px; background: var(--success-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--success); }
 
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--success-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--success);
+        }
+
+        /* Modal */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.2s;
         }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: var(--surface); border-radius: 28px; width: 90%; max-width: 700px;
-            max-height: 80vh; overflow: auto; padding: 24px; border: 1px solid var(--border);
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-        .icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 16px; max-height: 400px; overflow-y: auto; }
-        .icon-item { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); }
-        .icon-item:hover { background: var(--primary-light); border-color: var(--primary); }
-        .icon-item i { font-size: 1.8rem; color: var(--primary); }
-        .color-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .color-row input[type="color"] { width: 50px; height: 40px; padding: 4px; }
-        .rgb-input { flex: 1; display: flex; gap: 8px; }
-        .rgb-input input { width: 70px; text-align: center; padding: 8px; }
-        .notifications-grid { display: flex; flex-direction: column; gap: 32px; }
-        .notification-card { background: var(--bg); border-radius: 20px; padding: 24px; border: 1px solid var(--border); }
-        .notification-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
 
-        @media (max-width: 768px) {
-            .sidebar { transform: translateX(-100%); position: fixed; z-index: 200; transition: 0.3s; }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; }
-            .menu-toggle { display: block; position: fixed; top: 20px; left: 20px; z-index: 201; background: var(--primary); padding: 12px; border-radius: 12px; cursor: pointer; }
-            .items-grid { grid-template-columns: 1fr; }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
-        @media (min-width: 769px) { .menu-toggle { display: none; } }
-        .mt-2 { margin-top: 12px; }
-        .text-muted { color: var(--text-muted); font-size: 0.8rem; }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow: auto;
+            padding: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Support Messages */
+        .support-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .support-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .support-field {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        .support-subject {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .support-details {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+
+        .support-date {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        /* Notifications Grid */
+        .notifications-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .notification-card {
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .notification-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 200;
+                transition: 0.3s;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .menu-toggle {
+                display: block;
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 201;
+                background: var(--primary);
+                padding: 12px;
+                border-radius: 12px;
+                cursor: pointer;
+            }
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+
+        .mt-2 {
+            margin-top: 12px;
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
 <div class="admin-wrapper">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="http://by-pro.kesug.com/B.Y%20PRO.png" alt="Logo">
+            <img src="https://by-pro.kesug.com/B.Y%20PRO.png" alt="Logo">
             <h2>B.Y PRO Admin</h2>
         </div>
         <nav class="sidebar-nav">
@@ -268,47 +556,171 @@
             <div class="nav-item" data-section="local"><i class="fas fa-print"></i> Local Services</div>
             <div class="nav-item" data-section="phone"><i class="fas fa-mobile-alt"></i> Phone Services</div>
             <div class="nav-item" data-section="products"><i class="fas fa-cubes"></i> Products</div>
-            <div class="nav-item" data-section="communication"><i class="fas fa-share-alt"></i> Social Media</div>
+            <div class="nav-item" data-section="social"><i class="fas fa-share-alt"></i> Social Media</div>
             <div class="nav-item" data-section="support"><i class="fas fa-headset"></i> Support Messages</div>
         </nav>
     </aside>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
 
     <main class="main-content">
-        <div id="homeSection" class="section-page active-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-images"></i> Home Images</h2><button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button></div><div id="imagesContainer" class="items-grid"></div></div></div>
-        <div id="newsSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-newspaper"></i> News</h2><button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button></div><div id="newsContainer" class="items-grid"></div></div></div>
+        <!-- Home Images Section -->
+        <div id="homeSection" class="section-page active-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-images"></i> Home Page Images</h2>
+                    <button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button>
+                </div>
+                <div id="imagesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- News Section -->
+        <div id="newsSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-newspaper"></i> News Management</h2>
+                    <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button>
+                </div>
+                <div id="newsContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Notifications Section -->
         <div id="notificationsSection" class="section-page">
             <div class="card">
-                <div class="card-header"><h2 class="card-title"><i class="fas fa-bell"></i> Notifications</h2></div>
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-bell"></i> Notifications</h2>
+                </div>
                 <div class="notifications-grid">
-                    <div class="notification-card"><h3><i class="fas fa-globe"></i> Broadcast Notification</h3><div class="form-group"><label>Title</label><input type="text" id="broadcastTitle" placeholder="Enter notification title"></div><div class="form-group"><label>Description</label><textarea id="broadcastDesc" rows="3" placeholder="Enter notification description"></textarea></div><button onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> Send to All Users</button></div>
-                    <div class="notification-card"><h3><i class="fas fa-user"></i> Individual Notification</h3><div class="form-group"><label>Recipient (Name / ID)</label><input type="text" id="individualRecipient" placeholder="e.g., John Doe / USR-001"></div><div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Enter notification title"></div><div class="form-group"><label>Description</label><textarea id="individualDesc" rows="3" placeholder="Enter notification description"></textarea></div><button onclick="sendIndividual()"><i class="fas fa-envelope"></i> Send to Specific User</button></div>
+                    <div class="notification-card">
+                        <h3><i class="fas fa-globe"></i> Broadcast Notification</h3>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="broadcastTitle" placeholder="Enter notification title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="broadcastDesc" rows="3" placeholder="Enter notification description"></textarea>
+                        </div>
+                        <button onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> Send to All Users</button>
+                    </div>
+
+                    <div class="notification-card">
+                        <h3><i class="fas fa-user"></i> Individual Notification</h3>
+                        <div class="form-group">
+                            <label>Recipient (Name / ID)</label>
+                            <input type="text" id="individualRecipient" placeholder="e.g., John Doe / USR-001">
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="individualTitle" placeholder="Enter notification title">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="individualDesc" rows="3" placeholder="Enter notification description"></textarea>
+                        </div>
+                        <button onclick="sendIndividual()"><i class="fas fa-envelope"></i> Send to Specific User</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div id="digitalSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-code"></i> Digital Services</h2><button onclick="addDigital()"><i class="fas fa-plus"></i> Add Service</button></div><div id="digitalServicesContainer" class="items-grid"></div></div></div>
-        <div id="localSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-print"></i> Local Services</h2><button onclick="addLocal()"><i class="fas fa-plus"></i> Add Service</button></div><div id="localServicesContainer" class="items-grid"></div></div></div>
-        <div id="phoneSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-mobile-alt"></i> Phone Services</h2><button onclick="addPhone()"><i class="fas fa-plus"></i> Add Service</button></div><div id="phoneServicesContainer" class="items-grid"></div></div></div>
-        <div id="productsSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-cubes"></i> Products</h2><button onclick="addProduct()"><i class="fas fa-plus"></i> Add Product</button></div><div id="productsContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropProduct(event)"></div></div></div>
-        <div id="communicationSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-share-alt"></i> Social Media</h2><div><button onclick="openIconLibrary(null)" class="btn-outline" style="margin-right: 8px;"><i class="fas fa-icons"></i> Browse Icons</button><button onclick="addSocial()"><i class="fas fa-plus"></i> Add New</button></div></div><div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div></div></div>
-        <div id="supportSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2></div><div id="supportMessagesContainer" class="items-grid"></div></div></div>
+
+        <!-- Digital Services Section -->
+        <div id="digitalSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-code"></i> Digital Services</h2>
+                    <button onclick="addDigital()"><i class="fas fa-plus"></i> Add Service</button>
+                </div>
+                <div id="digitalServicesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Local Services Section -->
+        <div id="localSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-print"></i> Local Services</h2>
+                    <button onclick="addLocal()"><i class="fas fa-plus"></i> Add Service</button>
+                </div>
+                <div id="localServicesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Phone Services Section -->
+        <div id="phoneSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-mobile-alt"></i> Phone Services</h2>
+                    <button onclick="addPhone()"><i class="fas fa-plus"></i> Add Service</button>
+                </div>
+                <div id="phoneServicesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="productsSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-cubes"></i> Products & Platforms</h2>
+                    <button onclick="addProduct()"><i class="fas fa-plus"></i> Add Product</button>
+                </div>
+                <div id="productsContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropProduct(event)"></div>
+            </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div id="socialSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links</h2>
+                    <div>
+                        <button onclick="openIconLibrary(null)" class="btn-outline" style="margin-right: 8px;"><i class="fas fa-icons"></i> Browse Icons</button>
+                        <button onclick="addSocial()"><i class="fas fa-plus"></i> Add New</button>
+                    </div>
+                </div>
+                <div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div>
+            </div>
+        </div>
+
+        <!-- Support Messages Section -->
+        <div id="supportSection" class="section-page">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2>
+                </div>
+                <div id="supportMessagesContainer"></div>
+            </div>
+        </div>
     </main>
 </div>
 
-<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage">Saved successfully</div></div>
+<div class="toast-notification" id="toast">
+    <div class="toast-icon"><i class="fas fa-check"></i></div>
+    <div class="toast-message" id="toastMessage">Saved successfully</div>
+</div>
 
-<div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-icons"></i> Select Icon</h3><button class="btn-outline" onclick="closeIconModal()"><i class="fas fa-times"></i> Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
+<!-- Icon Library Modal -->
+<div class="modal-overlay" id="iconModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-icons"></i> Select Icon</h3>
+            <button class="btn-outline" onclick="closeIconModal()"><i class="fas fa-times"></i> Close</button>
+        </div>
+        <div class="icons-grid" id="iconsGrid"></div>
+    </div>
+</div>
 
 <script>
-    // API Configuration - All requests go through the server
-    const API_BASE = window.location.origin; // Same origin as the server
+    // API Configuration
+    const API_BASE = '';
 
     // Data stores
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
     let nextId = { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
     let currentEditingSocial = null;
 
-    // Toast notification
+    // Toast function
     let toastTimeout = null;
     function showToast(message, isError = false) {
         const toast = document.getElementById('toast');
@@ -331,7 +743,7 @@
         toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    // Upload image to server (which uploads to Cloudinary)
+    // Upload image to server
     async function uploadToServer(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -364,7 +776,7 @@
             }
         } catch (err) {
             console.error('Load failed:', err);
-            showToast('Failed to load data from server', true);
+            showToast('Failed to load data', true);
         }
         renderAll();
     }
@@ -391,7 +803,7 @@
 
     function autoSave() { saveToServer(); }
 
-    // Images
+    // ==================== HOME IMAGES ====================
     async function addImage() {
         const input = document.createElement('input');
         input.type = 'file'; input.accept = 'image/*';
@@ -419,7 +831,9 @@
                     <input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImage(${img.id}, 'alt', this.value)">
                     <button class="btn-outline" onclick="replaceImage(${img.id})"><i class="fas fa-sync-alt"></i> Replace</button>
                 </div>
-                <div class="item-actions"><button class="btn-danger" onclick="removeImage(${img.id})"><i class="fas fa-trash"></i> Delete</button></div>
+                <div class="item-actions">
+                    <button class="btn-danger" onclick="removeImage(${img.id})"><i class="fas fa-trash"></i> Delete</button>
+                </div>
             </div>
         `).join('');
         if (!homeImages.length) container.innerHTML = '<div class="item-card"><div class="item-info text-muted">No images. Click "Add Image"</div></div>';
@@ -444,7 +858,7 @@
     function updateImage(id, field, val) { const img = homeImages.find(i => i.id === id); if (img) img[field] = val; renderImages(); }
     function removeImage(id) { homeImages = homeImages.filter(i => i.id !== id); renderImages(); }
 
-    // News
+    // ==================== NEWS ====================
     function renderNews() {
         const container = document.getElementById('newsContainer');
         if (!container) return;
@@ -468,7 +882,7 @@
     function toggleNews(id, val) { const i = newsItems.find(i => i.id === id); if (i) i.enabled = val; renderNews(); }
     function deleteNews(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); }
 
-    // Generic image-based items renderer
+    // ==================== GENERIC SERVICES RENDERER ====================
     function renderImageBased(containerId, items, updateFn, deleteFn, typeName) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -537,7 +951,7 @@
     function updatePhone(id, field, val) { const i = phoneServices.find(i => i.id === id); if (i) i[field] = val; renderPhone(); }
     function deletePhone(id) { phoneServices = phoneServices.filter(i => i.id !== id); renderPhone(); }
 
-    // Products with drag-drop
+    // Products (with drag-drop)
     function renderProducts() { renderImageBased('productsContainer', products, 'updateProduct', 'deleteProduct', 'products'); }
     function addProduct() { products.push({ id: nextId.product++, name: "New Product", description: "", imageUrl: "https://placehold.co/400x200?text=Product", enabled: true, order: products.length }); renderProducts(); }
     function updateProduct(id, field, val) { const i = products.find(i => i.id === id); if (i) i[field] = val; renderProducts(); }
@@ -561,14 +975,50 @@
         renderProducts();
     }
 
-    // Social Media
-    const iconList = ['fab fa-facebook-f', 'fab fa-instagram', 'fab fa-twitter', 'fab fa-youtube', 'fab fa-tiktok', 'fab fa-whatsapp', 'fab fa-telegram', 'fab fa-discord', 'fab fa-github', 'fab fa-linkedin-in', 'fab fa-snapchat', 'fab fa-pinterest', 'fab fa-reddit-alien', 'fab fa-tumblr', 'fab fa-vimeo-v', 'fab fa-skype', 'fab fa-android', 'fab fa-apple', 'fas fa-envelope', 'fas fa-globe'];
+    // ==================== SOCIAL MEDIA ====================
+    const iconList = [
+        'fab fa-facebook-f', 'fab fa-instagram', 'fab fa-twitter', 'fab fa-youtube', 'fab fa-tiktok',
+        'fab fa-whatsapp', 'fab fa-telegram', 'fab fa-discord', 'fab fa-github', 'fab fa-linkedin-in',
+        'fab fa-snapchat', 'fab fa-pinterest', 'fab fa-reddit-alien', 'fab fa-tumblr', 'fab fa-vimeo-v',
+        'fab fa-skype', 'fab fa-android', 'fab fa-apple', 'fab fa-windows', 'fas fa-envelope', 'fas fa-globe'
+    ];
 
-    function openIconLibrary(socialId = null) { currentEditingSocial = socialId; document.getElementById('iconsGrid').innerHTML = iconList.map(icon => `<div class="icon-item" onclick="selectIcon('${icon}')"><i class="${icon}"></i><span>${icon.split(' ')[1] || icon}</span></div>`).join(''); document.getElementById('iconModal').classList.add('active'); }
-    function selectIcon(iconClass) { if (currentEditingSocial) { const social = socialLinks.find(s => s.id === currentEditingSocial); if (social) social.icon = iconClass; renderSocial(); } closeIconModal(); }
-    function closeIconModal() { document.getElementById('iconModal').classList.remove('active'); currentEditingSocial = null; }
-    function rgbToHex(r, g, b) { return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1); }
-    function updateColorFromRGB(id, r, g, b) { const hex = rgbToHex(parseInt(r), parseInt(g), parseInt(b)); const social = socialLinks.find(s => s.id === id); if (social) { social.color = hex; renderSocial(); } }
+    function openIconLibrary(socialId = null) {
+        currentEditingSocial = socialId;
+        const grid = document.getElementById('iconsGrid');
+        grid.innerHTML = iconList.map(icon => `
+            <div class="icon-item" onclick="selectIcon('${icon}')">
+                <i class="${icon}"></i>
+                <span>${icon.split(' ')[1] || icon}</span>
+            </div>
+        `).join('');
+        document.getElementById('iconModal').classList.add('active');
+    }
+
+    function selectIcon(iconClass) {
+        if (currentEditingSocial) {
+            const social = socialLinks.find(s => s.id === currentEditingSocial);
+            if (social) social.icon = iconClass;
+            renderSocial();
+        }
+        closeIconModal();
+    }
+
+    function closeIconModal() {
+        document.getElementById('iconModal').classList.remove('active');
+        currentEditingSocial = null;
+    }
+
+    function rgbToHex(r, g, b) {
+        return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    function updateColorFromRGB(id, r, g, b) {
+        const hex = rgbToHex(parseInt(r), parseInt(g), parseInt(b));
+        const social = socialLinks.find(s => s.id === id);
+        if (social) { social.color = hex; renderSocial(); }
+    }
+
     function renderSocial() {
         const container = document.getElementById('socialContainer');
         if (!container) return;
@@ -577,40 +1027,158 @@
             const r = parseInt(s.color.slice(1,3), 16);
             const g = parseInt(s.color.slice(3,5), 16);
             const b = parseInt(s.color.slice(5,7), 16);
-            return `<div class="item-card" draggable="true" data-id="${s.id}" ondragstart="dragSocialStart(event)" ondragend="dragSocialEnd(event)"><div class="drag-handle"><i class="fas fa-grip-vertical"></i></div><div class="item-info"><div style="display: flex; align-items: center; gap: 20px;"><i class="${s.icon}" style="font-size: 2.8rem; color: ${s.color}"></i><button class="btn-outline" onclick="openIconLibrary(${s.id})"><i class="fas fa-icons"></i> Change Icon</button></div><input type="text" value="${escapeHtml(s.name)}" placeholder="Platform Name" onchange="updateSocial(${s.id}, 'name', this.value)"><div class="color-row"><input type="color" value="${s.color}" onchange="updateSocial(${s.id}, 'color', this.value)"><div class="rgb-input"><input type="number" id="r-${s.id}" placeholder="R" min="0" max="255" value="${r}" onchange="updateColorFromRGB(${s.id}, this.value, document.getElementById('g-${s.id}').value, document.getElementById('b-${s.id}').value)"><input type="number" id="g-${s.id}" placeholder="G" min="0" max="255" value="${g}" onchange="updateColorFromRGB(${s.id}, document.getElementById('r-${s.id}').value, this.value, document.getElementById('b-${s.id}').value)"><input type="number" id="b-${s.id}" placeholder="B" min="0" max="255" value="${b}" onchange="updateColorFromRGB(${s.id}, document.getElementById('r-${s.id}').value, document.getElementById('g-${s.id}').value, this.value)"></div></div><input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocial(${s.id}, 'url', this.value)"></div><div class="item-actions"><button class="btn-danger" onclick="deleteSocial(${s.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`;
-        }).join('');
+            return `
+            <div class="item-card" draggable="true" data-id="${s.id}" ondragstart="dragSocialStart(event)" ondragend="dragSocialEnd(event)">
+                <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
+                <div class="item-info">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <i class="${s.icon}" style="font-size: 2.8rem; color: ${s.color}"></i>
+                        <button class="btn-outline" onclick="openIconLibrary(${s.id})"><i class="fas fa-icons"></i> Change Icon</button>
+                    </div>
+                    <input type="text" value="${escapeHtml(s.name)}" placeholder="Platform Name" onchange="updateSocial(${s.id}, 'name', this.value)">
+                    <div class="color-row">
+                        <input type="color" value="${s.color}" onchange="updateSocial(${s.id}, 'color', this.value)">
+                        <div class="rgb-input">
+                            <input type="number" id="r-${s.id}" placeholder="R" min="0" max="255" value="${r}" onchange="updateColorFromRGB(${s.id}, this.value, document.getElementById('g-${s.id}').value, document.getElementById('b-${s.id}').value)">
+                            <input type="number" id="g-${s.id}" placeholder="G" min="0" max="255" value="${g}" onchange="updateColorFromRGB(${s.id}, document.getElementById('r-${s.id}').value, this.value, document.getElementById('b-${s.id}').value)">
+                            <input type="number" id="b-${s.id}" placeholder="B" min="0" max="255" value="${b}" onchange="updateColorFromRGB(${s.id}, document.getElementById('r-${s.id}').value, document.getElementById('g-${s.id}').value, this.value)">
+                        </div>
+                    </div>
+                    <input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocial(${s.id}, 'url', this.value)">
+                </div>
+                <div class="item-actions">
+                    <button class="btn-danger" onclick="deleteSocial(${s.id})"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+            </div>
+        `}).join('');
         if (!socialLinks.length) container.innerHTML = '<div class="item-card"><div class="item-info text-muted">No social links. Click "Add New" to create.</div></div>';
         autoSave();
     }
-    function addSocial() { socialLinks.push({ id: nextId.social++, name: "New Platform", icon: "fab fa-facebook-f", color: "#3b82f6", url: "#", order: socialLinks.length }); renderSocial(); }
-    function updateSocial(id, field, val) { const s = socialLinks.find(s => s.id === id); if (s) s[field] = val; renderSocial(); }
-    function deleteSocial(id) { socialLinks = socialLinks.filter(s => s.id !== id); socialLinks.forEach((s, idx) => s.order = idx); renderSocial(); }
+
+    function addSocial() {
+        socialLinks.push({
+            id: nextId.social++,
+            name: "New Platform",
+            icon: "fab fa-facebook-f",
+            color: "#3b82f6",
+            url: "#",
+            order: socialLinks.length
+        });
+        renderSocial();
+    }
+
+    function updateSocial(id, field, val) {
+        const s = socialLinks.find(s => s.id === id);
+        if (s) s[field] = val;
+        renderSocial();
+    }
+
+    function deleteSocial(id) {
+        socialLinks = socialLinks.filter(s => s.id !== id);
+        socialLinks.forEach((s, idx) => s.order = idx);
+        renderSocial();
+    }
+
     let dragSocialId = null;
     function dragSocialStart(e) { dragSocialId = parseInt(e.target.closest('.item-card').dataset.id); }
     function dragSocialEnd(e) { dragSocialId = null; }
-    function dropSocial(e) { e.preventDefault(); const targetCard = e.target.closest('.item-card'); if (!targetCard || dragSocialId === null) return; const targetId = parseInt(targetCard.dataset.id); if (dragSocialId === targetId) return; const dragIndex = socialLinks.findIndex(s => s.id === dragSocialId); const targetIndex = socialLinks.findIndex(s => s.id === targetId); if (dragIndex === -1 || targetIndex === -1) return; const [dragged] = socialLinks.splice(dragIndex, 1); socialLinks.splice(targetIndex, 0, dragged); socialLinks.forEach((s, idx) => s.order = idx); renderSocial(); }
+    function dropSocial(e) {
+        e.preventDefault();
+        const targetCard = e.target.closest('.item-card');
+        if (!targetCard || dragSocialId === null) return;
+        const targetId = parseInt(targetCard.dataset.id);
+        if (dragSocialId === targetId) return;
+        const dragIndex = socialLinks.findIndex(s => s.id === dragSocialId);
+        const targetIndex = socialLinks.findIndex(s => s.id === targetId);
+        if (dragIndex === -1 || targetIndex === -1) return;
+        const [dragged] = socialLinks.splice(dragIndex, 1);
+        socialLinks.splice(targetIndex, 0, dragged);
+        socialLinks.forEach((s, idx) => s.order = idx);
+        renderSocial();
+    }
 
-    // Support Messages
+    // ==================== SUPPORT MESSAGES ====================
     function renderSupportMessages() {
         const container = document.getElementById('supportMessagesContainer');
         if (!container) return;
-        container.innerHTML = supportMessages.map(msg => `<div class="item-card"><div class="item-info"><strong>${escapeHtml(msg.sender)}</strong> (${escapeHtml(msg.field)})<br><strong>Subject:</strong> ${escapeHtml(msg.subject)}<br><small>${escapeHtml(msg.details)}</small><br><small class="text-muted">${escapeHtml(msg.date)}</small></div><div class="item-actions"><button onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}')"><i class="fas fa-reply"></i> Reply</button></div></div>`).join('');
-        if (!supportMessages.length) container.innerHTML = '<div class="item-card"><div class="item-info text-muted">No support messages</div></div>';
+        if (!supportMessages || supportMessages.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No support messages yet</p></div>';
+            return;
+        }
+        container.innerHTML = supportMessages.map(msg => `
+            <div class="support-card">
+                <div class="support-header">
+                    <strong><i class="fas fa-user"></i> ${escapeHtml(msg.sender || 'Anonymous')}</strong>
+                    <span class="support-field">${escapeHtml(msg.field || 'General')}</span>
+                </div>
+                <div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div>
+                <div class="support-details">${escapeHtml(msg.details)}</div>
+                <div class="support-date"><i class="fas fa-clock"></i> ${new Date(msg.date).toLocaleString()}</div>
+                <div class="item-actions mt-2">
+                    <button onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}')"><i class="fas fa-reply"></i> Reply</button>
+                </div>
+            </div>
+        `).join('');
         autoSave();
     }
-    function replyToMessage(recipient, subject) { showSection('notifications'); document.getElementById('individualRecipient').value = recipient; document.getElementById('individualTitle').value = `Re: ${subject}`; }
 
-    // Notifications (mock)
-    function sendBroadcast() { const title = document.getElementById('broadcastTitle').value; if (!title) { showToast('Please enter a title', true); return; } showToast(`✓ Broadcast sent: ${title}`); document.getElementById('broadcastTitle').value = ''; document.getElementById('broadcastDesc').value = ''; }
-    function sendIndividual() { const recipient = document.getElementById('individualRecipient').value; const title = document.getElementById('individualTitle').value; if (!recipient || !title) { showToast('Please enter recipient and title', true); return; } showToast(`✓ Notification sent to ${recipient}`); document.getElementById('individualRecipient').value = ''; document.getElementById('individualTitle').value = ''; document.getElementById('individualDesc').value = ''; }
+    function replyToMessage(recipient, subject) {
+        showSection('notifications');
+        document.getElementById('individualRecipient').value = recipient;
+        document.getElementById('individualTitle').value = `Re: ${subject}`;
+    }
 
-    // Navigation
-    const sections = ['home', 'news', 'notifications', 'digital', 'local', 'phone', 'products', 'communication', 'support'];
-    function showSection(sectionId) { sections.forEach(s => document.getElementById(s + 'Section').classList.remove('active-page')); document.getElementById(sectionId + 'Section').classList.add('active-page'); document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active')); document.querySelector(`.nav-item[data-section="${sectionId}"]`).classList.add('active'); if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open'); renderAll(); }
-    function renderAll() { renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages(); }
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+    // ==================== NOTIFICATIONS ====================
+    function sendBroadcast() {
+        const title = document.getElementById('broadcastTitle').value;
+        if (!title) { showToast('Please enter a title', true); return; }
+        showToast(`✓ Broadcast sent: ${title}`);
+        document.getElementById('broadcastTitle').value = '';
+        document.getElementById('broadcastDesc').value = '';
+    }
 
-    document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
+    function sendIndividual() {
+        const recipient = document.getElementById('individualRecipient').value;
+        const title = document.getElementById('individualTitle').value;
+        if (!recipient || !title) { showToast('Please enter recipient and title', true); return; }
+        showToast(`✓ Notification sent to ${recipient}`);
+        document.getElementById('individualRecipient').value = '';
+        document.getElementById('individualTitle').value = '';
+        document.getElementById('individualDesc').value = '';
+    }
+
+    // ==================== NAVIGATION ====================
+    const sections = ['home', 'news', 'notifications', 'digital', 'local', 'phone', 'products', 'social', 'support'];
+    
+    function showSection(sectionId) {
+        sections.forEach(s => document.getElementById(s + 'Section').classList.remove('active-page'));
+        document.getElementById(sectionId + 'Section').classList.add('active-page');
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        document.querySelector(`.nav-item[data-section="${sectionId}"]`).classList.add('active');
+        if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+        renderAll();
+    }
+
+    function renderAll() {
+        renderImages();
+        renderNews();
+        renderDigital();
+        renderLocal();
+        renderPhone();
+        renderProducts();
+        renderSocial();
+        renderSupportMessages();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+
+    // Event listeners
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.addEventListener('click', () => showSection(nav.dataset.section));
+    });
     document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
 
     // Expose globals
@@ -627,13 +1195,6 @@
     window.updateColorFromRGB = updateColorFromRGB;
     window.replyToMessage = replyToMessage; window.sendBroadcast = sendBroadcast; window.sendIndividual = sendIndividual;
     window.showSection = showSection;
-
-    // Periodic refresh every 30 seconds
-    setInterval(async () => {
-        if (document.hasFocus()) {
-            await loadFromServer();
-        }
-    }, 30000);
 
     // Initial load
     loadFromServer();
