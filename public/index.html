@@ -483,6 +483,37 @@
             .cards-grid { grid-template-columns: 1fr; }
             .avatar { width: 100px; height: 100px; font-size: 2.5rem; }
         }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #10b981;
+            z-index: 2000;
+            transform: translateX(120%);
+            transition: transform 0.3s ease;
+        }
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            background: #d1fae5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #10b981;
+        }
     </style>
 </head>
 <body>
@@ -611,6 +642,12 @@
     </div>
 </div>
 
+<!-- Toast Notification -->
+<div class="toast-notification" id="toast">
+    <div class="toast-icon"><i class="fas fa-check"></i></div>
+    <div class="toast-message" id="toastMessage">Message sent</div>
+</div>
+
 <script>
     // Theme
     const themeToggle = document.getElementById('themeToggleSidebar');
@@ -688,10 +725,33 @@
         if (e.target === modal) modal.classList.remove('active');
     });
 
+    // Toast function
+    let toastTimeout = null;
+    function showToast(message, isError = false) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMessage');
+        const toastIcon = toast.querySelector('.toast-icon');
+        toastMsg.textContent = message;
+        if (isError) {
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            toastIcon.style.background = '#fee2e2';
+            toastIcon.style.color = '#ef4444';
+            toast.style.borderLeftColor = '#ef4444';
+        } else {
+            toastIcon.innerHTML = '<i class="fas fa-check"></i>';
+            toastIcon.style.background = '#d1fae5';
+            toastIcon.style.color = '#10b981';
+            toast.style.borderLeftColor = '#10b981';
+        }
+        toast.classList.add('show');
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
     // ---------- API Integration ----------
     let cachedData = null;
     let lastFetch = 0;
-    const CACHE_TTL = 30000; // 30 seconds
+    const CACHE_TTL = 30000;
 
     async function fetchData() {
         const now = Date.now();
@@ -706,7 +766,7 @@
             return cachedData;
         } catch (error) {
             console.error('Failed to fetch data:', error);
-            return cachedData || { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [], support: [] };
+            return cachedData || { news: [], digital: [], local: [], phone: [], products: [], social: [] };
         }
     }
 
@@ -718,25 +778,34 @@
             container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news</div><div class="card-desc">Check back later for updates.</div></div></div>';
             return;
         }
-        container.innerHTML = news.map(item => `
+        const activeNews = news.filter(n => n.enabled !== false);
+        if (activeNews.length === 0) {
+            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No active news</div><div class="card-desc">Check back later for updates.</div></div></div>';
+            return;
+        }
+        container.innerHTML = activeNews.map(item => `
             <div class="slim-card">
                 <div class="card-content">
                     <div class="card-title"><i class="fas fa-newspaper"></i> ${escapeHtml(item.title)}</div>
                     <div class="card-desc">${escapeHtml(item.description)}</div>
-                    ${item.enabled === false ? '<div class="card-desc" style="color: #ef4444;"><i class="fas fa-eye-slash"></i> Disabled</div>' : ''}
                 </div>
             </div>
         `).join('');
     }
 
-    function renderServices(containerId, services, emptyMessage, iconClass = 'fas fa-cogs') {
+    function renderServices(containerId, services, emptyMessage, iconClass) {
         const container = document.getElementById(containerId);
         if (!container) return;
         if (!services || services.length === 0) {
             container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${iconClass}"></i> ${emptyMessage}</div><div class="card-desc">No services available.</div></div></div>`;
             return;
         }
-        container.innerHTML = services.map(service => `
+        const activeServices = services.filter(s => s.enabled !== false);
+        if (activeServices.length === 0) {
+            container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${iconClass}"></i> No active services</div><div class="card-desc">Check back later.</div></div></div>`;
+            return;
+        }
+        container.innerHTML = activeServices.map(service => `
             <div class="slim-card">
                 ${service.imageUrl ? `<div class="card-media"><img src="${service.imageUrl}" alt="${escapeHtml(service.name)}" loading="lazy"></div>` : ''}
                 <div class="card-content">
@@ -754,7 +823,12 @@
             container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products</div><div class="card-desc">New products will appear here.</div></div></div>';
             return;
         }
-        container.innerHTML = products.map(product => `
+        const activeProducts = products.filter(p => p.enabled !== false);
+        if (activeProducts.length === 0) {
+            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No active products</div><div class="card-desc">Check back later.</div></div></div>';
+            return;
+        }
+        container.innerHTML = activeProducts.map(product => `
             <div class="slim-card">
                 ${product.imageUrl ? `<div class="card-media"><img src="${product.imageUrl}" alt="${escapeHtml(product.name)}" loading="lazy"></div>` : ''}
                 <div class="card-content">
@@ -804,7 +878,7 @@
             renderProducts(data.products || []);
             renderSocial(data.social || []);
             
-            // Update badge counts
+            // Update badge count
             const newsBadge = document.getElementById('newsBadge');
             if (newsBadge && data.news) {
                 const activeNews = data.news.filter(n => n.enabled !== false).length;
@@ -813,7 +887,7 @@
         }
     }
 
-    // Support form submission (sends to server)
+    // Support form submission
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -822,40 +896,34 @@
             const service = document.getElementById('serviceSelect').value;
             const topic = document.getElementById('topicInput').value.trim();
             const details = document.getElementById('detailsInput').value.trim();
+            
             if (!topic) {
                 formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a topic.</span>';
                 return;
             }
             
-            const message = {
-                sender: "App User",
-                field: service,
-                subject: topic,
-                details: details,
-                date: new Date().toISOString()
-            };
-            
             try {
-                // Get current data
-                const response = await fetch('/api/data');
-                const data = await response.json();
-                // Add new message
-                const support = data.support || [];
-                support.push(message);
-                // Save back
-                const saveResponse = await fetch('/api/data', {
-                    method: 'PUT',
+                const response = await fetch('/api/support', {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...data, support })
+                    body: JSON.stringify({
+                        sender: "App User",
+                        field: service,
+                        subject: topic,
+                        details: details
+                    })
                 });
-                if (saveResponse.ok) {
+                
+                if (response.ok) {
+                    showToast('Request sent! We\'ll reply within 24h.', false);
                     formMsg.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Request sent! We\'ll reply within 24h.</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 4000);
                 } else {
-                    throw new Error('Save failed');
+                    throw new Error('Server error');
                 }
             } catch (error) {
+                showToast('Failed to send. Please try again.', true);
                 formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again.</span>';
                 setTimeout(() => formMsg.innerHTML = '', 3000);
             }
