@@ -1,0 +1,17 @@
+{
+  "name": "B.Y PRO",
+  "short_name": "BYPRO",
+  "description": "Technology & Software Services & AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066cc",
+  "icons": [
+    {
+      "src": "https://by-pro.kesug.com/App.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
