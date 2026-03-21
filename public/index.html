@@ -27,12 +27,13 @@
             --text-muted: #4a4a4a;
             --border: #e5e5e5;
             --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --danger: #ef4444;
             --card-radius: 24px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --transition: all 0.2s ease;
             --notification-badge: #ef4444;
-            --swipe-threshold: 80px;
         }
 
         .dark-theme {
@@ -42,7 +43,7 @@
             --text-muted: #b0b0b0;
             --border: #333333;
             --primary: #3b82f6;
-            --notification-badge: #ef4444;
+            --primary-dark: #2563eb;
         }
 
         body {
@@ -53,7 +54,7 @@
             line-height: 1.5;
         }
 
-        /* Menu button with bracket > */
+        /* Menu button */
         .menu-trigger {
             position: fixed;
             left: 16px;
@@ -71,23 +72,19 @@
             transition: all 0.2s ease;
             border: 1px solid rgba(0, 0, 0, 0.3);
             border-radius: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             font-size: 1.5rem;
-            font-weight: 500;
             color: var(--primary);
         }
 
         .dark-theme .menu-trigger {
             background: rgba(30, 30, 40, 0.8);
             border-color: rgba(255, 255, 255, 0.3);
-            color: var(--primary);
         }
 
         .menu-trigger.hidden {
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
-            transform: translateY(-50%) scale(0.9);
         }
 
         /* Sidebar */
@@ -96,14 +93,13 @@
             background: var(--surface);
             border-right: 1px solid var(--border);
             position: fixed;
-            top: 0;
             left: 0;
+            top: 0;
             bottom: 0;
             z-index: 100;
             transform: translateX(-100%);
-            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.05);
+            transition: transform 0.35s ease;
             overflow-y: auto;
-            box-shadow: 2px 0 25px rgba(0,0,0,0.1);
         }
 
         .sidebar.mobile-open {
@@ -145,38 +141,24 @@
             margin-bottom: 6px;
             border-radius: 14px;
             color: var(--text-muted);
-            transition: all 0.18s ease;
             cursor: pointer;
+            transition: all 0.18s ease;
             font-weight: 500;
         }
 
-        .nav-item i, .nav-item img {
+        .nav-item i {
             width: 24px;
-            height: 24px;
-            object-fit: contain;
         }
 
-        .nav-item:hover {
+        .nav-item:hover, .nav-item.active {
             background: rgba(0, 102, 204, 0.08);
             color: var(--primary);
-            transform: translateX(4px);
         }
 
-        .nav-item.active {
-            background: rgba(0, 102, 204, 0.12);
-            color: var(--primary);
-            border-left: 3px solid var(--primary);
-        }
-
-        .nav-item.has-notification {
-            position: relative;
-        }
         .nav-item.has-notification::after {
             content: '';
             position: absolute;
             right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
             width: 8px;
             height: 8px;
             background: var(--notification-badge);
@@ -185,9 +167,8 @@
         }
 
         @keyframes pulse {
-            0% { opacity: 1; transform: translateY(-50%) scale(1); }
-            50% { opacity: 0.7; transform: translateY(-50%) scale(1.2); }
-            100% { opacity: 1; transform: translateY(-50%) scale(1); }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
         }
 
         .theme-switch-sidebar {
@@ -196,7 +177,6 @@
             background: var(--bg);
             border-radius: 16px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
             border: 1px solid var(--border);
         }
@@ -206,14 +186,12 @@
             flex: 1;
             margin-left: 0;
             padding: 24px 32px;
-            width: 100%;
         }
 
         /* Account Circle */
         .account-circle {
             display: flex;
             justify-content: center;
-            align-items: center;
             margin: 40px auto;
             cursor: pointer;
         }
@@ -227,7 +205,6 @@
             align-items: center;
             justify-content: center;
             font-size: 3rem;
-            font-weight: 500;
             color: white;
             box-shadow: var(--shadow-md);
             transition: transform 0.2s;
@@ -237,7 +214,7 @@
             transform: scale(1.05);
         }
 
-        /* Modal Popup */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -252,7 +229,7 @@
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.2s;
+            transition: 0.2s;
         }
 
         .modal-overlay.active {
@@ -268,7 +245,6 @@
             max-width: 380px;
             text-align: center;
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-lg);
         }
 
         .modal-card h3 {
@@ -282,16 +258,6 @@
             justify-content: space-between;
             padding: 12px 0;
             border-bottom: 1px solid var(--border);
-            font-size: 1rem;
-        }
-
-        .info-row span:first-child {
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .info-row span:last-child {
-            color: var(--text);
         }
 
         .close-modal {
@@ -302,11 +268,10 @@
             padding: 10px 20px;
             border-radius: 40px;
             cursor: pointer;
-            font-weight: 600;
             width: 100%;
         }
 
-        /* Cards Grid */
+        /* Cards */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -314,13 +279,54 @@
             margin-bottom: 40px;
         }
 
-        /* Notification Card with swipe and delete */
+        .slim-card {
+            background: var(--surface);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .slim-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-media {
+            height: 160px;
+            overflow: hidden;
+        }
+
+        .card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Notification Cards */
         .notification-card-wrapper {
             position: relative;
             overflow: hidden;
             border-radius: var(--card-radius);
             margin-bottom: 16px;
-            transition: all 0.3s ease;
         }
 
         .notification-card {
@@ -328,10 +334,7 @@
             border-radius: var(--card-radius);
             border: 1px solid var(--border);
             padding: 20px;
-            transition: var(--transition);
-            position: relative;
-            transform: translateX(0);
-            z-index: 2;
+            transition: transform 0.2s ease;
         }
 
         .notification-card.unread {
@@ -339,14 +342,19 @@
             background: rgba(59, 130, 246, 0.05);
         }
 
-        .notification-card.swiped-left {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
+        .notification-card.new {
+            animation: slideIn 0.3s ease-out;
         }
 
-        .notification-card.swiped-right {
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .notification-delete {
@@ -362,24 +370,13 @@
             justify-content: center;
             font-size: 1.5rem;
             cursor: pointer;
-            z-index: 1;
             border-radius: var(--card-radius);
-            transition: all 0.2s;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
 
-        .notification-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .notification-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .notification-card-wrapper:hover .notification-delete {
+            opacity: 1;
         }
 
         .notification-time {
@@ -402,66 +399,7 @@
             font-size: 0.8rem;
         }
 
-        .notification-actions button:hover {
-            background: var(--border);
-            transform: none;
-        }
-
-        /* Other cards */
-        .slim-card {
-            background: var(--surface);
-            border-radius: var(--card-radius);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .slim-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .card-media {
-            height: 160px;
-            overflow: hidden;
-        }
-
-        .card-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .slim-card:hover .card-media img {
-            transform: scale(1.03);
-        }
-
-        .card-content {
-            padding: 20px;
-        }
-
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card-title i {
-            color: var(--primary);
-        }
-
-        .card-desc {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-
-        /* Form styles */
+        /* Form */
         .support-form {
             margin-top: 20px;
         }
@@ -477,7 +415,6 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             color: var(--text);
-            font-family: inherit;
         }
 
         .btn-submit {
@@ -489,7 +426,6 @@
             font-weight: 600;
             width: 100%;
             cursor: pointer;
-            transition: all 0.18s ease;
         }
 
         .hours-badge {
@@ -500,8 +436,6 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
             margin-bottom: 20px;
         }
 
@@ -525,7 +459,6 @@
             padding: 6px 14px;
             border-radius: 40px;
             font-size: 0.75rem;
-            font-weight: 600;
         }
 
         .notification-badge {
@@ -534,7 +467,6 @@
             padding: 2px 8px;
             border-radius: 20px;
             font-size: 0.7rem;
-            font-weight: 600;
             margin-left: 8px;
         }
 
@@ -556,6 +488,7 @@
             z-index: 99;
             display: none;
         }
+
         .sidebar-overlay.active {
             display: block;
         }
@@ -566,7 +499,7 @@
             width: 52px;
             height: 28px;
         }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-switch input { opacity: 0; }
         .slider {
             position: absolute;
             cursor: pointer;
@@ -592,13 +525,7 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
 
-        @media (max-width: 768px) {
-            .main-content { padding: 20px; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .avatar { width: 100px; height: 100px; font-size: 2.5rem; }
-        }
-
-        /* Toast Notification */
+        /* Toast */
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -609,15 +536,13 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border-left: 4px solid #10b981;
             z-index: 2000;
             transform: translateX(120%);
             transition: transform 0.3s ease;
         }
-        .toast-notification.show {
-            transform: translateX(0);
-        }
+        .toast-notification.show { transform: translateX(0); }
         .toast-icon {
             width: 28px;
             height: 28px;
@@ -629,31 +554,31 @@
             color: #10b981;
         }
 
-        .enable-notif-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 6px 12px;
-            font-size: 0.8rem;
+        .notify-request-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
         }
-        .enable-notif-btn:hover {
-            background: var(--border);
+
+        @media (max-width: 768px) {
+            .main-content { padding: 20px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .avatar { width: 100px; height: 100px; font-size: 2.5rem; }
+            .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 <div class="app-wrapper">
-    <!-- Menu button with bracket > -->
-    <div class="menu-trigger" id="menuTrigger">
-        <span>&gt;</span>
-    </div>
+    <div class="menu-trigger" id="menuTrigger"><span>&gt;</span></div>
 
-    <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo">
-                <img src="https://by-pro.kesug.com/App.png" alt="B.Y PRO Logo">
-            </div>
+            <div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png" alt="Logo"></div>
             <span class="sidebar-title">B.Y PRO</span>
         </div>
         <nav class="sidebar-nav">
@@ -674,90 +599,60 @@
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- HOME SECTION -->
         <div id="homePage" class="section-page active-page">
             <div class="section-header">
                 <h1 class="section-title">Home</h1>
                 <span class="section-badge">Account</span>
-                <button id="enableNotificationsBtn" class="enable-notif-btn"><i class="fas fa-bell"></i> Enable Notifications</button>
+                <button id="requestNotificationBtn" class="notify-request-btn"><i class="fas fa-bell"></i> تفعيل الإشعارات</button>
             </div>
-            <div class="account-circle" id="accountCircle">
-                <div class="avatar">
-                    <i class="fas fa-user"></i>
-                </div>
-            </div>
+            <div class="account-circle" id="accountCircle"><div class="avatar"><i class="fas fa-user"></i></div></div>
         </div>
 
-        <!-- NOTIFICATIONS SECTION -->
         <div id="notificationsPage" class="section-page">
-            <div class="section-header">
-                <h1 class="section-title">Notifications</h1>
-                <span id="notificationsPageBadge" class="section-badge">Updates</span>
-            </div>
+            <div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge">Updates</span></div>
             <div id="notificationsContainer" class="cards-grid"></div>
         </div>
 
-        <!-- NEWS SECTION -->
         <div id="newsPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Latest News</h1><span id="newsBadge" class="section-badge">Updates</span></div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
 
-        <!-- DIGITAL SERVICES SECTION -->
         <div id="digitalPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div>
             <div id="digitalContainer" class="cards-grid"></div>
         </div>
 
-        <!-- LOCAL SERVICES SECTION -->
         <div id="localPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div>
             <div id="localContainer" class="cards-grid"></div>
         </div>
 
-        <!-- PHONE SERVICES SECTION -->
         <div id="phonePage" class="section-page">
             <div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div>
             <div id="phoneContainer" class="cards-grid"></div>
         </div>
 
-        <!-- PRODUCTS SECTION -->
         <div id="productsPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Products & Platforms</h1><span class="section-badge">Available</span></div>
             <div id="productsContainer" class="cards-grid"></div>
         </div>
 
-        <!-- SOCIAL MEDIA SECTION -->
         <div id="socialPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div>
             <div id="socialContainer" class="cards-grid"></div>
         </div>
 
-        <!-- SUPPORT SECTION -->
         <div id="supportPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
             <div class="slim-card">
                 <div class="card-content">
-                    <div class="hours-badge"><i class="fas fa-clock"></i> Available 24 hours / 7 days a week</div>
-                    <form id="supportRequestForm" class="support-form">
-                        <div class="form-group">
-                            <select id="serviceSelect" required>
-                                <option value="">Select a service</option>
-                                <option>Digital Services</option>
-                                <option>Local Services</option>
-                                <option>Phone Services</option>
-                                <option>Products</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="topicInput" placeholder="Topic / Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="detailsInput" rows="3" placeholder="Describe your request..."></textarea>
-                        </div>
+                    <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
+                    <form id="supportRequestForm">
+                        <div class="form-group"><select id="serviceSelect" required><option value="">Select a service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div>
+                        <div class="form-group"><input type="text" id="topicInput" placeholder="Topic / Subject" required></div>
+                        <div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Describe your request..."></textarea></div>
                         <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit Request</button>
                     </form>
                     <div id="formMessage" style="margin-top: 12px;"></div>
@@ -767,7 +662,6 @@
     </main>
 </div>
 
-<!-- Account Popup Modal -->
 <div class="modal-overlay" id="accountModal">
     <div class="modal-card">
         <h3><i class="fas fa-user-circle"></i> Account Details</h3>
@@ -778,11 +672,7 @@
     </div>
 </div>
 
-<!-- Toast Notification -->
-<div class="toast-notification" id="toast">
-    <div class="toast-icon"><i class="fas fa-check"></i></div>
-    <div class="toast-message" id="toastMessage">Message sent</div>
-</div>
+<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script>
     // Theme
@@ -797,7 +687,7 @@
         localStorage.setItem('darkTheme', e.target.checked);
     });
 
-    // Menu button & sidebar
+    // Sidebar
     const menuTrigger = document.getElementById('menuTrigger');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
@@ -814,8 +704,7 @@
     }
     menuTrigger.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (sidebar.classList.contains('mobile-open')) closeSidebar();
-        else openSidebar();
+        sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar();
     });
     overlay.addEventListener('click', closeSidebar);
 
@@ -836,8 +725,7 @@
         Object.values(pages).forEach(p => p.classList.remove('active-page'));
         pages[pageId].classList.add('active-page');
         navItems.forEach(nav => nav.classList.remove('active'));
-        const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
-        if (activeNav) activeNav.classList.add('active');
+        document.querySelector(`.nav-item[data-page="${pageId}"]`).classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         closeSidebar();
     }
@@ -848,21 +736,15 @@
         });
     });
 
-    // Account circle modal
+    // Account modal
     const accountCircle = document.getElementById('accountCircle');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
-    accountCircle.addEventListener('click', () => {
-        modal.classList.add('active');
-    });
-    closeModalBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) modal.classList.remove('active');
-    });
+    accountCircle.addEventListener('click', () => modal.classList.add('active'));
+    closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    // Toast function
+    // Toast
     let toastTimeout = null;
     function showToast(message, isError = false) {
         const toast = document.getElementById('toast');
@@ -887,60 +769,59 @@
 
     // Browser Notifications
     let notificationPermission = false;
-    
-    function requestNotificationPermission() {
-        if ('Notification' in window) {
-            Notification.requestPermission().then(permission => {
+    const requestNotifBtn = document.getElementById('requestNotificationBtn');
+    if (requestNotifBtn) {
+        requestNotifBtn.addEventListener('click', async () => {
+            if ('Notification' in window) {
+                const permission = await Notification.requestPermission();
                 notificationPermission = permission === 'granted';
                 if (notificationPermission) {
-                    showToast('Notifications enabled! You will receive alerts.');
+                    showToast('✓ Notifications enabled!');
                     localStorage.setItem('notificationsEnabled', 'true');
                 } else {
-                    showToast('Notifications disabled. You can enable them in browser settings.', true);
+                    showToast('❌ Notifications denied', true);
                 }
-            });
-        } else {
-            showToast('Your browser does not support notifications', true);
-        }
+            } else {
+                showToast('Browser does not support notifications', true);
+            }
+        });
     }
-    
-    function sendBrowserNotification(title, body, icon = 'https://by-pro.kesug.com/App.png') {
-        if (notificationPermission && 'Notification' in window) {
-            new Notification(title, { body, icon });
-        }
-    }
-    
-    // Check if notifications were previously enabled
     if (localStorage.getItem('notificationsEnabled') === 'true' && 'Notification' in window && Notification.permission === 'granted') {
         notificationPermission = true;
     }
-    
-    const enableNotifBtn = document.getElementById('enableNotificationsBtn');
-    if (enableNotifBtn) {
-        enableNotifBtn.addEventListener('click', requestNotificationPermission);
-    }
 
-    // ---------- NOTIFICATIONS DATA ----------
-    let userNotifications = []; // { id, title, message, date, read, icon, color, type }
+    // ==================== REAL-TIME NOTIFICATIONS (SSE) ====================
+    let eventSource = null;
+    let userNotifications = [];
     
-    // Load notifications from localStorage initially
+    function connectToNotificationStream() {
+        if (eventSource) eventSource.close();
+        eventSource = new EventSource('/api/events');
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            if (data.type === 'notification') {
+                addNotification(data.title, data.message, data.icon, data.color);
+                if (notificationPermission) {
+                    new Notification(data.title, { body: data.message, icon: 'https://by-pro.kesug.com/App.png' });
+                }
+            }
+        };
+        eventSource.onerror = () => setTimeout(connectToNotificationStream, 5000);
+    }
+    connectToNotificationStream();
+
+    // Local notifications storage
     function loadNotifications() {
         const saved = localStorage.getItem('userNotifications');
-        if (saved) {
-            userNotifications = JSON.parse(saved);
-        } else {
-            // Add welcome notification with icon
-            userNotifications = [{
-                id: Date.now(),
-                title: 'Welcome to B.Y PRO!',
-                message: 'Thank you for using our services. You will receive important updates here.',
-                date: new Date().toISOString(),
-                read: false,
-                icon: 'fas fa-smile-wink',
-                color: '#3b82f6'
-            }];
-            saveNotifications();
-        }
+        userNotifications = saved ? JSON.parse(saved) : [{
+            id: Date.now(),
+            title: 'Welcome to B.Y PRO!',
+            message: 'You will receive important updates here.',
+            date: new Date().toISOString(),
+            read: false,
+            icon: 'fas fa-smile-wink',
+            color: '#3b82f6'
+        }];
         updateNotificationUI();
     }
     
@@ -949,125 +830,93 @@
         updateNotificationUI();
     }
     
-    function updateNotificationUI() {
-        const container = document.getElementById('notificationsContainer');
-        const countBadge = document.getElementById('notificationsCount');
-        const pageBadge = document.getElementById('notificationsPageBadge');
-        
-        const unreadCount = userNotifications.filter(n => !n.read).length;
-        
-        if (countBadge) {
-            if (unreadCount > 0) {
-                countBadge.style.display = 'inline-block';
-                countBadge.textContent = unreadCount;
-                document.getElementById('notificationsNavItem').classList.add('has-notification');
-            } else {
-                countBadge.style.display = 'none';
-                document.getElementById('notificationsNavItem').classList.remove('has-notification');
-            }
-        }
-        
-        if (pageBadge) {
-            pageBadge.textContent = `${unreadCount} new`;
-        }
-        
-        if (container) {
-            if (userNotifications.length === 0) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div><div class="card-desc">You\'re all caught up.</div></div></div>';
-                return;
-            }
-            
-            container.innerHTML = userNotifications.sort((a, b) => new Date(b.date) - new Date(a.date)).map(notif => `
-                <div class="notification-card-wrapper" data-id="${notif.id}">
-                    <div class="notification-delete" onclick="deleteNotification(${notif.id})"><i class="fas fa-trash-alt"></i></div>
-                    <div class="notification-card ${!notif.read ? 'unread' : ''}" id="notif-${notif.id}">
-                        <div class="notification-card-header">
-                            <div class="notification-title">
-                                <i class="${notif.icon || 'fas fa-bell'}" style="color: ${notif.color || '#3b82f6'}"></i>
-                                ${escapeHtml(notif.title)}
-                                ${!notif.read ? '<span class="section-badge" style="background: var(--primary);">New</span>' : ''}
-                            </div>
-                        </div>
-                        <div class="card-desc">${escapeHtml(notif.message)}</div>
-                        <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(notif.date)}</div>
-                        <div class="notification-actions">
-                            ${!notif.read ? `<button onclick="markAsRead(${notif.id})"><i class="fas fa-check"></i> Mark as read</button>` : ''}
-                            <button onclick="deleteNotification(${notif.id})"><i class="fas fa-trash-alt"></i> Delete</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            // Add swipe listeners after rendering
-            document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
-                let startX = 0;
-                let currentX = 0;
-                let isSwiping = false;
-                const card = wrapper.querySelector('.notification-card');
-                
-                wrapper.addEventListener('touchstart', (e) => {
-                    startX = e.touches[0].clientX;
-                    isSwiping = true;
-                });
-                
-                wrapper.addEventListener('touchmove', (e) => {
-                    if (!isSwiping) return;
-                    currentX = e.touches[0].clientX;
-                    const deltaX = currentX - startX;
-                    if (Math.abs(deltaX) > 20) {
-                        e.preventDefault();
-                        card.style.transform = `translateX(${deltaX}px)`;
-                    }
-                });
-                
-                wrapper.addEventListener('touchend', (e) => {
-                    if (!isSwiping) return;
-                    const deltaX = currentX - startX;
-                    const threshold = 80;
-                    if (deltaX > threshold) {
-                        // Swipe right -> delete
-                        card.style.transform = 'translateX(100%)';
-                        setTimeout(() => {
-                            deleteNotification(parseInt(wrapper.dataset.id));
-                        }, 200);
-                    } else if (deltaX < -threshold) {
-                        // Swipe left -> delete (same action)
-                        card.style.transform = 'translateX(-100%)';
-                        setTimeout(() => {
-                            deleteNotification(parseInt(wrapper.dataset.id));
-                        }, 200);
-                    } else {
-                        card.style.transform = '';
-                    }
-                    isSwiping = false;
-                    startX = 0;
-                    currentX = 0;
-                });
-            });
-        }
-    }
-    
     function formatDate(dateStr) {
         const date = new Date(dateStr);
         const now = new Date();
         const diffMs = now - date;
         const diffMins = Math.floor(diffMs / 60000);
-        const diffHours = Math.floor(diffMs / 3600000);
-        const diffDays = Math.floor(diffMs / 86400000);
-        
         if (diffMins < 1) return 'Just now';
         if (diffMins < 60) return `${diffMins} minutes ago`;
-        if (diffHours < 24) return `${diffHours} hours ago`;
-        if (diffDays === 1) return 'Yesterday';
+        if (diffMins < 1440) return `${Math.floor(diffMins / 60)} hours ago`;
         return date.toLocaleDateString();
     }
     
-    function markAsRead(id) {
-        const notif = userNotifications.find(n => n.id === id);
-        if (notif) {
-            notif.read = true;
-            saveNotifications();
+    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
+        const newNotif = {
+            id: Date.now(),
+            title, message, icon, color,
+            date: new Date().toISOString(),
+            read: false
+        };
+        userNotifications.unshift(newNotif);
+        saveNotifications();
+        showToast(`New: ${title}`);
+        // Play sound (optional)
+        try {
+            new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3').play().catch(() => {});
+        } catch(e) {}
+    }
+    
+    function updateNotificationUI() {
+        const container = document.getElementById('notificationsContainer');
+        const countBadge = document.getElementById('notificationsCount');
+        const pageBadge = document.getElementById('notificationsPageBadge');
+        const unreadCount = userNotifications.filter(n => !n.read).length;
+        
+        if (countBadge) {
+            countBadge.style.display = unreadCount ? 'inline-block' : 'none';
+            countBadge.textContent = unreadCount;
+            document.getElementById('notificationsNavItem').classList.toggle('has-notification', unreadCount > 0);
         }
+        if (pageBadge) pageBadge.textContent = `${unreadCount} new`;
+        
+        if (!container) return;
+        if (!userNotifications.length) {
+            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
+            return;
+        }
+        
+        container.innerHTML = userNotifications.sort((a,b) => new Date(b.date) - new Date(a.date)).map(n => `
+            <div class="notification-card-wrapper" data-id="${n.id}">
+                <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
+                <div class="notification-card ${!n.read ? 'unread' : ''}">
+                    <div class="card-title">
+                        <i class="${n.icon}" style="color: ${n.color}"></i> ${escapeHtml(n.title)}
+                        ${!n.read ? '<span class="section-badge" style="background: var(--primary);">New</span>' : ''}
+                    </div>
+                    <div class="card-desc">${escapeHtml(n.message)}</div>
+                    <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(n.date)}</div>
+                    <div class="notification-actions">
+                        ${!n.read ? `<button onclick="markAsRead(${n.id})"><i class="fas fa-check"></i> Mark read</button>` : ''}
+                        <button onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Swipe handlers for touch devices
+        document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
+            let startX = 0, isSwiping = false;
+            const card = wrapper.querySelector('.notification-card');
+            wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; isSwiping = true; });
+            wrapper.addEventListener('touchmove', (e) => {
+                if (!isSwiping) return;
+                const delta = e.touches[0].clientX - startX;
+                if (Math.abs(delta) > 20) card.style.transform = `translateX(${delta}px)`;
+            });
+            wrapper.addEventListener('touchend', (e) => {
+                if (!isSwiping) return;
+                const delta = e.changedTouches[0].clientX - startX;
+                if (Math.abs(delta) > 80) deleteNotification(parseInt(wrapper.dataset.id));
+                else card.style.transform = '';
+                isSwiping = false;
+            });
+        });
+    }
+    
+    function markAsRead(id) {
+        const n = userNotifications.find(n => n.id === id);
+        if (n) { n.read = true; saveNotifications(); }
     }
     
     function deleteNotification(id) {
@@ -1076,264 +925,122 @@
         showToast('Notification deleted');
     }
     
-    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
-        const newNotif = {
-            id: Date.now(),
-            title: title,
-            message: message,
-            date: new Date().toISOString(),
-            read: false,
-            icon: icon,
-            color: color
-        };
-        userNotifications.unshift(newNotif);
-        saveNotifications();
-        
-        // Send browser notification
-        sendBrowserNotification(title, message);
-        
-        // Show toast
-        showToast(`New notification: ${title}`);
-        
-        return newNotif;
-    }
+    window.markAsRead = markAsRead;
+    window.deleteNotification = deleteNotification;
     
-    // Check for new notifications from server (broadcast/individual)
-    let lastNotificationCheck = 0;
-    let lastNotificationIds = [];
-    
-    async function checkForNewServerNotifications() {
-        try {
-            const response = await fetch('/api/data');
-            if (!response.ok) throw new Error('Network error');
-            const data = await response.json();
-            const serverNotifications = data.notifications || [];
-            
-            // Compare with stored local IDs (using localStorage to track seen server notification IDs)
-            let seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
-            const newNotifs = serverNotifications.filter(n => !seenIds.includes(n.id));
-            
-            for (const notif of newNotifs) {
-                addNotification(notif.title, notif.message, notif.icon, notif.color);
-                seenIds.push(notif.id);
-            }
-            localStorage.setItem('seenNotificationIds', JSON.stringify(seenIds));
-        } catch (error) {
-            console.error('Failed to check server notifications:', error);
-        }
-    }
-    
-    // ---------- API Integration for content ----------
-    let cachedData = null;
-    let lastFetch = 0;
-    const CACHE_TTL = 30000;
-
+    // ==================== DATA FETCHING ====================
+    let cachedData = null, lastFetch = 0;
     async function fetchData() {
         const now = Date.now();
-        if (cachedData && (now - lastFetch) < CACHE_TTL) {
-            return cachedData;
-        }
+        if (cachedData && (now - lastFetch) < 30000) return cachedData;
         try {
-            const response = await fetch('/api/data');
-            if (!response.ok) throw new Error('Network error');
-            cachedData = await response.json();
+            const res = await fetch('/api/data');
+            cachedData = await res.json();
             lastFetch = now;
             return cachedData;
-        } catch (error) {
-            console.error('Failed to fetch data:', error);
-            return cachedData || { news: [], digital: [], local: [], phone: [], products: [], social: [] };
-        }
+        } catch (err) { return cachedData || {}; }
     }
-
-    // Render functions
+    
     function renderNews(news) {
         const container = document.getElementById('newsContainer');
         if (!container) return;
-        if (!news || news.length === 0) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news</div><div class="card-desc">Check back later for updates.</div></div></div>';
-            return;
-        }
-        const activeNews = news.filter(n => n.enabled !== false);
-        if (activeNews.length === 0) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No active news</div><div class="card-desc">Check back later for updates.</div></div></div>';
-            return;
-        }
-        container.innerHTML = activeNews.map(item => `
-            <div class="slim-card">
-                <div class="card-content">
-                    <div class="card-title">
-                        <i class="${item.icon || 'fas fa-newspaper'}" style="color: ${item.color || '#3b82f6'}"></i>
-                        ${escapeHtml(item.title)}
-                    </div>
-                    <div class="card-desc">${escapeHtml(item.description)}</div>
-                </div>
-            </div>
+        const active = (news || []).filter(n => n.enabled !== false);
+        if (!active.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news</div></div></div>'; return; }
+        container.innerHTML = active.map(item => `
+            <div class="slim-card"><div class="card-content"><div class="card-title"><i class="${item.icon || 'fas fa-newspaper'}" style="color: ${item.color || '#3b82f6'}"></i> ${escapeHtml(item.title)}</div><div class="card-desc">${escapeHtml(item.description)}</div></div></div>
         `).join('');
     }
-
-    function renderServices(containerId, services, emptyMessage, iconClass) {
+    
+    function renderServices(containerId, services, icon) {
         const container = document.getElementById(containerId);
         if (!container) return;
-        if (!services || services.length === 0) {
-            container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${iconClass}"></i> ${emptyMessage}</div><div class="card-desc">No services available.</div></div></div>`;
-            return;
-        }
-        const activeServices = services.filter(s => s.enabled !== false);
-        if (activeServices.length === 0) {
-            container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${iconClass}"></i> No active services</div><div class="card-desc">Check back later.</div></div></div>`;
-            return;
-        }
-        container.innerHTML = activeServices.map(service => `
-            <div class="slim-card">
-                ${service.imageUrl ? `<div class="card-media"><img src="${service.imageUrl}" alt="${escapeHtml(service.name)}" loading="lazy"></div>` : ''}
-                <div class="card-content">
-                    <div class="card-title"><i class="${iconClass}"></i> ${escapeHtml(service.name)}</div>
-                    <div class="card-desc">${escapeHtml(service.description)}</div>
-                </div>
-            </div>
+        const active = (services || []).filter(s => s.enabled !== false);
+        if (!active.length) { container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; }
+        container.innerHTML = active.map(s => `
+            <div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>
         `).join('');
     }
-
+    
     function renderProducts(products) {
         const container = document.getElementById('productsContainer');
         if (!container) return;
-        if (!products || products.length === 0) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products</div><div class="card-desc">New products will appear here.</div></div></div>';
-            return;
-        }
-        const activeProducts = products.filter(p => p.enabled !== false);
-        if (activeProducts.length === 0) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No active products</div><div class="card-desc">Check back later.</div></div></div>';
-            return;
-        }
-        container.innerHTML = activeProducts.map(product => `
-            <div class="slim-card">
-                ${product.imageUrl ? `<div class="card-media"><img src="${product.imageUrl}" alt="${escapeHtml(product.name)}" loading="lazy"></div>` : ''}
-                <div class="card-content">
-                    <div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(product.name)}</div>
-                    <div class="card-desc">${escapeHtml(product.description)}</div>
-                </div>
-            </div>
+        const active = (products || []).filter(p => p.enabled !== false);
+        if (!active.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products</div></div></div>'; return; }
+        container.innerHTML = active.map(p => `
+            <div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>
         `).join('');
     }
-
+    
     function renderSocial(social) {
         const container = document.getElementById('socialContainer');
         if (!container) return;
-        if (!social || social.length === 0) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div><div class="card-desc">Follow us on social media for updates.</div></div></div>';
-            return;
-        }
+        if (!social || !social.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>'; return; }
         container.innerHTML = social.map(item => `
-            <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer" class="slim-card" style="text-decoration: none; display: block;">
+            <a href="${escapeHtml(item.url)}" target="_blank" class="slim-card" style="text-decoration: none;">
                 <div class="card-content" style="text-align: center;">
                     <i class="${escapeHtml(item.icon)}" style="font-size: 2.5rem; color: ${item.color}; margin-bottom: 12px; display: inline-block;"></i>
                     <div class="card-title" style="justify-content: center;">${escapeHtml(item.name)}</div>
-                    <div class="card-desc" style="word-break: break-all;">${escapeHtml(item.url)}</div>
+                    <div class="card-desc">${escapeHtml(item.url)}</div>
                 </div>
             </a>
         `).join('');
     }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // Load all data and render
+    
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+    
     async function loadAndRender() {
         const data = await fetchData();
         if (data) {
-            renderNews(data.news || []);
-            renderServices('digitalContainer', data.digital || [], 'No digital services', 'fas fa-code');
-            renderServices('localContainer', data.local || [], 'No local services', 'fas fa-print');
-            renderServices('phoneContainer', data.phone || [], 'No phone services', 'fas fa-mobile-alt');
-            renderProducts(data.products || []);
-            renderSocial(data.social || []);
-            
+            renderNews(data.news);
+            renderServices('digitalContainer', data.digital, 'fas fa-code');
+            renderServices('localContainer', data.local, 'fas fa-print');
+            renderServices('phoneContainer', data.phone, 'fas fa-mobile-alt');
+            renderProducts(data.products);
+            renderSocial(data.social);
             const newsBadge = document.getElementById('newsBadge');
-            if (newsBadge && data.news) {
-                const activeNews = data.news.filter(n => n.enabled !== false).length;
-                newsBadge.textContent = `${activeNews} Updates`;
-            }
+            if (newsBadge && data.news) newsBadge.textContent = `${data.news.filter(n => n.enabled !== false).length} Updates`;
         }
     }
-
-    // Support form submission
+    
+    // Support form
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const service = document.getElementById('serviceSelect').value;
             const topic = document.getElementById('topicInput').value.trim();
-            const details = document.getElementById('detailsInput').value.trim();
-            
-            if (!topic) {
-                formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a topic.</span>';
-                return;
-            }
-            
+            if (!topic) { formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a topic.</span>'; return; }
             try {
-                const response = await fetch('/api/support', {
+                const res = await fetch('/api/support', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         sender: "App User",
-                        field: service,
+                        field: document.getElementById('serviceSelect').value,
                         subject: topic,
-                        details: details
+                        details: document.getElementById('detailsInput').value
                     })
                 });
-                
-                if (response.ok) {
-                    showToast('Request sent! We\'ll reply within 24h.', false);
-                    formMsg.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Request sent! We\'ll reply within 24h.</span>';
+                if (res.ok) {
+                    formMsg.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Request sent!</span>';
                     supportForm.reset();
-                    setTimeout(() => formMsg.innerHTML = '', 4000);
-                    
-                    // Add a notification that the request was sent
-                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted. We'll reply within 24 hours.`, 'fas fa-headset', '#10b981');
-                } else {
-                    throw new Error('Server error');
-                }
-            } catch (error) {
-                showToast('Failed to send. Please try again.', true);
-                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again.</span>';
+                    setTimeout(() => formMsg.innerHTML = '', 3000);
+                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`);
+                } else throw new Error();
+            } catch (err) {
+                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send.</span>';
                 setTimeout(() => formMsg.innerHTML = '', 3000);
             }
         });
     }
-
+    
     // Initialize
     loadNotifications();
     loadAndRender();
+    setInterval(() => { if (document.hasFocus()) loadAndRender(); }, 30000);
     
-    // Check for server notifications every 30 seconds
-    setInterval(() => {
-        if (document.hasFocus()) {
-            loadAndRender();
-            checkForNewServerNotifications();
-        }
-    }, 30000);
-    
-    // Make functions globally available
-    window.markAsRead = markAsRead;
-    window.deleteNotification = deleteNotification;
-    
-    // Register service worker for PWA
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(reg => {
-            console.log('Service Worker registered');
-        }).catch(err => {
-            console.log('Service Worker registration failed:', err);
-        });
-    }
+    // Register service worker
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(console.log);
 </script>
 </body>
 </html>
