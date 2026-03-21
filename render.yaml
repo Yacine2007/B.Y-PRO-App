@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: bypro-admin-server
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: "B.Y PRO App"
+      - key: JSON_BIN_ID
+        sync: false
+      - key: JSON_BIN_MASTER_KEY
+        sync: false
+    healthCheckPath: /api/health
+    plan: free
