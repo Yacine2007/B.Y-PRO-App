@@ -2,9 +2,14 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" href="https://by-pro.kesug.com/B.Y%20PRO.png" type="image/png">
+    <link rel="icon" href="https://by-pro.kesug.com/App.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png">
+    <link rel="manifest" href="/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#0066cc">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO">
     <title>B.Y PRO — Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -27,6 +32,7 @@
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --transition: all 0.2s ease;
             --notification-badge: #ef4444;
+            --swipe-threshold: 80px;
         }
 
         .dark-theme {
@@ -165,7 +171,6 @@
         .nav-item.has-notification {
             position: relative;
         }
-        
         .nav-item.has-notification::after {
             content: '';
             position: absolute;
@@ -309,6 +314,100 @@
             margin-bottom: 40px;
         }
 
+        /* Notification Card with swipe and delete */
+        .notification-card-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--card-radius);
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .notification-card {
+            background: var(--surface);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border);
+            padding: 20px;
+            transition: var(--transition);
+            position: relative;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .notification-card.unread {
+            border-left: 4px solid var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .notification-card.swiped-left {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification-card.swiped-right {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification-delete {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 70px;
+            background: var(--danger);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1;
+            border-radius: var(--card-radius);
+            transition: all 0.2s;
+        }
+
+        .notification-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .notification-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+            justify-content: flex-end;
+        }
+
+        .notification-actions button {
+            background: transparent;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+        .notification-actions button:hover {
+            background: var(--border);
+            transform: none;
+        }
+
+        /* Other cards */
         .slim-card {
             background: var(--surface);
             border-radius: var(--card-radius);
@@ -360,42 +459,6 @@
             color: var(--text-muted);
             font-size: 0.85rem;
             margin-bottom: 16px;
-        }
-
-        /* Notification Card Specific */
-        .notification-card {
-            background: var(--surface);
-            border-radius: var(--card-radius);
-            border: 1px solid var(--border);
-            padding: 20px;
-            transition: var(--transition);
-            position: relative;
-        }
-        
-        .notification-card.unread {
-            border-left: 4px solid var(--primary);
-            background: rgba(59, 130, 246, 0.05);
-        }
-        
-        .notification-card .notification-time {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-        
-        .mark-read-btn {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            padding: 4px 8px;
-        }
-        
-        .mark-read-btn:hover {
-            background: var(--border);
-            transform: none;
         }
 
         /* Form styles */
@@ -566,7 +629,6 @@
             color: #10b981;
         }
 
-        /* Enable notifications button */
         .enable-notif-btn {
             background: transparent;
             border: 1px solid var(--border);
@@ -590,7 +652,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <img src="https://by-pro.kesug.com/B.Y%20PRO.png" alt="B.Y PRO Logo">
+                <img src="https://by-pro.kesug.com/App.png" alt="B.Y PRO Logo">
             </div>
             <span class="sidebar-title">B.Y PRO</span>
         </div>
@@ -842,7 +904,7 @@
         }
     }
     
-    function sendBrowserNotification(title, body, icon = 'https://by-pro.kesug.com/B.Y%20PRO.png') {
+    function sendBrowserNotification(title, body, icon = 'https://by-pro.kesug.com/App.png') {
         if (notificationPermission && 'Notification' in window) {
             new Notification(title, { body, icon });
         }
@@ -853,15 +915,13 @@
         notificationPermission = true;
     }
     
-    // Enable notifications button
     const enableNotifBtn = document.getElementById('enableNotificationsBtn');
     if (enableNotifBtn) {
         enableNotifBtn.addEventListener('click', requestNotificationPermission);
     }
 
     // ---------- NOTIFICATIONS DATA ----------
-    let userNotifications = []; // { id, title, message, date, read }
-    let lastNotificationCheck = 0;
+    let userNotifications = []; // { id, title, message, date, read, icon, color, type }
     
     // Load notifications from localStorage initially
     function loadNotifications() {
@@ -869,13 +929,15 @@
         if (saved) {
             userNotifications = JSON.parse(saved);
         } else {
-            // Add welcome notification
+            // Add welcome notification with icon
             userNotifications = [{
                 id: Date.now(),
                 title: 'Welcome to B.Y PRO!',
                 message: 'Thank you for using our services. You will receive important updates here.',
                 date: new Date().toISOString(),
-                read: false
+                read: false,
+                icon: 'fas fa-smile-wink',
+                color: '#3b82f6'
             }];
             saveNotifications();
         }
@@ -916,16 +978,72 @@
             }
             
             container.innerHTML = userNotifications.sort((a, b) => new Date(b.date) - new Date(a.date)).map(notif => `
-                <div class="notification-card ${!notif.read ? 'unread' : ''}">
-                    <div class="card-title">
-                        <i class="fas fa-bell"></i> ${escapeHtml(notif.title)}
-                        ${!notif.read ? '<span class="section-badge" style="background: var(--primary);">New</span>' : ''}
+                <div class="notification-card-wrapper" data-id="${notif.id}">
+                    <div class="notification-delete" onclick="deleteNotification(${notif.id})"><i class="fas fa-trash-alt"></i></div>
+                    <div class="notification-card ${!notif.read ? 'unread' : ''}" id="notif-${notif.id}">
+                        <div class="notification-card-header">
+                            <div class="notification-title">
+                                <i class="${notif.icon || 'fas fa-bell'}" style="color: ${notif.color || '#3b82f6'}"></i>
+                                ${escapeHtml(notif.title)}
+                                ${!notif.read ? '<span class="section-badge" style="background: var(--primary);">New</span>' : ''}
+                            </div>
+                        </div>
+                        <div class="card-desc">${escapeHtml(notif.message)}</div>
+                        <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(notif.date)}</div>
+                        <div class="notification-actions">
+                            ${!notif.read ? `<button onclick="markAsRead(${notif.id})"><i class="fas fa-check"></i> Mark as read</button>` : ''}
+                            <button onclick="deleteNotification(${notif.id})"><i class="fas fa-trash-alt"></i> Delete</button>
+                        </div>
                     </div>
-                    <div class="card-desc">${escapeHtml(notif.message)}</div>
-                    <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(notif.date)}</div>
-                    ${!notif.read ? `<button class="mark-read-btn" onclick="markAsRead(${notif.id})"><i class="fas fa-check"></i> Mark as read</button>` : ''}
                 </div>
             `).join('');
+            
+            // Add swipe listeners after rendering
+            document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
+                let startX = 0;
+                let currentX = 0;
+                let isSwiping = false;
+                const card = wrapper.querySelector('.notification-card');
+                
+                wrapper.addEventListener('touchstart', (e) => {
+                    startX = e.touches[0].clientX;
+                    isSwiping = true;
+                });
+                
+                wrapper.addEventListener('touchmove', (e) => {
+                    if (!isSwiping) return;
+                    currentX = e.touches[0].clientX;
+                    const deltaX = currentX - startX;
+                    if (Math.abs(deltaX) > 20) {
+                        e.preventDefault();
+                        card.style.transform = `translateX(${deltaX}px)`;
+                    }
+                });
+                
+                wrapper.addEventListener('touchend', (e) => {
+                    if (!isSwiping) return;
+                    const deltaX = currentX - startX;
+                    const threshold = 80;
+                    if (deltaX > threshold) {
+                        // Swipe right -> delete
+                        card.style.transform = 'translateX(100%)';
+                        setTimeout(() => {
+                            deleteNotification(parseInt(wrapper.dataset.id));
+                        }, 200);
+                    } else if (deltaX < -threshold) {
+                        // Swipe left -> delete (same action)
+                        card.style.transform = 'translateX(-100%)';
+                        setTimeout(() => {
+                            deleteNotification(parseInt(wrapper.dataset.id));
+                        }, 200);
+                    } else {
+                        card.style.transform = '';
+                    }
+                    isSwiping = false;
+                    startX = 0;
+                    currentX = 0;
+                });
+            });
         }
     }
     
@@ -952,13 +1070,21 @@
         }
     }
     
-    function addNotification(title, message) {
+    function deleteNotification(id) {
+        userNotifications = userNotifications.filter(n => n.id !== id);
+        saveNotifications();
+        showToast('Notification deleted');
+    }
+    
+    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
         const newNotif = {
             id: Date.now(),
             title: title,
             message: message,
             date: new Date().toISOString(),
-            read: false
+            read: false,
+            icon: icon,
+            color: color
         };
         userNotifications.unshift(newNotif);
         saveNotifications();
@@ -972,42 +1098,31 @@
         return newNotif;
     }
     
-    // Check for new support replies from server (every 30 seconds)
-    let lastSupportCheck = 0;
-    let lastSupportCount = 0;
+    // Check for new notifications from server (broadcast/individual)
+    let lastNotificationCheck = 0;
+    let lastNotificationIds = [];
     
-    async function checkForNewSupportReplies() {
+    async function checkForNewServerNotifications() {
         try {
             const response = await fetch('/api/data');
             if (!response.ok) throw new Error('Network error');
             const data = await response.json();
-            const supportMessages = data.support || [];
+            const serverNotifications = data.notifications || [];
             
-            if (supportMessages.length > lastSupportCount) {
-                const newMessages = supportMessages.slice(lastSupportCount);
-                for (const msg of newMessages) {
-                    addNotification(
-                        `Support Reply: ${msg.subject}`,
-                        `From: ${msg.sender || 'Support Team'}\n${msg.details.substring(0, 100)}${msg.details.length > 100 ? '...' : ''}`
-                    );
-                }
-                lastSupportCount = supportMessages.length;
+            // Compare with stored local IDs (using localStorage to track seen server notification IDs)
+            let seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
+            const newNotifs = serverNotifications.filter(n => !seenIds.includes(n.id));
+            
+            for (const notif of newNotifs) {
+                addNotification(notif.title, notif.message, notif.icon, notif.color);
+                seenIds.push(notif.id);
             }
+            localStorage.setItem('seenNotificationIds', JSON.stringify(seenIds));
         } catch (error) {
-            console.error('Failed to check support replies:', error);
+            console.error('Failed to check server notifications:', error);
         }
     }
     
-    // Start checking for new support replies every 30 seconds
-    setInterval(() => {
-        if (document.hasFocus()) {
-            checkForNewSupportReplies();
-        }
-    }, 30000);
-    
-    // Also check when page loads
-    checkForNewSupportReplies();
-
     // ---------- API Integration for content ----------
     let cachedData = null;
     let lastFetch = 0;
@@ -1046,7 +1161,10 @@
         container.innerHTML = activeNews.map(item => `
             <div class="slim-card">
                 <div class="card-content">
-                    <div class="card-title"><i class="fas fa-newspaper"></i> ${escapeHtml(item.title)}</div>
+                    <div class="card-title">
+                        <i class="${item.icon || 'fas fa-newspaper'}" style="color: ${item.color || '#3b82f6'}"></i>
+                        ${escapeHtml(item.title)}
+                    </div>
                     <div class="card-desc">${escapeHtml(item.description)}</div>
                 </div>
             </div>
@@ -1180,7 +1298,7 @@
                     setTimeout(() => formMsg.innerHTML = '', 4000);
                     
                     // Add a notification that the request was sent
-                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted. We'll reply within 24 hours.`);
+                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted. We'll reply within 24 hours.`, 'fas fa-headset', '#10b981');
                 } else {
                     throw new Error('Server error');
                 }
@@ -1192,20 +1310,30 @@
         });
     }
 
-    // Initialize notifications and load data
+    // Initialize
     loadNotifications();
     loadAndRender();
-
-    // Refresh content every 30 seconds
+    
+    // Check for server notifications every 30 seconds
     setInterval(() => {
         if (document.hasFocus()) {
             loadAndRender();
-            checkForNewSupportReplies();
+            checkForNewServerNotifications();
         }
     }, 30000);
     
-    // Mark as read function globally
+    // Make functions globally available
     window.markAsRead = markAsRead;
+    window.deleteNotification = deleteNotification;
+    
+    // Register service worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+            console.log('Service Worker registered');
+        }).catch(err => {
+            console.log('Service Worker registration failed:', err);
+        });
+    }
 </script>
 </body>
 </html>
