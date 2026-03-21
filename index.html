@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="http://by-pro.kesug.com/B.Y%20PRO.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
+    <title>B.Y PRO — Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --text: #111111;
+            --text-muted: #4a4a4a;
+            --border: #e5e5e5;
+            --primary: #0066cc;
+            --card-radius: 24px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.2s ease;
+        }
+
+        .dark-theme {
+            --bg: #000000;
+            --surface: #1a1a1a;
+            --text: #ffffff;
+            --text-muted: #b0b0b0;
+            --border: #333333;
+            --primary: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            line-height: 1.5;
+        }
+
+        /* Menu button with bracket > */
+        .menu-trigger {
+            position: fixed;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            border-radius: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .dark-theme .menu-trigger {
+            background: rgba(30, 30, 40, 0.8);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: var(--primary);
+        }
+
+        .menu-trigger.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-50%) scale(0.9);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.05);
+            overflow-y: auto;
+            box-shadow: 2px 0 25px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.mobile-open {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .sidebar-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--primary), #6c5ce7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-nav {
+            padding: 20px 16px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            margin-bottom: 6px;
+            border-radius: 14px;
+            color: var(--text-muted);
+            transition: all 0.18s ease;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .nav-item i, .nav-item img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .nav-item:hover {
+            background: rgba(0, 102, 204, 0.08);
+            color: var(--primary);
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: rgba(0, 102, 204, 0.12);
+            color: var(--primary);
+            border-left: 3px solid var(--primary);
+        }
+
+        .theme-switch-sidebar {
+            margin: 20px 16px;
+            padding: 16px;
+            background: var(--bg);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            padding: 24px 32px;
+            width: 100%;
+        }
+
+        /* Account Circle */
+        .account-circle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px auto;
+            cursor: pointer;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), #6c5ce7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 500;
+            color: white;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        /* Modal Popup */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--surface);
+            border-radius: 28px;
+            padding: 32px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            color: var(--primary);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 1rem;
+        }
+
+        .info-row span:first-child {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .info-row span:last-child {
+            color: var(--text);
+        }
+
+        .close-modal {
+            margin-top: 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .slim-card {
+            background: var(--surface);
+            border-radius: var(--card-radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .slim-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-media {
+            height: 160px;
+            overflow: hidden;
+        }
+
+        .card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .slim-card:hover .card-media img {
+            transform: scale(1.03);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .card-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .card-list li i {
+            width: 18px;
+            font-size: 0.7rem;
+            color: var(--primary);
+        }
+
+        /* Form styles */
+        .support-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            color: var(--text);
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.18s ease;
+        }
+
+        .hours-badge {
+            background: #10b981;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .section-badge {
+            background: var(--primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .section-page {
+            display: none;
+        }
+
+        .section-page.active-page {
+            display: block;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 99;
+            display: none;
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.2s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 20px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .avatar { width: 100px; height: 100px; font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- Menu button with bracket > -->
+    <div class="menu-trigger" id="menuTrigger">
+        <span>&gt;</span>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="http://by-pro.kesug.com/B.Y%20PRO.png" alt="B.Y PRO Logo">
+            </div>
+            <span class="sidebar-title">B.Y PRO</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
+            <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span></div>
+            <div class="nav-item" data-page="digitalServices"><i class="fas fa-code"></i><span>Digital Services</span></div>
+            <div class="nav-item" data-page="digitalProducts"><i class="fas fa-cubes"></i><span>Digital Products</span></div>
+            <div class="nav-item" data-page="platformsProducts"><i class="fas fa-th-large"></i><span>Our Platforms/Products</span></div>
+            <div class="nav-item" data-external="https://store-pro.great-site.net">
+                <img src="https://store-pro.great-site.net/favicon.png" style="width:20px;height:20px;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'">
+                <span>Store</span>
+                <i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.7rem;"></i>
+            </div>
+            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
+            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
+        </nav>
+        <div class="theme-switch-sidebar">
+            <span><i class="fas fa-moon"></i> Dark Mode</span>
+            <label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label>
+        </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- HOME SECTION (with account circle) -->
+        <div id="homePage" class="section-page active-page">
+            <div class="section-header">
+                <h1 class="section-title">Home</h1>
+                <span class="section-badge">Account</span>
+            </div>
+            <div class="account-circle" id="accountCircle">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS (blank) -->
+        <div id="notificationsPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Notifications</h1><span class="section-badge">Empty</span></div>
+            <div class="slim-card">
+                <div class="card-content">
+                    <div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div>
+                    <div class="card-desc">You're all caught up.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIGITAL SERVICES (full with images) -->
+        <div id="digitalServicesPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div>
+            <div class="cards-grid">
+                <div class="slim-card">
+                    <div class="card-media"><img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=160&fit=crop" alt="Programming"></div>
+                    <div class="card-content">
+                        <div class="card-title">Programming & Development</div>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Custom software</li>
+                            <li><i class="fas fa-check"></i> Web & e-commerce</li>
+                            <li><i class="fas fa-check"></i> Mobile apps (iOS/Android)</li>
+                            <li><i class="fas fa-check"></i> AI & machine learning</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slim-card">
+                    <div class="card-media"><img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?w=400&h=160&fit=crop" alt="Hardware"></div>
+                    <div class="card-content">
+                        <div class="card-title">Hardware & Repair</div>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Computer repair & diagnostics</li>
+                            <li><i class="fas fa-check"></i> Hardware upgrades</li>
+                            <li><i class="fas fa-check"></i> Network configuration</li>
+                            <li><i class="fas fa-check"></i> Preventive maintenance</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slim-card">
+                    <div class="card-media"><img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=160&fit=crop" alt="Design"></div>
+                    <div class="card-content">
+                        <div class="card-title">Design & Graphics</div>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Logo & brand identity</li>
+                            <li><i class="fas fa-check"></i> UI/UX design</li>
+                            <li><i class="fas fa-check"></i> 3D modeling & animation</li>
+                            <li><i class="fas fa-check"></i> Marketing materials</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slim-card">
+                    <div class="card-media"><img src="https://images.pexels.com/photos/257904/pexels-photo-257904.jpeg?w=400&h=160&fit=crop" alt="Video"></div>
+                    <div class="card-content">
+                        <div class="card-title">Video Editing & Montage</div>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Professional video editing</li>
+                            <li><i class="fas fa-check"></i> Motion graphics & VFX</li>
+                            <li><i class="fas fa-check"></i> Color correction</li>
+                            <li><i class="fas fa-check"></i> Audio editing</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slim-card">
+                    <div class="card-media"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&h=160&fit=crop" alt="Marketing"></div>
+                    <div class="card-content">
+                        <div class="card-title">Marketing & Digital Brokerage</div>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Social media growth</li>
+                            <li><i class="fas fa-check"></i> Influencer marketing</li>
+                            <li><i class="fas fa-check"></i> Account brokerage</li>
+                            <li><i class="fas fa-check"></i> Digital product marketing</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="slim-card">
+                    <div class="card-media"><img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=160&fit=crop" alt="Cyber"></div>
+                    <div class="card-content">
+                        <div class="card-title">Cyber & Internet Services</div>
+                        <ul class="card-list">
+                            <li><i class="fas fa-check"></i> Internet research & browsing</li>
+                            <li><i class="fas fa-check"></i> Online form filling</li>
+                            <li><i class="fas fa-check"></i> Digital registration</li>
+                            <li><i class="fas fa-check"></i> Email setup & management</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIGITAL PRODUCTS (empty) -->
+        <div id="digitalProductsPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Digital Products</h1><span class="section-badge">Empty</span></div>
+            <div class="slim-card">
+                <div class="card-content">
+                    <div class="card-title"><i class="fas fa-box-open"></i> No products</div>
+                    <div class="card-desc">This section is currently empty.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OUR PLATFORMS/PRODUCTS (empty) -->
+        <div id="platformsProductsPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Our Platforms/Products</h1><span class="section-badge">Empty</span></div>
+            <div class="slim-card">
+                <div class="card-content">
+                    <div class="card-title"><i class="fas fa-th-large"></i> Coming soon</div>
+                    <div class="card-desc">This section will showcase our platforms and products.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOCIAL MEDIA (empty) -->
+        <div id="socialPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Empty</span></div>
+            <div class="slim-card">
+                <div class="card-content">
+                    <div class="card-title"><i class="fas fa-share-alt"></i> Connect</div>
+                    <div class="card-desc">No social media links configured.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPPORT (24/7) -->
+        <div id="supportPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
+            <div class="slim-card">
+                <div class="card-content">
+                    <div class="hours-badge"><i class="fas fa-clock"></i> Available 24 hours / 7 days a week</div>
+                    <form id="supportRequestForm" class="support-form">
+                        <div class="form-group">
+                            <select id="serviceSelect" required>
+                                <option value="">Select a service</option>
+                                <option>Digital Services</option>
+                                <option>Digital Products</option>
+                                <option>Store</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="topicInput" placeholder="Topic / Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="detailsInput" rows="3" placeholder="Describe your request..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit Request</button>
+                    </form>
+                    <div id="formMessage" style="margin-top: 12px;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Account Popup Modal -->
+<div class="modal-overlay" id="accountModal">
+    <div class="modal-card">
+        <h3><i class="fas fa-user-circle"></i> Account Details</h3>
+        <div class="info-row"><span>Name:</span><span>Alex Johnson</span></div>
+        <div class="info-row"><span>ID:</span><span>BY-2024-001</span></div>
+        <div class="info-row"><span>Email:</span><span>alex@bypro.com</span></div>
+        <button class="close-modal" id="closeModalBtn">Close</button>
+    </div>
+</div>
+
+<script>
+    // Theme
+    const themeToggle = document.getElementById('themeToggleSidebar');
+    if (localStorage.getItem('darkTheme') === 'true') {
+        document.documentElement.classList.add('dark-theme');
+        themeToggle.checked = true;
+    }
+    themeToggle.addEventListener('change', (e) => {
+        if (e.target.checked) document.documentElement.classList.add('dark-theme');
+        else document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('darkTheme', e.target.checked);
+    });
+
+    // Menu button & sidebar
+    const menuTrigger = document.getElementById('menuTrigger');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    function openSidebar() {
+        sidebar.classList.add('mobile-open');
+        overlay.classList.add('active');
+        menuTrigger.classList.add('hidden');
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('active');
+        menuTrigger.classList.remove('hidden');
+    }
+    menuTrigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (sidebar.classList.contains('mobile-open')) closeSidebar();
+        else openSidebar();
+    });
+    overlay.addEventListener('click', closeSidebar);
+
+    // Navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = {
+        home: document.getElementById('homePage'),
+        notifications: document.getElementById('notificationsPage'),
+        digitalServices: document.getElementById('digitalServicesPage'),
+        digitalProducts: document.getElementById('digitalProductsPage'),
+        platformsProducts: document.getElementById('platformsProductsPage'),
+        social: document.getElementById('socialPage'),
+        support: document.getElementById('supportPage')
+    };
+    function navigateTo(pageId) {
+        Object.values(pages).forEach(p => p.classList.remove('active-page'));
+        pages[pageId].classList.add('active-page');
+        navItems.forEach(nav => nav.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+        if (activeNav) activeNav.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closeSidebar();
+    }
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const externalUrl = item.getAttribute('data-external');
+            if (externalUrl) {
+                window.open(externalUrl, '_blank');
+                closeSidebar();
+                return;
+            }
+            const pageId = item.getAttribute('data-page');
+            if (pageId && pages[pageId]) navigateTo(pageId);
+        });
+    });
+
+    // Account circle modal
+    const accountCircle = document.getElementById('accountCircle');
+    const modal = document.getElementById('accountModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    accountCircle.addEventListener('click', () => {
+        modal.classList.add('active');
+    });
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+
+    // Support form submission
+    const supportForm = document.getElementById('supportRequestForm');
+    const formMsg = document.getElementById('formMessage');
+    if (supportForm) {
+        supportForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const topic = document.getElementById('topicInput').value.trim();
+            if (!topic) {
+                formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a topic.</span>';
+                return;
+            }
+            formMsg.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Request sent! We’ll reply within 24h.</span>';
+            supportForm.reset();
+            setTimeout(() => formMsg.innerHTML = '', 4000);
+        });
+    }
+</script>
+</body>
+</html>
