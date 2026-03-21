@@ -9,11 +9,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use(express.static(path.join(__dirname, 'public'))); // Serve static frontend files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure Cloudinary
 cloudinary.config({
@@ -29,17 +28,14 @@ const JSON_BIN_HEADERS = {
     'X-Master-Key': process.env.JSON_BIN_MASTER_KEY,
 };
 
-// Cache data in memory (optional, but reduces API calls)
+// Cache
 let cachedData = null;
 let lastFetch = 0;
-const CACHE_TTL = 30000; // 30 seconds
+const CACHE_TTL = 30000;
 
-// Fetch data from JSON Bin (with cache)
 async function fetchData() {
     const now = Date.now();
-    if (cachedData && (now - lastFetch) < CACHE_TTL) {
-        return cachedData;
-    }
+    if (cachedData && (now - lastFetch) < CACHE_TTL) return cachedData;
     try {
         const response = await axios.get(JSON_BIN_URL, {
             headers: { 'X-Master-Key': process.env.JSON_BIN_MASTER_KEY }
@@ -48,29 +44,24 @@ async function fetchData() {
         lastFetch = now;
         return cachedData;
     } catch (error) {
-        console.error('Error fetching data from JSON Bin:', error.message);
+        console.error('Error fetching data:', error.message);
         throw error;
     }
 }
 
-// Save data to JSON Bin
 async function saveData(data) {
     try {
-        const response = await axios.put(JSON_BIN_URL, data, {
-            headers: JSON_BIN_HEADERS
-        });
-        cachedData = data; // update cache
+        const response = await axios.put(JSON_BIN_URL, data, { headers: JSON_BIN_HEADERS });
+        cachedData = data;
         lastFetch = Date.now();
         return response.data;
     } catch (error) {
-        console.error('Error saving data to JSON Bin:', error.message);
+        console.error('Error saving data:', error.message);
         throw error;
     }
 }
 
-// Routes
-
-// Get all data
+// API Routes
 app.get('/api/data', async (req, res) => {
     try {
         const data = await fetchData();
@@ -80,28 +71,42 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-// Save all data (PUT)
 app.put('/api/data', async (req, res) => {
     try {
-        const newData = req.body;
-        await saveData(newData);
+        await saveData(req.body);
         res.json({ success: true, message: 'Data saved successfully' });
     } catch (error) {
         res.status(500).json({ error: 'Failed to save data' });
     }
 });
 
-// Image upload to Cloudinary
+// NEW: Support message endpoint
+app.post('/api/support', async (req, res) => {
+    try {
+        const newMessage = req.body;
+        newMessage.date = new Date().toISOString();
+        newMessage.id = Date.now();
+        
+        const currentData = await fetchData();
+        const support = currentData.support || [];
+        support.unshift(newMessage); // Add to top
+        currentData.support = support;
+        
+        await saveData(currentData);
+        res.json({ success: true, message: 'Support request received' });
+    } catch (error) {
+        console.error('Support error:', error);
+        res.status(500).json({ error: 'Failed to save support message' });
+    }
+});
+
+// Image upload
 const upload = multer({ storage: multer.memoryStorage() });
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
-        // Convert buffer to base64 for Cloudinary upload
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         const base64 = req.file.buffer.toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${base64}`;
-        
         const result = await cloudinary.uploader.upload(dataURI, {
             folder: process.env.CLOUDINARY_FOLDER || 'B.Y PRO App',
             resource_type: 'auto'
@@ -113,24 +118,10 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 });
 
-// Optional: endpoint for image deletion (if needed)
-app.delete('/api/delete-image', async (req, res) => {
-    try {
-        const { publicId } = req.body;
-        if (!publicId) return res.status(400).json({ error: 'No publicId' });
-        const result = await cloudinary.uploader.destroy(publicId);
-        res.json(result);
-    } catch (error) {
-        res.status(500).json({ error: 'Delete failed' });
-    }
-});
-
-// Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve the admin panel (if it's in public folder)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
