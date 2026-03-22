@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bypro-cache-v1';
+const CACHE_NAME = 'bypro-v1';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -9,14 +9,24 @@ const urlsToCache = [
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
 });
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    caches.match(event.request).then(response => response || fetch(event.request))
   );
+});
+
+// Push notifications support
+self.addEventListener('push', event => {
+  const data = event.data ? event.data.json() : {};
+  const options = {
+    body: data.body || 'New notification',
+    icon: 'https://by-pro.kesug.com/App.png',
+    badge: 'https://by-pro.kesug.com/App.png',
+    vibrate: [200, 100, 200]
+  };
+  event.waitUntil(self.registration.showNotification(data.title || 'B.Y PRO', options));
 });
