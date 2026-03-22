@@ -1,37 +1,99 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    
+    <!-- PWA Meta Tags -->
     <link rel="icon" href="https://by-pro.kesug.com/App.png" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png">
     <link rel="manifest" href="/manifest.json">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <meta name="theme-color" content="#0066cc">
-    <title>B.Y PRO</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
+    <meta name="application-name" content="B.Y PRO App">
+    
+    <title>B.Y PRO App</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
-            --bg: #ffffff; --surface: #f8f9fa; --text: #111111; --text-muted: #4a4a4a;
-            --border: #e5e5e5; --primary: #0066cc; --danger: #ef4444;
-            --card-radius: 24px; --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --text: #111111;
+            --text-muted: #4a4a4a;
+            --border: #e5e5e5;
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --danger: #ef4444;
+            --success: #10b981;
+            --card-radius: 24px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
         }
+
         .dark-theme {
-            --bg: #000000; --surface: #1a1a1a; --text: #ffffff; --text-muted: #b0b0b0;
-            --border: #333333; --primary: #3b82f6;
+            --bg: #000000;
+            --surface: #1a1a1a;
+            --text: #ffffff;
+            --text-muted: #b0b0b0;
+            --border: #333333;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.2s; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            transition: all 0.2s;
+        }
+
+        /* Menu Button */
         .menu-trigger {
-            position: fixed; left: 16px; top: 50%; transform: translateY(-50%); width: 48px; height: 48px;
-            background: rgba(255,255,255,0.9); backdrop-filter: blur(8px); display: flex; align-items: center;
-            justify-content: center; cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.3);
-            border-radius: 24px; font-size: 1.5rem; color: var(--primary);
+            position: fixed;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 24px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: all 0.2s;
         }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
+        .dark-theme .menu-trigger { background: rgba(30,30,40,0.8); border-color: rgba(255,255,255,0.2); }
+
+        /* Sidebar */
         .sidebar {
-            width: 280px; background: var(--surface); border-right: 1px solid var(--border); position: fixed;
-            left: 0; top: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform 0.35s ease;
+            width: 280px;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
             overflow-y: auto;
         }
         .sidebar.mobile-open { transform: translateX(0); }
@@ -45,58 +107,89 @@
         }
         .nav-item i { width: 24px; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
-        .nav-item.has-notification::after {
-            content: ''; position: absolute; right: 16px; width: 8px; height: 8px;
-            background: #ef4444; border-radius: 50%;
-        }
         .theme-switch-sidebar { margin: 20px 16px; padding: 16px; background: var(--bg); border-radius: 16px; display: flex; justify-content: space-between; border: 1px solid var(--border); }
+
+        /* Main Content */
         .main-content { flex: 1; margin-left: 0; padding: 24px 32px; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
         .section-title { font-size: 1.5rem; font-weight: 700; }
         .section-badge { background: var(--primary); color: white; padding: 6px 14px; border-radius: 40px; font-size: 0.75rem; }
+
+        /* Cards */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
         .slim-card { background: var(--surface); border-radius: var(--card-radius); border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
-        .slim-card:hover { transform: translateY(-4px); }
+        .slim-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
         .card-media { height: 160px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
         .card-content { padding: 20px; }
         .card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .card-desc { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* Notification Cards */
         .notification-card-wrapper { position: relative; overflow: hidden; border-radius: var(--card-radius); margin-bottom: 16px; }
         .notification-card { background: var(--surface); border-radius: var(--card-radius); border: 1px solid var(--border); padding: 20px; transition: transform 0.2s; }
         .notification-card.unread { border-left: 4px solid var(--primary); background: rgba(59,130,246,0.05); }
-        .notification-card.new { animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         .notification-delete { position: absolute; right: 0; top: 0; bottom: 0; width: 70px; background: var(--danger); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border-radius: var(--card-radius); opacity: 0; transition: opacity 0.2s; }
         .notification-card-wrapper:hover .notification-delete { opacity: 1; }
         .notification-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
         .notification-actions { display: flex; gap: 12px; margin-top: 12px; justify-content: flex-end; }
-        .notification-actions button { background: transparent; color: var(--text-muted); padding: 4px 8px; font-size: 0.8rem; border: none; cursor: pointer; }
+        .notification-actions button { background: transparent; color: var(--text-muted); padding: 4px 8px; border: none; cursor: pointer; font-size: 0.8rem; }
+
+        /* Form */
         .support-form { margin-top: 20px; }
         .form-group { margin-bottom: 16px; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; color: var(--text); }
         .btn-submit { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 40px; font-weight: 600; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .hours-badge { background: #10b981; color: white; padding: 10px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+        .hours-badge { background: var(--success); color: white; padding: 10px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+
+        .account-circle { display: flex; justify-content: center; margin: 20px auto; cursor: pointer; }
+        .avatar { width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), #6c5ce7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white; }
+
         .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
         .sidebar-overlay.active { display: block; }
         .toggle-switch { position: relative; display: inline-block; width: 52px; height: 28px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-switch input { opacity: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.2s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
-        .toast-notification { position: fixed; bottom: 24px; right: 24px; background: var(--surface); border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-left: 4px solid #10b981; z-index: 2000; transform: translateX(120%); transition: transform 0.3s ease; }
-        .toast-notification.show { transform: translateX(0); }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--surface);
+            border-radius: 50px;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-left: 4px solid var(--success);
+            z-index: 2000;
+            transition: transform 0.3s ease;
+            white-space: nowrap;
+            max-width: 90vw;
+        }
+        .toast-notification.show { transform: translateX(-50%) translateY(0); }
+        .toast-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .toast-message { font-size: 0.85rem; font-weight: 500; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card { background: var(--surface); border-radius: 28px; padding: 32px; width: 90%; max-width: 380px; text-align: center; }
         .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .close-modal { margin-top: 24px; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
+
         @media (max-width: 768px) {
             .main-content { padding: 20px; }
             .cards-grid { grid-template-columns: 1fr; }
             .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; }
+            .toast-notification { padding: 10px 20px; white-space: normal; text-align: center; }
         }
     </style>
 </head>
@@ -106,11 +199,11 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png" alt="Logo"></div>
-            <span class="sidebar-title">B.Y PRO</span>
+            <span class="sidebar-title">B.Y PRO App</span>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
-            <div class="nav-item" data-page="notifications" id="notificationsNavItem"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="notification-badge" style="display: none;"></span></div>
+            <div class="nav-item" data-page="notifications" id="notificationsNavItem"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 20px; font-size: 0.7rem; margin-left: 8px; display: none;">0</span></div>
             <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>Digital Services</span></div>
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
@@ -125,15 +218,9 @@
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
-        <!-- HOME SECTION (with news integrated) -->
         <div id="homePage" class="section-page active-page">
-            <div class="section-header">
-                <h1 class="section-title">Home</h1>
-                <span class="section-badge">Latest News</span>
-            </div>
-            <div class="account-circle" id="accountCircle" style="display: flex; justify-content: center; margin: 20px auto; cursor: pointer;">
-                <div class="avatar" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), #6c5ce7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: white;"><i class="fas fa-user"></i></div>
-            </div>
+            <div class="section-header"><h1 class="section-title">Home</h1><span class="section-badge">News</span></div>
+            <div class="account-circle" id="accountCircle"><div class="avatar"><i class="fas fa-user"></i></div></div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
@@ -142,28 +229,14 @@
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
-        <div id="supportPage" class="section-page">
-            <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
-            <div class="slim-card">
-                <div class="card-content">
-                    <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
-                    <form id="supportRequestForm">
-                        <div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div>
-                        <div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div>
-                        <div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Details"></textarea></div>
-                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button>
-                    </form>
-                    <div id="formMessage" style="margin-top: 12px;"></div>
-                </div>
-            </div>
-        </div>
+        <div id="supportPage" class="section-page"><div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div><div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div><form id="supportRequestForm"><div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button></form><div id="formMessage" style="margin-top: 12px;"></div></div></div></div>
     </main>
 </div>
-<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account</h3><div class="info-row"><span>Name:</span><span>Alex Johnson</span></div><div class="info-row"><span>ID:</span><span>BY-2024-001</span></div><div class="info-row"><span>Email:</span><span>alex@bypro.com</span></div><button class="close-modal" id="closeModalBtn" style="margin-top:24px;background:var(--primary);color:white;border:none;padding:10px;border-radius:40px;width:100%;cursor:pointer;">Close</button></div></div>
-<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message"></div></div>
+<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account</h3><div class="info-row"><span>Name:</span><span>Alex Johnson</span></div><div class="info-row"><span>ID:</span><span>BY-2024-001</span></div><div class="info-row"><span>Email:</span><span>alex@bypro.com</span></div><button class="close-modal" id="closeModalBtn">Close</button></div></div>
+<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script>
-    // Theme
+    // ==================== THEME ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
     if (localStorage.getItem('darkTheme') === 'true') {
         document.documentElement.classList.add('dark-theme');
@@ -175,7 +248,7 @@
         localStorage.setItem('darkTheme', e.target.checked);
     });
 
-    // Sidebar
+    // ==================== SIDEBAR ====================
     const menuTrigger = document.getElementById('menuTrigger');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
@@ -184,7 +257,7 @@
     menuTrigger.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar(); });
     overlay.addEventListener('click', closeSidebar);
 
-    // Navigation
+    // ==================== NAVIGATION ====================
     const navItems = document.querySelectorAll('.nav-item');
     const pages = {
         home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'),
@@ -202,7 +275,7 @@
     }
     navItems.forEach(item => { item.addEventListener('click', () => { const pageId = item.getAttribute('data-page'); if (pageId && pages[pageId]) navigateTo(pageId); }); });
 
-    // Account modal
+    // ==================== ACCOUNT MODAL ====================
     const accountCircle = document.getElementById('accountCircle');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -210,76 +283,232 @@
     closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    // Toast
+    // ==================== TOAST ====================
     let toastTimeout = null;
-    function showToast(msg, isErr = false) {
-        const toast = document.getElementById('toast'), toastMsg = document.getElementById('toastMessage'), icon = toast.querySelector('.toast-icon');
+    function showToast(msg, isError = false) {
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMessage');
+        const toastIcon = toast.querySelector('.toast-icon');
         toastMsg.textContent = msg;
-        if (isErr) {
-            icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            icon.style.background = '#fee2e2'; icon.style.color = '#ef4444';
+        if (isError) {
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            toastIcon.style.background = '#fee2e2';
+            toastIcon.style.color = '#ef4444';
             toast.style.borderLeftColor = '#ef4444';
         } else {
-            icon.innerHTML = '<i class="fas fa-check"></i>';
-            icon.style.background = '#d1fae5'; icon.style.color = '#10b981';
+            toastIcon.innerHTML = '<i class="fas fa-check"></i>';
+            toastIcon.style.background = '#d1fae5';
+            toastIcon.style.color = '#10b981';
             toast.style.borderLeftColor = '#10b981';
         }
         toast.classList.add('show');
         if (toastTimeout) clearTimeout(toastTimeout);
-        toastTimeout = setTimeout(() => toast.classList.remove('show'), 2000);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
-    // Browser Notifications - Auto request on first visit
+    // ==================== BROWSER NOTIFICATIONS ====================
     let notificationPermission = false;
-    if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission().then(perm => { notificationPermission = perm === 'granted'; });
-    } else if (Notification.permission === 'granted') {
-        notificationPermission = true;
+    
+    // طلب الإذن تلقائياً عند تحميل الصفحة
+    if ('Notification' in window) {
+        if (Notification.permission === 'default') {
+            Notification.requestPermission().then(perm => {
+                notificationPermission = perm === 'granted';
+                if (notificationPermission) showToast('✓ Notifications enabled');
+                else showToast('❌ Notifications blocked', true);
+            });
+        } else if (Notification.permission === 'granted') {
+            notificationPermission = true;
+        }
+    }
+    
+    function sendBrowserNotification(title, body) {
+        if (notificationPermission && 'Notification' in window) {
+            try {
+                new Notification(title, { body, icon: 'https://by-pro.kesug.com/App.png', badge: 'https://by-pro.kesug.com/App.png' });
+            } catch(e) { console.log('Notification error:', e); }
+        }
     }
 
-    // Real-time SSE Connection
-    let eventSource = null;
+    // ==================== NOTIFICATIONS STORAGE ====================
     let userNotifications = [];
-    let currentData = { news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    let lastNotificationId = 0;
+    
+    function loadNotificationsFromStorage() {
+        const saved = localStorage.getItem('bypro_notifications');
+        if (saved) {
+            try {
+                userNotifications = JSON.parse(saved);
+                lastNotificationId = userNotifications.length ? Math.max(...userNotifications.map(n => n.id)) : 0;
+            } catch(e) { userNotifications = []; }
+        }
+        if (!userNotifications.length) {
+            userNotifications = [{
+                id: Date.now(),
+                title: 'Welcome to B.Y PRO App!',
+                message: 'You will receive important updates and notifications here.',
+                date: new Date().toISOString(),
+                read: false,
+                icon: 'fas fa-smile-wink',
+                color: '#3b82f6'
+            }];
+            saveNotificationsToStorage();
+        }
+        updateNotificationUI();
+    }
+    
+    function saveNotificationsToStorage() {
+        localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications));
+        updateNotificationUI();
+    }
+    
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 60000);
+        if (diff < 1) return 'Just now';
+        if (diff < 60) return `${diff}m ago`;
+        if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+        return date.toLocaleDateString();
+    }
+    
+    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
+        const newNotif = {
+            id: Date.now(),
+            title: title,
+            message: message,
+            icon: icon,
+            color: color,
+            date: new Date().toISOString(),
+            read: false
+        };
+        userNotifications.unshift(newNotif);
+        saveNotificationsToStorage();
+        showToast(title);
+        sendBrowserNotification(title, message);
+        return newNotif;
+    }
+    
+    function updateNotificationUI() {
+        const container = document.getElementById('notificationsContainer');
+        const countSpan = document.getElementById('notificationsCount');
+        const pageBadge = document.getElementById('notificationsPageBadge');
+        const unreadCount = userNotifications.filter(n => !n.read).length;
+        
+        if (countSpan) {
+            if (unreadCount > 0) {
+                countSpan.style.display = 'inline-block';
+                countSpan.textContent = unreadCount;
+            } else {
+                countSpan.style.display = 'none';
+            }
+        }
+        if (pageBadge) pageBadge.textContent = `${unreadCount} new`;
+        
+        if (!container) return;
+        if (!userNotifications.length) {
+            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
+            return;
+        }
+        
+        container.innerHTML = userNotifications.sort((a,b) => new Date(b.date) - new Date(a.date)).map(n => `
+            <div class="notification-card-wrapper" data-id="${n.id}">
+                <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
+                <div class="notification-card ${!n.read ? 'unread' : ''}">
+                    <div class="card-title"><i class="${n.icon}" style="color: ${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background: var(--primary); margin-left: 8px;">New</span>' : ''}</div>
+                    <div class="card-desc">${escapeHtml(n.message)}</div>
+                    <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(n.date)}</div>
+                    <div class="notification-actions">
+                        ${!n.read ? `<button onclick="markRead(${n.id})"><i class="fas fa-check"></i> Read</button>` : ''}
+                        <button onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        // Swipe to delete for touch devices
+        document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
+            let startX = 0;
+            wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
+            wrapper.addEventListener('touchend', (e) => {
+                const delta = e.changedTouches[0].clientX - startX;
+                if (Math.abs(delta) > 80) deleteNotification(parseInt(wrapper.dataset.id));
+            });
+        });
+    }
+    
+    function markRead(id) {
+        const n = userNotifications.find(n => n.id === id);
+        if (n) { n.read = true; saveNotificationsToStorage(); }
+    }
+    
+    function deleteNotification(id) {
+        userNotifications = userNotifications.filter(n => n.id !== id);
+        saveNotificationsToStorage();
+        showToast('Notification deleted');
+    }
+    
+    window.markRead = markRead;
+    window.deleteNotification = deleteNotification;
 
+    // ==================== SSE REAL-TIME CONNECTION ====================
+    let eventSource = null;
+    let reconnectAttempts = 0;
+    let lastSeenNotificationId = 0;
+    
     function connectToStream() {
         if (eventSource) eventSource.close();
         eventSource = new EventSource('/api/events');
-        eventSource.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.type === 'data_update') {
-                currentData = data.data;
-                renderAllContent();
-            } else if (data.type === 'notification_new') {
-                addNotification(data.data.title, data.data.message, data.data.icon, data.data.color);
-                if (notificationPermission) new Notification(data.data.title, { body: data.data.message, icon: 'https://by-pro.kesug.com/App.png' });
-            } else if (data.type === 'support_new') {
-                showToast(`New support request: ${data.data.subject}`);
-                addNotification('New Support Request', `${data.data.sender}: ${data.data.subject}`, 'fas fa-headset', '#10b981');
-            }
+        
+        eventSource.onopen = () => {
+            console.log('SSE Connected');
+            reconnectAttempts = 0;
         };
-        eventSource.onerror = () => setTimeout(connectToStream, 3000);
+        
+        eventSource.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                console.log('SSE Message:', data);
+                
+                if (data.type === 'notification') {
+                    addNotification(data.title, data.message, data.icon || 'fas fa-bell', data.color || '#3b82f6');
+                } else if (data.type === 'data_update') {
+                    loadContentData();
+                }
+            } catch(e) { console.error('SSE parse error:', e); }
+        };
+        
+        eventSource.onerror = () => {
+            console.log('SSE Error, reconnecting...');
+            if (eventSource) eventSource.close();
+            const delay = Math.min(30000, 1000 * Math.pow(2, reconnectAttempts));
+            setTimeout(() => connectToStream(), delay);
+            reconnectAttempts++;
+        };
     }
-    connectToStream();
-
-    // Fetch initial data
-    async function fetchInitialData() {
+    
+    // ==================== CONTENT DATA ====================
+    let contentData = { news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    
+    async function loadContentData() {
         try {
             const res = await fetch('/api/data');
-            currentData = await res.json();
-            renderAllContent();
-        } catch (err) { console.error('Fetch failed', err); }
+            if (res.ok) {
+                contentData = await res.json();
+                renderAllContent();
+            }
+        } catch(e) { console.error('Failed to load content:', e); }
     }
-
+    
     function renderAllContent() {
-        renderNews(currentData.news || []);
-        renderServices('digitalContainer', currentData.digital || [], 'fas fa-code');
-        renderServices('localContainer', currentData.local || [], 'fas fa-print');
-        renderServices('phoneContainer', currentData.phone || [], 'fas fa-mobile-alt');
-        renderProducts(currentData.products || []);
-        renderSocial(currentData.social || []);
+        renderNews(contentData.news || []);
+        renderServices('digitalContainer', contentData.digital || [], 'fas fa-code');
+        renderServices('localContainer', contentData.local || [], 'fas fa-print');
+        renderServices('phoneContainer', contentData.phone || [], 'fas fa-mobile-alt');
+        renderProducts(contentData.products || []);
+        renderSocial(contentData.social || []);
     }
-
+    
     function renderNews(news) {
         const container = document.getElementById('newsContainer');
         if (!container) return;
@@ -289,7 +518,7 @@
             <div class="slim-card"><div class="card-content"><div class="card-title"><i class="${item.icon || 'fas fa-newspaper'}" style="color: ${item.color || '#3b82f6'}"></i> ${escapeHtml(item.title)}</div><div class="card-desc">${escapeHtml(item.description)}</div></div></div>
         `).join('');
     }
-
+    
     function renderServices(containerId, services, icon) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -299,7 +528,7 @@
             <div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>
         `).join('');
     }
-
+    
     function renderProducts(products) {
         const container = document.getElementById('productsContainer');
         if (!container) return;
@@ -309,7 +538,7 @@
             <div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>
         `).join('');
     }
-
+    
     function renderSocial(social) {
         const container = document.getElementById('socialContainer');
         if (!container) return;
@@ -324,72 +553,10 @@
             </a>
         `).join('');
     }
+    
+    function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
-    // Notifications
-    function loadNotifications() {
-        const saved = localStorage.getItem('userNotifications');
-        userNotifications = saved ? JSON.parse(saved) : [];
-        updateNotificationUI();
-    }
-
-    function saveNotifications() {
-        localStorage.setItem('userNotifications', JSON.stringify(userNotifications));
-        updateNotificationUI();
-    }
-
-    function formatDate(dateStr) {
-        const date = new Date(dateStr);
-        const now = new Date();
-        const diff = Math.floor((now - date) / 60000);
-        if (diff < 1) return 'Just now';
-        if (diff < 60) return `${diff}m ago`;
-        if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
-        return date.toLocaleDateString();
-    }
-
-    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
-        userNotifications.unshift({ id: Date.now(), title, message, icon, color, date: new Date().toISOString(), read: false });
-        saveNotifications();
-        showToast(title);
-    }
-
-    function updateNotificationUI() {
-        const container = document.getElementById('notificationsContainer');
-        const countBadge = document.getElementById('notificationsCount');
-        const pageBadge = document.getElementById('notificationsPageBadge');
-        const unread = userNotifications.filter(n => !n.read).length;
-        if (countBadge) { countBadge.style.display = unread ? 'inline-block' : 'none'; countBadge.textContent = unread; }
-        if (pageBadge) pageBadge.textContent = `${unread} new`;
-        if (!container) return;
-        if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>'; return; }
-        container.innerHTML = userNotifications.sort((a,b) => new Date(b.date) - new Date(a.date)).map(n => `
-            <div class="notification-card-wrapper" data-id="${n.id}">
-                <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
-                <div class="notification-card ${!n.read ? 'unread' : ''}">
-                    <div class="card-title"><i class="${n.icon}" style="color: ${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background: var(--primary); margin-left: 8px;">New</span>' : ''}</div>
-                    <div class="card-desc">${escapeHtml(n.message)}</div>
-                    <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(n.date)}</div>
-                    <div class="notification-actions">${!n.read ? `<button onclick="markRead(${n.id})"><i class="fas fa-check"></i></button>` : ''}<button onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></button></div>
-                </div>
-            </div>
-        `).join('');
-        // Swipe handlers
-        document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
-            let startX = 0;
-            wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
-            wrapper.addEventListener('touchend', (e) => {
-                const delta = e.changedTouches[0].clientX - startX;
-                if (Math.abs(delta) > 80) deleteNotification(parseInt(wrapper.dataset.id));
-            });
-        });
-    }
-
-    function markRead(id) { const n = userNotifications.find(n => n.id === id); if (n) { n.read = true; saveNotifications(); } }
-    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotifications(); }
-    window.markRead = markRead;
-    window.deleteNotification = deleteNotification;
-
-    // Support form
+    // ==================== SUPPORT FORM ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -412,17 +579,28 @@
                     formMsg.innerHTML = '<span style="color: #10b981;">✓ Sent</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 2000);
+                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
                 } else throw new Error();
             } catch { formMsg.innerHTML = '<span style="color: #ef4444;">Failed</span>'; setTimeout(() => formMsg.innerHTML = '', 2000); }
         });
     }
 
-    function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
-
-    loadNotifications();
-    fetchInitialData();
-
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(console.log);
+    // ==================== INITIALIZATION ====================
+    loadNotificationsFromStorage();
+    loadContentData();
+    connectToStream();
+    
+    // Periodic refresh every 30 seconds as fallback
+    setInterval(() => {
+        if (document.hasFocus()) {
+            loadContentData();
+        }
+    }, 30000);
+    
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(console.log);
+    }
 </script>
 </body>
 </html>
