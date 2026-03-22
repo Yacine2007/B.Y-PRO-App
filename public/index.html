@@ -34,39 +34,27 @@
             transition: all 0.2s;
         }
         /* Menu Button - centered vertically */
-
-
-
-.menu-trigger {
-    position: fixed;
-    left: 16px;
-    top: calc(50% - 24px);  /* نصف ارتفاع الزر (48px / 2 = 24px) */
-    width: 48px;
-    height: 48px;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 1000;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-radius: 24px;
-    font-size: 1.5rem;
-    color: var(--primary);
-}
-
-.menu-trigger {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-
-
-        .menu-trigger.hidden {
-            opacity: 0;
-            visibility: hidden;
+        .menu-trigger {
+            position: fixed;
+            left: 16px;
+            top: calc(50% - 24px);
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 24px;
+            font-size: 1.5rem;
+            color: var(--primary);
+            transition: all 0.2s;
+            position: relative;
         }
+        .menu-trigger.hidden { opacity: 0; visibility: hidden; }
         .menu-dot {
             position: absolute;
             top: -4px;
@@ -138,14 +126,8 @@
             opacity: 0;
             transition: opacity 0.5s ease;
         }
-        .carousel-slide.active {
-            opacity: 1;
-        }
-        .carousel-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .carousel-slide.active { opacity: 1; }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
         .carousel-indicators {
             position: absolute;
             bottom: 12px;
@@ -162,27 +144,20 @@
             border-radius: 50%;
             background: rgba(255,255,255,0.6);
             cursor: pointer;
-            transition: all 0.2s;
         }
-        .indicator.active {
-            background: var(--primary);
-            width: 20px;
-            border-radius: 4px;
-        }
+        .indicator.active { background: var(--primary); width: 20px; border-radius: 4px; }
         /* Bell icon */
         .bell-icon {
             background: var(--surface); border: 1px solid var(--border); border-radius: 40px;
             padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            transition: all 0.2s; position: relative;
         }
-        .bell-icon:hover { background: var(--border); }
         .bell-count {
             background: var(--danger); color: white; border-radius: 20px; padding: 2px 8px;
             font-size: 0.7rem; font-weight: 600;
         }
         /* Cards */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
-        .slim-card { background: var(--surface); border-radius: var(--card-radius); border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
+        .slim-card { background: var(--surface); border-radius: var(--card-radius); border: 1px solid var(--border); overflow: hidden; }
         .slim-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
         .card-media { height: 160px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
@@ -191,17 +166,23 @@
         .card-desc { color: var(--text-muted); font-size: 0.85rem; }
         /* Notification Cards */
         .notification-card-wrapper { position: relative; overflow: hidden; border-radius: var(--card-radius); margin-bottom: 16px; }
-        .notification-card { background: var(--surface); border-radius: var(--card-radius); border: 1px solid var(--border); padding: 20px; transition: transform 0.2s; }
+        .notification-card { background: var(--surface); border-radius: var(--card-radius); border: 1px solid var(--border); padding: 20px; }
         .notification-card.unread { border-left: 4px solid var(--primary); background: rgba(59,130,246,0.05); }
-        .notification-delete { position: absolute; right: 0; top: 0; bottom: 0; width: 70px; background: var(--danger); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; border-radius: var(--card-radius); opacity: 0; transition: opacity 0.2s; }
+        .notification-delete {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 70px; background: var(--danger);
+            color: white; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            cursor: pointer; border-radius: var(--card-radius); opacity: 0; transition: opacity 0.2s;
+        }
         .notification-card-wrapper:hover .notification-delete { opacity: 1; }
         .notification-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
         .notification-actions { display: flex; gap: 12px; margin-top: 12px; justify-content: flex-end; }
-        .notification-actions button { background: transparent; color: var(--text-muted); padding: 4px 8px; border: none; cursor: pointer; font-size: 0.8rem; }
+        .notification-actions button { background: transparent; padding: 4px 8px; border: none; cursor: pointer; font-size: 0.8rem; color: var(--text-muted); }
         /* Support form */
         .support-form { margin-top: 20px; }
         .form-group { margin-bottom: 16px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; color: var(--text); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; color: var(--text);
+        }
         .btn-submit { background: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 40px; font-weight: 600; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .hours-badge { background: var(--success); color: white; padding: 10px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
         .account-circle { display: flex; justify-content: center; margin: 20px auto; cursor: pointer; }
@@ -231,21 +212,9 @@
             transition: transform 0.3s ease;
             border-left: 4px solid var(--success);
         }
-        .toast-notification.show {
-            transform: translateX(-50%) translateY(0);
-        }
-        .toast-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .toast-message {
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
+        .toast-notification.show { transform: translateX(-50%) translateY(0); }
+        .toast-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .toast-message { font-size: 0.85rem; font-weight: 500; }
         /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -255,9 +224,8 @@
         @media (max-width: 768px) {
             .main-content { padding: 20px; }
             .cards-grid { grid-template-columns: 1fr; }
-            .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; }
+            .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; top: calc(50% - 22px); }
             .carousel-slides { height: 160px; }
-            .toast-notification { padding: 10px 16px; }
         }
     </style>
 </head>
@@ -297,14 +265,11 @@
                     <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
                 </div>
             </div>
-            <!-- Carousel -->
             <div class="carousel-container" id="carouselContainer">
                 <div class="carousel-slides" id="carouselSlides"></div>
                 <div class="carousel-indicators" id="carouselIndicators"></div>
             </div>
-            <!-- Account circle -->
             <div class="account-circle" id="accountCircle"><div class="avatar"><i class="fas fa-user"></i></div></div>
-            <!-- News Section -->
             <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
@@ -331,10 +296,7 @@
     </main>
 </div>
 <div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account</h3><div class="info-row"><span>Name:</span><span>Alex Johnson</span></div><div class="info-row"><span>ID:</span><span>BY-2024-001</span></div><div class="info-row"><span>Email:</span><span>alex@bypro.com</span></div><button class="close-modal" id="closeModalBtn">Close</button></div></div>
-<div class="toast-notification" id="toast">
-    <div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div>
-    <div class="toast-message" id="toastMessage"></div>
-</div>
+<div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script>
     // ==================== THEME ====================
@@ -384,7 +346,7 @@
     closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    // ==================== SIMPLE TOAST ====================
+    // ==================== TOAST ====================
     let toastTimeout = null;
     function showToast(message, isError = false) {
         const toast = document.getElementById('toast');
@@ -424,61 +386,10 @@
         }
     }
 
-    // ==================== CAROUSEL ====================
-    let carouselImages = [];
-    let currentSlide = 0;
-    let slideInterval = null;
-
-    function renderCarousel(images) {
-        const slidesContainer = document.getElementById('carouselSlides');
-        const indicatorsContainer = document.getElementById('carouselIndicators');
-        if (!slidesContainer || !indicatorsContainer) return;
-        if (!images || images.length === 0) {
-            slidesContainer.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images" alt="Placeholder"></div>';
-            indicatorsContainer.innerHTML = '';
-            return;
-        }
-        carouselImages = images;
-        slidesContainer.innerHTML = images.map((img, idx) => `
-            <div class="carousel-slide ${idx === 0 ? 'active' : ''}">
-                <img src="${img.imageUrl}" alt="${img.alt || 'Slide'}">
-            </div>
-        `).join('');
-        indicatorsContainer.innerHTML = images.map((_, idx) => `
-            <div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>
-        `).join('');
-
-        // Add click handlers to indicators
-        document.querySelectorAll('.indicator').forEach(ind => {
-            ind.addEventListener('click', () => {
-                const idx = parseInt(ind.dataset.index);
-                if (!isNaN(idx)) goToSlide(idx);
-            });
-        });
-
-        startAutoSlide();
-    }
-
-    function goToSlide(index) {
-        const slides = document.querySelectorAll('.carousel-slide');
-        const indicators = document.querySelectorAll('.indicator');
-        if (!slides.length) return;
-        slides[currentSlide].classList.remove('active');
-        indicators[currentSlide]?.classList.remove('active');
-        currentSlide = (index + slides.length) % slides.length;
-        slides[currentSlide].classList.add('active');
-        indicators[currentSlide]?.classList.add('active');
-    }
-
-    function nextSlide() { goToSlide(currentSlide + 1); }
-    function startAutoSlide() {
-        if (slideInterval) clearInterval(slideInterval);
-        slideInterval = setInterval(nextSlide, 5000);
-    }
-
     // ==================== NOTIFICATIONS STORAGE ====================
     let userNotifications = [];
-    let lastNotificationId = 0;
+    let lastSeenNotificationId = 0;
+
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
         if (saved) {
@@ -533,23 +444,15 @@
         const unreadCount = userNotifications.filter(n => !n.read).length;
 
         if (countSpan) {
-            if (unreadCount > 0) {
-                countSpan.style.display = 'inline-block';
-                countSpan.textContent = unreadCount;
-            } else {
-                countSpan.style.display = 'none';
-            }
+            countSpan.style.display = unreadCount ? 'inline-block' : 'none';
+            if (unreadCount) countSpan.textContent = unreadCount;
         }
         if (pageBadge) pageBadge.textContent = `${unreadCount} new`;
         if (homeBellCount) {
-            if (unreadCount > 0) {
-                homeBellCount.style.display = 'inline-block';
-                homeBellCount.textContent = unreadCount;
-            } else {
-                homeBellCount.style.display = 'none';
-            }
+            homeBellCount.style.display = unreadCount ? 'inline-block' : 'none';
+            if (unreadCount) homeBellCount.textContent = unreadCount;
         }
-        if (menuDot) menuDot.style.display = unreadCount > 0 ? 'block' : 'none';
+        if (menuDot) menuDot.style.display = unreadCount ? 'block' : 'none';
 
         if (!container) return;
         if (!userNotifications.length) {
@@ -595,26 +498,84 @@
     // Home bell click -> navigate to notifications
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
 
-    // ==================== SSE REAL-TIME ====================
+    // ==================== CAROUSEL ====================
+    let carouselImages = [];
+    let currentSlide = 0;
+    let slideInterval = null;
+
+    function renderCarousel(images) {
+        const slidesContainer = document.getElementById('carouselSlides');
+        const indicatorsContainer = document.getElementById('carouselIndicators');
+        if (!slidesContainer || !indicatorsContainer) return;
+        if (!images || images.length === 0) {
+            slidesContainer.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images" alt="Placeholder"></div>';
+            indicatorsContainer.innerHTML = '';
+            return;
+        }
+        carouselImages = images;
+        slidesContainer.innerHTML = images.map((img, idx) => `
+            <div class="carousel-slide ${idx === 0 ? 'active' : ''}">
+                <img src="${img.imageUrl}" alt="${img.alt || 'Slide'}">
+            </div>
+        `).join('');
+        indicatorsContainer.innerHTML = images.map((_, idx) => `
+            <div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>
+        `).join('');
+
+        document.querySelectorAll('.indicator').forEach(ind => {
+            ind.addEventListener('click', () => {
+                const idx = parseInt(ind.dataset.index);
+                if (!isNaN(idx)) goToSlide(idx);
+            });
+        });
+        startAutoSlide();
+    }
+
+    function goToSlide(index) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        if (!slides.length) return;
+        slides[currentSlide].classList.remove('active');
+        indicators[currentSlide]?.classList.remove('active');
+        currentSlide = (index + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        indicators[currentSlide]?.classList.add('active');
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function startAutoSlide() {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    // ==================== SSE REAL-TIME (FIXED) ====================
     let eventSource = null;
     let reconnectAttempts = 0;
-    let lastSeenNotificationId = 0;
 
     function connectToStream() {
         if (eventSource) eventSource.close();
         eventSource = new EventSource('/api/events');
-        eventSource.onopen = () => { reconnectAttempts = 0; };
+        eventSource.onopen = () => {
+            console.log('SSE Connected');
+            reconnectAttempts = 0;
+        };
         eventSource.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
+                console.log('SSE Message:', data);
                 if (data.type === 'notification') {
+                    // Add notification to local storage and UI
                     addNotification(data.title, data.message, data.icon || 'fas fa-bell', data.color || '#3b82f6');
+                } else if (data.type === 'support_reply') {
+                    // Special handling for support replies
+                    addNotification(data.title, data.message, 'fas fa-reply', '#10b981');
                 } else if (data.type === 'data_update') {
                     loadContentData();
                 }
             } catch(e) { console.error('SSE parse error:', e); }
         };
         eventSource.onerror = () => {
+            console.log('SSE Error, reconnecting...');
             if (eventSource) eventSource.close();
             const delay = Math.min(30000, 1000 * Math.pow(2, reconnectAttempts));
             setTimeout(() => connectToStream(), delay);
@@ -735,7 +696,7 @@
     loadContentData();
     // Periodic refresh as fallback
     setInterval(() => { if (document.hasFocus()) loadContentData(); }, 30000);
-    // Register Service Worker with version
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => { regs.forEach(reg => reg.unregister()); });
         navigator.serviceWorker.register('/sw.js?v=3').catch(console.log);
