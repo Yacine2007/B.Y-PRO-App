@@ -41,26 +41,40 @@
             color: var(--text);
             transition: all 0.2s;
         }
-        /* Menu Button - fixed positioning */
+		
+		
+		
+.menu-trigger {
+    position: fixed;
+    left: 16px;
+    top: calc(50% - 24px);  /* نصف ارتفاع الزر (48px / 2 = 24px) */
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 24px;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.menu-trigger {
+    margin: 0 !important;
+    padding: 0 !important;
+}		
+		
+		
+		
+		
+        /* Force margin/padding reset */
         .menu-trigger {
-            position: fixed;
-            left: 16px;
-            top: calc(50% - 24px);
-            width: 48px;
-            height: 48px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 24px;
-            font-size: 1.5rem;
-            color: var(--primary);
-            transition: all 0.2s;
-            position: relative;
+            margin: 0 !important;
+            padding: 0 !important;
         }
         .dark-theme .menu-trigger {
             background: rgba(30,30,40,0.8);
@@ -164,12 +178,29 @@
             border-radius: 40px;
             font-size: 0.75rem;
         }
-        /* User greeting */
+        /* User greeting with avatar */
         .user-greeting {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+        }
+        .greeting-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .avatar-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), #6c5ce7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
         }
         .greeting-text {
             font-size: 1.2rem;
@@ -503,10 +534,15 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
-            <!-- User greeting row -->
+            <!-- User greeting with avatar -->
             <div class="user-greeting">
-                <div class="greeting-text">
-                    <i class="fas fa-hand-wave"></i> Hello, User
+                <div class="greeting-left" id="greetingAvatar">
+                    <div class="avatar-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="greeting-text">
+                        Hello, User
+                    </div>
                 </div>
                 <div class="bell-icon" id="homeBellIcon">
                     <i class="fas fa-bell"></i>
@@ -519,6 +555,10 @@
                 <div class="carousel-indicators" id="carouselIndicators"></div>
             </div>
             <!-- News section -->
+            <div class="section-header" style="margin-top: 8px;">
+                <h2 class="section-title">Latest News</h2>
+                <span class="section-badge">Updates</span>
+            </div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page">
@@ -632,11 +672,11 @@
     }
     navItems.forEach(item => { item.addEventListener('click', () => { const pageId = item.getAttribute('data-page'); if (pageId && pages[pageId]) navigateTo(pageId); }); });
 
-    // ==================== ACCOUNT MODAL (from greeting) ====================
-    const greeting = document.querySelector('.greeting-text');
+    // ==================== ACCOUNT MODAL (from avatar) ====================
+    const greetingAvatar = document.getElementById('greetingAvatar');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
-    if (greeting) greeting.addEventListener('click', () => modal.classList.add('active'));
+    if (greetingAvatar) greetingAvatar.addEventListener('click', () => modal.classList.add('active'));
     closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
