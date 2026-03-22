@@ -15,14 +15,14 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configure Cloudinary
+// Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// JSON Bin configuration
+// JSON Bin
 const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
 const JSON_BIN_HEADERS = {
     'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ const JSON_BIN_HEADERS = {
 // Cache
 let cachedData = null;
 let lastFetch = 0;
-const CACHE_TTL = 30000;
+const CACHE_TTL = 1000; // 1 second cache for real-time
 
 async function fetchData() {
     const now = Date.now();
@@ -62,10 +62,9 @@ async function saveData(data) {
     }
 }
 
-// SSE Clients
+// SSE Clients for real-time updates
 let clients = [];
 
-// SSE endpoint for real-time notifications
 app.get('/api/events', (req, res) => {
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
@@ -75,25 +74,20 @@ app.get('/api/events', (req, res) => {
     });
     
     const clientId = Date.now();
-    const newClient = { id: clientId, res };
-    clients.push(newClient);
+    clients.push({ id: clientId, res });
     
-    res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to notification stream' })}\n\n`);
+    res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected' })}\n\n`);
     
     req.on('close', () => {
         clients = clients.filter(client => client.id !== clientId);
-        console.log(`Client ${clientId} disconnected`);
     });
 });
 
-// Broadcast to all connected clients
-function broadcastNotification(notification) {
+function broadcastUpdate(type, data) {
     clients.forEach(client => {
         try {
-            client.res.write(`data: ${JSON.stringify(notification)}\n\n`);
-        } catch (err) {
-            console.error('Broadcast error:', err);
-        }
+            client.res.write(`data: ${JSON.stringify({ type, data })}\n\n`);
+        } catch (err) {}
     });
 }
 
@@ -110,7 +104,8 @@ app.get('/api/data', async (req, res) => {
 app.put('/api/data', async (req, res) => {
     try {
         await saveData(req.body);
-        res.json({ success: true, message: 'Data saved successfully' });
+        broadcastUpdate('data_update', req.body);
+        res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: 'Failed to save data' });
     }
@@ -130,15 +125,9 @@ app.post('/api/support', async (req, res) => {
         
         await saveData(currentData);
         
-        // Broadcast support notification
-        broadcastNotification({
-            type: 'support',
-            title: 'New Support Request',
-            message: `${newMessage.sender}: ${newMessage.subject}`,
-            icon: 'fas fa-headset',
-            color: '#10b981',
-            id: newMessage.id
-        });
+        // Broadcast to all clients
+        broadcastUpdate('support_new', newMessage);
+        broadcastUpdate('data_update', currentData);
         
         res.json({ success: true, message: 'Support request received' });
     } catch (error) {
@@ -147,33 +136,23 @@ app.post('/api/support', async (req, res) => {
     }
 });
 
-// Notification endpoint - sends real-time to all clients
+// Notification endpoint
 app.post('/api/notifications', async (req, res) => {
     try {
         const newNotification = req.body;
         newNotification.id = Date.now();
         newNotification.date = new Date().toISOString();
         
-        // Save to JSON Bin
         const currentData = await fetchData();
         const notifications = currentData.notifications || [];
         notifications.unshift(newNotification);
         currentData.notifications = notifications;
         await saveData(currentData);
         
-        // Broadcast to all connected clients (real-time)
-        broadcastNotification({
-            type: 'notification',
-            title: newNotification.title,
-            message: newNotification.message,
-            icon: newNotification.icon || 'fas fa-bell',
-            color: newNotification.color || '#3b82f6',
-            id: newNotification.id,
-            date: newNotification.date,
-            sender: newNotification.sender || 'Admin'
-        });
+        broadcastUpdate('notification_new', newNotification);
+        broadcastUpdate('data_update', currentData);
         
-        res.json({ success: true, message: 'Notification sent to all connected clients' });
+        res.json({ success: true });
     } catch (error) {
         console.error('Error sending notification:', error);
         res.status(500).json({ error: 'Failed to send notification' });
@@ -198,12 +177,10 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 });
 
-// Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve static files - fallback to index.html for SPA
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
