@@ -1,6 +1,6 @@
 {
   "name": "B.Y PRO App",
-  "short_name": "B.Y PRO App",
+  "short_name": "B.Y_PRO_App",
   "description": "Technology & Software Services & AI",
   "start_url": "/",
   "display": "standalone",
@@ -8,7 +8,7 @@
   "theme_color": "#0066cc",
   "icons": [
     {
-      "src": "https://by-pro.kesug.com/App.png",
+      "src": "https://by-pro.kesug.com/App.png?v=3",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
