@@ -33,33 +33,40 @@
             color: var(--text);
             transition: all 0.2s;
         }
-        /* Menu Button - centered vertically on left edge */
-        .menu-trigger {
-            position: fixed;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 48px;
-            height: 48px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 1000;
-            border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 24px;
-            font-size: 1.5rem;
-            color: var(--primary);
-            transition: all 0.2s;
-            position: relative;
-        }
+        /* Menu Button - centered vertically */
+
+
+
+.menu-trigger {
+    position: fixed;
+    left: 16px;
+    top: calc(50% - 24px);  /* نصف ارتفاع الزر (48px / 2 = 24px) */
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 24px;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.menu-trigger {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+
         .menu-trigger.hidden {
             opacity: 0;
             visibility: hidden;
         }
-        /* Red dot for unread notifications */
         .menu-dot {
             position: absolute;
             top: -4px;
@@ -76,7 +83,7 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.7; transform: scale(1.2); }
         }
-        /* Sidebar (same as before) */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--surface);
@@ -109,7 +116,60 @@
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
         .section-title { font-size: 1.5rem; font-weight: 700; }
         .section-badge { background: var(--primary); color: white; padding: 6px 14px; border-radius: 40px; font-size: 0.75rem; }
-        /* Bell icon in Home header */
+        /* Carousel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            margin-bottom: 32px;
+            background: var(--surface);
+        }
+        .carousel-slides {
+            position: relative;
+            height: 200px;
+        }
+        .carousel-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .carousel-slide.active {
+            opacity: 1;
+        }
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 2;
+        }
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .indicator.active {
+            background: var(--primary);
+            width: 20px;
+            border-radius: 4px;
+        }
+        /* Bell icon */
         .bell-icon {
             background: var(--surface); border: 1px solid var(--border); border-radius: 40px;
             padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px;
@@ -138,7 +198,7 @@
         .notification-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
         .notification-actions { display: flex; gap: 12px; margin-top: 12px; justify-content: flex-end; }
         .notification-actions button { background: transparent; color: var(--text-muted); padding: 4px 8px; border: none; cursor: pointer; font-size: 0.8rem; }
-        /* Form */
+        /* Support form */
         .support-form { margin-top: 20px; }
         .form-group { margin-bottom: 16px; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; color: var(--text); }
@@ -154,7 +214,7 @@
         .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
-        /* Toast - simple rectangle, one icon, one message */
+        /* Toast */
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -196,6 +256,7 @@
             .main-content { padding: 20px; }
             .cards-grid { grid-template-columns: 1fr; }
             .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; }
+            .carousel-slides { height: 160px; }
             .toast-notification { padding: 10px 16px; }
         }
     </style>
@@ -236,7 +297,14 @@
                     <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
                 </div>
             </div>
+            <!-- Carousel -->
+            <div class="carousel-container" id="carouselContainer">
+                <div class="carousel-slides" id="carouselSlides"></div>
+                <div class="carousel-indicators" id="carouselIndicators"></div>
+            </div>
+            <!-- Account circle -->
             <div class="account-circle" id="accountCircle"><div class="avatar"><i class="fas fa-user"></i></div></div>
+            <!-- News Section -->
             <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
@@ -251,22 +319,9 @@
                 <div class="card-content">
                     <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
                     <form id="supportRequestForm" class="support-form">
-                        <div class="form-group">
-                            <select id="serviceSelect" required>
-                                <option value="">Select service</option>
-                                <option>Digital Services</option>
-                                <option>Local Services</option>
-                                <option>Phone Services</option>
-                                <option>Products</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="topicInput" placeholder="Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="detailsInput" rows="3" placeholder="Details"></textarea>
-                        </div>
+                        <div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div>
+                        <div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div>
+                        <div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Details"></textarea></div>
                         <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button>
                     </form>
                     <div id="formMessage" style="margin-top: 12px;"></div>
@@ -369,8 +424,61 @@
         }
     }
 
+    // ==================== CAROUSEL ====================
+    let carouselImages = [];
+    let currentSlide = 0;
+    let slideInterval = null;
+
+    function renderCarousel(images) {
+        const slidesContainer = document.getElementById('carouselSlides');
+        const indicatorsContainer = document.getElementById('carouselIndicators');
+        if (!slidesContainer || !indicatorsContainer) return;
+        if (!images || images.length === 0) {
+            slidesContainer.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images" alt="Placeholder"></div>';
+            indicatorsContainer.innerHTML = '';
+            return;
+        }
+        carouselImages = images;
+        slidesContainer.innerHTML = images.map((img, idx) => `
+            <div class="carousel-slide ${idx === 0 ? 'active' : ''}">
+                <img src="${img.imageUrl}" alt="${img.alt || 'Slide'}">
+            </div>
+        `).join('');
+        indicatorsContainer.innerHTML = images.map((_, idx) => `
+            <div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>
+        `).join('');
+
+        // Add click handlers to indicators
+        document.querySelectorAll('.indicator').forEach(ind => {
+            ind.addEventListener('click', () => {
+                const idx = parseInt(ind.dataset.index);
+                if (!isNaN(idx)) goToSlide(idx);
+            });
+        });
+
+        startAutoSlide();
+    }
+
+    function goToSlide(index) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator');
+        if (!slides.length) return;
+        slides[currentSlide].classList.remove('active');
+        indicators[currentSlide]?.classList.remove('active');
+        currentSlide = (index + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        indicators[currentSlide]?.classList.add('active');
+    }
+
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function startAutoSlide() {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+
     // ==================== NOTIFICATIONS STORAGE ====================
     let userNotifications = [];
+    let lastNotificationId = 0;
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
         if (saved) {
@@ -490,6 +598,8 @@
     // ==================== SSE REAL-TIME ====================
     let eventSource = null;
     let reconnectAttempts = 0;
+    let lastSeenNotificationId = 0;
+
     function connectToStream() {
         if (eventSource) eventSource.close();
         eventSource = new EventSource('/api/events');
@@ -514,12 +624,13 @@
     connectToStream();
 
     // ==================== CONTENT DATA ====================
-    let contentData = { news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     async function loadContentData() {
         try {
             const res = await fetch('/api/data');
             if (res.ok) {
                 contentData = await res.json();
+                renderCarousel(contentData.images || []);
                 renderAllContent();
             }
         } catch(e) { console.error('Failed to load content:', e); }
@@ -575,7 +686,7 @@
     }
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
-    // ==================== SUPPORT FORM (FIXED) ====================
+    // ==================== SUPPORT FORM ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -586,7 +697,6 @@
                 formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>';
                 return;
             }
-            // Disable button to prevent double submit
             const submitBtn = supportForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
@@ -606,7 +716,6 @@
                     formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 4000);
-                    // Add local notification for user
                     addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
                 } else {
                     throw new Error(data.error || 'Server error');
