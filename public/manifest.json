@@ -1,6 +1,6 @@
 {
-  "name": "B.Y PRO",
-  "short_name": "BYPRO",
+  "name": "B.Y PRO App",
+  "short_name": "B.Y PRO App",
   "description": "Technology & Software Services & AI",
   "start_url": "/",
   "display": "standalone",
