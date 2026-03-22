@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     
     <!-- PWA Meta Tags -->
-    <link rel="icon" href="https://by-pro.kesug.com/App.png" type="image/png">
-    <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png">
+    <link rel="icon" href="https://by-pro.kesug.com/App.png?v=2" type="image/png">
+    <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=2">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0066cc">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
     <meta name="application-name" content="B.Y PRO App">
+    
+    <!-- Force no cache for this page -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     
     <title>B.Y PRO App</title>
     
@@ -198,7 +203,7 @@
     <div class="menu-trigger" id="menuTrigger"><span>&gt;</span></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png" alt="Logo"></div>
+            <div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=2" alt="Logo"></div>
             <span class="sidebar-title">B.Y PRO App</span>
         </div>
         <nav class="sidebar-nav">
@@ -308,8 +313,6 @@
 
     // ==================== BROWSER NOTIFICATIONS ====================
     let notificationPermission = false;
-    
-    // طلب الإذن تلقائياً عند تحميل الصفحة
     if ('Notification' in window) {
         if (Notification.permission === 'default') {
             Notification.requestPermission().then(perm => {
@@ -321,25 +324,21 @@
             notificationPermission = true;
         }
     }
-    
     function sendBrowserNotification(title, body) {
         if (notificationPermission && 'Notification' in window) {
             try {
-                new Notification(title, { body, icon: 'https://by-pro.kesug.com/App.png', badge: 'https://by-pro.kesug.com/App.png' });
+                new Notification(title, { body, icon: 'https://by-pro.kesug.com/App.png?v=2', badge: 'https://by-pro.kesug.com/App.png?v=2' });
             } catch(e) { console.log('Notification error:', e); }
         }
     }
 
     // ==================== NOTIFICATIONS STORAGE ====================
     let userNotifications = [];
-    let lastNotificationId = 0;
-    
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
         if (saved) {
             try {
                 userNotifications = JSON.parse(saved);
-                lastNotificationId = userNotifications.length ? Math.max(...userNotifications.map(n => n.id)) : 0;
             } catch(e) { userNotifications = []; }
         }
         if (!userNotifications.length) {
@@ -356,12 +355,10 @@
         }
         updateNotificationUI();
     }
-    
     function saveNotificationsToStorage() {
         localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications));
         updateNotificationUI();
     }
-    
     function formatDate(dateStr) {
         const date = new Date(dateStr);
         const now = new Date();
@@ -371,14 +368,10 @@
         if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
         return date.toLocaleDateString();
     }
-    
     function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
         const newNotif = {
             id: Date.now(),
-            title: title,
-            message: message,
-            icon: icon,
-            color: color,
+            title, message, icon, color,
             date: new Date().toISOString(),
             read: false
         };
@@ -388,13 +381,11 @@
         sendBrowserNotification(title, message);
         return newNotif;
     }
-    
     function updateNotificationUI() {
         const container = document.getElementById('notificationsContainer');
         const countSpan = document.getElementById('notificationsCount');
         const pageBadge = document.getElementById('notificationsPageBadge');
         const unreadCount = userNotifications.filter(n => !n.read).length;
-        
         if (countSpan) {
             if (unreadCount > 0) {
                 countSpan.style.display = 'inline-block';
@@ -404,13 +395,11 @@
             }
         }
         if (pageBadge) pageBadge.textContent = `${unreadCount} new`;
-        
         if (!container) return;
         if (!userNotifications.length) {
             container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
             return;
         }
-        
         container.innerHTML = userNotifications.sort((a,b) => new Date(b.date) - new Date(a.date)).map(n => `
             <div class="notification-card-wrapper" data-id="${n.id}">
                 <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
@@ -425,8 +414,7 @@
                 </div>
             </div>
         `).join('');
-        
-        // Swipe to delete for touch devices
+        // Swipe to delete
         document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
             let startX = 0;
             wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
@@ -436,40 +424,28 @@
             });
         });
     }
-    
     function markRead(id) {
         const n = userNotifications.find(n => n.id === id);
         if (n) { n.read = true; saveNotificationsToStorage(); }
     }
-    
     function deleteNotification(id) {
         userNotifications = userNotifications.filter(n => n.id !== id);
         saveNotificationsToStorage();
         showToast('Notification deleted');
     }
-    
     window.markRead = markRead;
     window.deleteNotification = deleteNotification;
 
-    // ==================== SSE REAL-TIME CONNECTION ====================
+    // ==================== SSE REAL-TIME ====================
     let eventSource = null;
     let reconnectAttempts = 0;
-    let lastSeenNotificationId = 0;
-    
     function connectToStream() {
         if (eventSource) eventSource.close();
         eventSource = new EventSource('/api/events');
-        
-        eventSource.onopen = () => {
-            console.log('SSE Connected');
-            reconnectAttempts = 0;
-        };
-        
+        eventSource.onopen = () => { reconnectAttempts = 0; };
         eventSource.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                console.log('SSE Message:', data);
-                
                 if (data.type === 'notification') {
                     addNotification(data.title, data.message, data.icon || 'fas fa-bell', data.color || '#3b82f6');
                 } else if (data.type === 'data_update') {
@@ -477,19 +453,17 @@
                 }
             } catch(e) { console.error('SSE parse error:', e); }
         };
-        
         eventSource.onerror = () => {
-            console.log('SSE Error, reconnecting...');
             if (eventSource) eventSource.close();
             const delay = Math.min(30000, 1000 * Math.pow(2, reconnectAttempts));
             setTimeout(() => connectToStream(), delay);
             reconnectAttempts++;
         };
     }
-    
+    connectToStream();
+
     // ==================== CONTENT DATA ====================
     let contentData = { news: [], digital: [], local: [], phone: [], products: [], social: [] };
-    
     async function loadContentData() {
         try {
             const res = await fetch('/api/data');
@@ -499,7 +473,6 @@
             }
         } catch(e) { console.error('Failed to load content:', e); }
     }
-    
     function renderAllContent() {
         renderNews(contentData.news || []);
         renderServices('digitalContainer', contentData.digital || [], 'fas fa-code');
@@ -508,7 +481,6 @@
         renderProducts(contentData.products || []);
         renderSocial(contentData.social || []);
     }
-    
     function renderNews(news) {
         const container = document.getElementById('newsContainer');
         if (!container) return;
@@ -518,7 +490,6 @@
             <div class="slim-card"><div class="card-content"><div class="card-title"><i class="${item.icon || 'fas fa-newspaper'}" style="color: ${item.color || '#3b82f6'}"></i> ${escapeHtml(item.title)}</div><div class="card-desc">${escapeHtml(item.description)}</div></div></div>
         `).join('');
     }
-    
     function renderServices(containerId, services, icon) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -528,7 +499,6 @@
             <div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>
         `).join('');
     }
-    
     function renderProducts(products) {
         const container = document.getElementById('productsContainer');
         if (!container) return;
@@ -538,7 +508,6 @@
             <div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>
         `).join('');
     }
-    
     function renderSocial(social) {
         const container = document.getElementById('socialContainer');
         if (!container) return;
@@ -553,7 +522,6 @@
             </a>
         `).join('');
     }
-    
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
     // ==================== SUPPORT FORM ====================
@@ -563,7 +531,11 @@
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) { formMsg.innerHTML = '<span style="color: #ef4444;">Enter topic</span>'; return; }
+            if (!topic) {
+                formMsg.innerHTML = '<span style="color: #ef4444;">Enter topic</span>';
+                return;
+            }
+            formMsg.innerHTML = '<span style="color: #10b981;">Sending...</span>';
             try {
                 const res = await fetch('/api/support', {
                     method: 'POST',
@@ -576,28 +548,24 @@
                     })
                 });
                 if (res.ok) {
-                    formMsg.innerHTML = '<span style="color: #10b981;">✓ Sent</span>';
+                    formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
                     supportForm.reset();
-                    setTimeout(() => formMsg.innerHTML = '', 2000);
+                    setTimeout(() => formMsg.innerHTML = '', 4000);
                     addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
                 } else throw new Error();
-            } catch { formMsg.innerHTML = '<span style="color: #ef4444;">Failed</span>'; setTimeout(() => formMsg.innerHTML = '', 2000); }
+            } catch(err) {
+                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Try again.</span>';
+                setTimeout(() => formMsg.innerHTML = '', 3000);
+            }
         });
     }
 
     // ==================== INITIALIZATION ====================
     loadNotificationsFromStorage();
     loadContentData();
-    connectToStream();
-    
-    // Periodic refresh every 30 seconds as fallback
-    setInterval(() => {
-        if (document.hasFocus()) {
-            loadContentData();
-        }
-    }, 30000);
-    
-    // Register Service Worker for PWA
+    // Periodic refresh as fallback
+    setInterval(() => { if (document.hasFocus()) loadContentData(); }, 30000);
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js').catch(console.log);
     }
