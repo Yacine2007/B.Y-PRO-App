@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
+        /* (جميع الأنماط كما هي بدون تغيير) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -41,38 +42,23 @@
             color: var(--text);
             transition: all 0.2s;
         }
-		
-		
-		
-.menu-trigger {
-    position: fixed;
-    left: 16px;
-    top: calc(50% - 24px);  /* نصف ارتفاع الزر (48px / 2 = 24px) */
-    width: 48px;
-    height: 48px;
-    background: rgba(255,255,255,0.95);
-    backdrop-filter: blur(8px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 1000;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-radius: 24px;
-    font-size: 1.5rem;
-    color: var(--primary);
-}
-
-.menu-trigger {
-    margin: 0 !important;
-    padding: 0 !important;
-}		
-		
-		
-		
-		
-        /* Force margin/padding reset */
         .menu-trigger {
+            position: fixed;
+            left: 16px;
+            top: calc(50% - 24px);
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 24px;
+            font-size: 1.5rem;
+            color: var(--primary);
             margin: 0 !important;
             padding: 0 !important;
         }
@@ -97,7 +83,6 @@
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.7; transform: scale(1.2); }
         }
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--surface);
@@ -139,6 +124,7 @@
             color: var(--text-muted);
             cursor: pointer;
             font-weight: 500;
+            text-decoration: none;
         }
         .nav-item i { width: 24px; }
         .nav-item:hover, .nav-item.active {
@@ -154,7 +140,6 @@
             justify-content: space-between;
             border: 1px solid var(--border);
         }
-        /* Main content */
         .main-content {
             flex: 1;
             margin-left: 0;
@@ -178,7 +163,6 @@
             border-radius: 40px;
             font-size: 0.75rem;
         }
-        /* User greeting with avatar */
         .user-greeting {
             display: flex;
             justify-content: space-between;
@@ -206,10 +190,6 @@
             font-size: 1.2rem;
             font-weight: 500;
         }
-        .greeting-text i {
-            color: var(--primary);
-            margin-right: 8px;
-        }
         .bell-icon {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -228,7 +208,6 @@
             font-size: 0.7rem;
             font-weight: 600;
         }
-        /* Carousel */
         .carousel-container {
             position: relative;
             width: 100%;
@@ -270,7 +249,6 @@
             cursor: pointer;
         }
         .indicator.active { background: var(--primary); width: 20px; border-radius: 4px; }
-        /* Cards */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -297,7 +275,6 @@
             gap: 8px;
         }
         .card-desc { color: var(--text-muted); font-size: 0.85rem; }
-        /* Notifications */
         .notification-card-wrapper {
             position: relative;
             overflow: hidden;
@@ -351,7 +328,6 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
-        /* Support form */
         .support-form { margin-top: 20px; }
         .form-group { margin-bottom: 16px; }
         .form-group input, .form-group select, .form-group textarea {
@@ -428,7 +404,6 @@
         }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
-        /* Toast */
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -455,7 +430,6 @@
             justify-content: center;
         }
         .toast-message { font-size: 0.85rem; font-weight: 500; }
-        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -523,6 +497,12 @@
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
+            <!-- Store PRO Link -->
+            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item" style="text-decoration: none;">
+                <img src="https://store-pro.great-site.net/favicon.png" style="width: 24px; height: 24px; object-fit: contain;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'">
+                <span>Store PRO</span>
+                <i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.7rem;"></i>
+            </a>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
@@ -534,27 +514,20 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
-            <!-- User greeting with avatar -->
             <div class="user-greeting">
                 <div class="greeting-left" id="greetingAvatar">
-                    <div class="avatar-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="greeting-text">
-                        Hello, User
-                    </div>
+                    <div class="avatar-icon"><i class="fas fa-user"></i></div>
+                    <div class="greeting-text">Hello, User</div>
                 </div>
                 <div class="bell-icon" id="homeBellIcon">
                     <i class="fas fa-bell"></i>
                     <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
                 </div>
             </div>
-            <!-- Carousel -->
             <div class="carousel-container" id="carouselContainer">
                 <div class="carousel-slides" id="carouselSlides"></div>
                 <div class="carousel-indicators" id="carouselIndicators"></div>
             </div>
-            <!-- News section -->
             <div class="section-header" style="margin-top: 8px;">
                 <h2 class="section-title">Latest News</h2>
                 <span class="section-badge">Updates</span>
@@ -562,10 +535,7 @@
             <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page">
-            <div class="section-header">
-                <h1 class="section-title">Notifications</h1>
-                <span id="notificationsPageBadge" class="section-badge"></span>
-            </div>
+            <div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div>
             <div id="notificationsContainer" class="cards-grid"></div>
         </div>
         <div id="digitalPage" class="section-page">
@@ -670,9 +640,16 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
         closeSidebar();
     }
-    navItems.forEach(item => { item.addEventListener('click', () => { const pageId = item.getAttribute('data-page'); if (pageId && pages[pageId]) navigateTo(pageId); }); });
+    navItems.forEach(item => { 
+        if (!item.hasAttribute('data-external')) {
+            item.addEventListener('click', () => { 
+                const pageId = item.getAttribute('data-page'); 
+                if (pageId && pages[pageId]) navigateTo(pageId); 
+            });
+        }
+    });
 
-    // ==================== ACCOUNT MODAL (from avatar) ====================
+    // ==================== ACCOUNT MODAL ====================
     const greetingAvatar = document.getElementById('greetingAvatar');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -905,17 +882,25 @@
     }
     connectToStream();
 
-    // ==================== CONTENT DATA ====================
+    // ==================== CONTENT DATA (مع معالجة 500) ====================
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     async function loadContentData() {
         try {
             const res = await fetch('/api/data');
+            if (res.status === 500) {
+                console.error('Server error (500)');
+                showToast('⚠️ Server error. Please try again later.', true);
+                return;
+            }
             if (res.ok) {
                 contentData = await res.json();
                 renderCarousel(contentData.images || []);
                 renderAllContent();
             }
-        } catch(e) { console.error('Failed to load content:', e); }
+        } catch(e) { 
+            console.error('Failed to load content:', e);
+            showToast('⚠️ Connection error. Please check your internet.', true);
+        }
     }
     function renderAllContent() {
         renderNews(contentData.news || []);
@@ -980,7 +965,7 @@
     }
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
-    // ==================== SUPPORT FORM (FIXED) ====================
+    // ==================== SUPPORT FORM (مع معالجة 500) ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -1005,6 +990,9 @@
                         details: document.getElementById('detailsInput').value
                     })
                 });
+                if (res.status === 500) {
+                    throw new Error('Server error');
+                }
                 const data = await res.json();
                 if (res.ok && data.success) {
                     formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
