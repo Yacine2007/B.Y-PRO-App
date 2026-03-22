@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bypro-v1';
+const CACHE_NAME = 'bypro-v3';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -24,8 +24,8 @@ self.addEventListener('push', event => {
   const data = event.data ? event.data.json() : {};
   const options = {
     body: data.body || 'New notification',
-    icon: 'https://by-pro.kesug.com/App.png',
-    badge: 'https://by-pro.kesug.com/App.png',
+    icon: 'https://by-pro.kesug.com/App.png?v=3',
+    badge: 'https://by-pro.kesug.com/App.png?v=3',
     vibrate: [200, 100, 200]
   };
   event.waitUntil(self.registration.showNotification(data.title || 'B.Y PRO', options));
