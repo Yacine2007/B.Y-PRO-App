@@ -390,7 +390,7 @@
         }
     }
 
-    // ==================== DATA LOAD/SAVE ====================
+    // ==================== DATA LOAD/SAVE (no auto-refresh) ====================
     async function loadFromServer() {
         try {
             const response = await fetch(`${API_BASE}/api/data`);
@@ -654,7 +654,7 @@
     function updateProduct(id, f, v) { const i = products.find(i => i.id === id); if (i) i[f] = v; renderProducts(); autoSave(); }
     function deleteProduct(id) { products = products.filter(i => i.id !== id); products.forEach((p, idx) => p.order = idx); renderProducts(); autoSave(); }
 
-    // ==================== SOCIAL MEDIA ====================
+    // ==================== SOCIAL MEDIA (fixed icon selection) ====================
     function renderSocial() {
         const container = document.getElementById('socialContainer');
         if (!container) return;
@@ -665,7 +665,7 @@
                 <div class="item-info">
                     <div style="display: flex; align-items: center; gap: 20px;">
                         <i class="${s.icon}" style="font-size: 2rem; color: ${s.color}"></i>
-                        <button class="btn-outline" onclick="openIconLibrary((icon)=>{ s.icon=icon; renderSocial(); autoSave(); })">Change</button>
+                        <button class="btn-outline" onclick="openIconLibraryForSocial(${s.id})">Change</button>
                     </div>
                     <input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocial(${s.id}, 'name', this.value)">
                     <div><input type="color" value="${s.color}" onchange="updateSocial(${s.id}, 'color', this.value)"></div>
@@ -677,9 +677,43 @@
         if (!socialLinks.length) container.innerHTML = '<div class="item-card"><div class="item-info">No social links</div></div>';
         autoSave();
     }
-    function addSocial() { socialLinks.push({ id: nextId.social++, name: "New Platform", icon: "fab fa-facebook-f", color: "#3b82f6", url: "#", order: socialLinks.length }); renderSocial(); autoSave(); }
-    function updateSocial(id, f, v) { const i = socialLinks.find(i => i.id === id); if (i) i[f] = v; renderSocial(); autoSave(); }
-    function deleteSocial(id) { socialLinks = socialLinks.filter(i => i.id !== id); socialLinks.forEach((s, idx) => s.order = idx); renderSocial(); autoSave(); }
+    
+    function openIconLibraryForSocial(socialId) {
+        openIconLibrary((icon) => {
+            const item = socialLinks.find(s => s.id === socialId);
+            if (item) {
+                item.icon = icon;
+                renderSocial();
+                autoSave();
+            }
+        });
+    }
+    
+    function addSocial() { 
+        socialLinks.push({ 
+            id: nextId.social++, 
+            name: "New Platform", 
+            icon: "fab fa-facebook-f", 
+            color: "#3b82f6", 
+            url: "#", 
+            order: socialLinks.length 
+        }); 
+        renderSocial(); 
+        autoSave(); 
+    }
+    function updateSocial(id, f, v) { 
+        const i = socialLinks.find(i => i.id === id); 
+        if (i) i[f] = v; 
+        renderSocial(); 
+        autoSave(); 
+    }
+    function deleteSocial(id) { 
+        socialLinks = socialLinks.filter(i => i.id !== id); 
+        socialLinks.forEach((s, idx) => s.order = idx); 
+        renderSocial(); 
+        autoSave(); 
+    }
+    
     let dragSocialId = null;
     function dragSocialStart(e) { dragSocialId = parseInt(e.target.closest('.item-card').dataset.id); }
     function dragSocialEnd() { dragSocialId = null; }
@@ -711,7 +745,7 @@
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        // Refresh current section
+        // Refresh current section display
         if (s === 'support') renderSupportMessages();
         if (s === 'homeImages') renderImages();
         if (s === 'news') renderNews();
@@ -731,6 +765,7 @@
     // Expose globals
     window.openIconLibrary = openIconLibrary; window.selectIcon = selectIcon; window.closeIconModal = closeIconModal;
     window.openIconLibraryForBroadcast = openIconLibraryForBroadcast; window.openIconLibraryForIndividual = openIconLibraryForIndividual;
+    window.openIconLibraryForSocial = openIconLibraryForSocial;
     window.sendBroadcast = sendBroadcast; window.sendIndividual = sendIndividual;
     window.replyToMessage = replyToMessage; window.deleteSupportMessage = deleteSupportMessage; window.clearAllSupportMessages = clearAllSupportMessages;
     window.addImage = addImage; window.replaceImage = replaceImage; window.updateImage = updateImage; window.removeImage = removeImage;
@@ -745,7 +780,7 @@
 
     loadFromServer();
 
-    // Real-time SSE for support messages
+    // Real-time SSE for support messages only (no auto-refresh)
     let eventSource = null;
     function connectToStream() {
         if (eventSource) eventSource.close();
@@ -755,7 +790,7 @@
             if (data.type === 'support_new' || data.type === 'data_update') {
                 loadFromServer();
                 if (data.type === 'support_new') {
-                    showToast(`📩 New support message from ${data.data?.sender || 'user'}`);
+                    showToast(`New support message from ${data.data?.sender || 'user'}`);
                 }
             }
         };
