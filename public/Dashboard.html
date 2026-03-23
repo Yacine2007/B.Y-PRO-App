@@ -79,6 +79,13 @@
             align-items: center;
             gap: 10px;
         }
+        /* Action Buttons Row */
+        .action-buttons-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: flex-end;
+        }
         /* Forms */
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.85rem; color: #475569; }
@@ -112,6 +119,7 @@
         .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
         .btn-success { background: #10b981; }
+        .btn-warning { background: #f59e0b; }
         /* Grids */
         .items-grid {
             display: grid;
@@ -274,6 +282,10 @@
                     <h2 class="card-title"><i class="fas fa-images"></i> Home Page Images (Carousel)</h2>
                     <button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button>
                 </div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
+                </div>
                 <div id="imagesContainer" class="items-grid"></div>
             </div>
         </div>
@@ -284,6 +296,10 @@
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-newspaper"></i> News Management</h2>
                     <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button>
+                </div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshNews()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="saveNews()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
                 </div>
                 <div id="newsContainer" class="items-grid"></div>
             </div>
@@ -323,16 +339,72 @@
                     <h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2>
                     <button onclick="clearAllSupportMessages()" class="btn-danger"><i class="fas fa-trash-alt"></i> Clear All</button>
                 </div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshSupport()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                </div>
                 <div id="supportMessagesContainer"></div>
             </div>
         </div>
 
         <!-- Digital Services Section -->
-        <div id="digitalSection" class="section-page"><div class="card"><div class="card-header"><h3>Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div><div id="digitalServicesContainer" class="items-grid"></div></div></div>
-        <div id="localSection" class="section-page"><div class="card"><div class="card-header"><h3>Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div><div id="localServicesContainer" class="items-grid"></div></div></div>
-        <div id="phoneSection" class="section-page"><div class="card"><div class="card-header"><h3>Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div><div id="phoneServicesContainer" class="items-grid"></div></div></div>
-        <div id="productsSection" class="section-page"><div class="card"><div class="card-header"><h3>Products</h3><button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div><div id="productsContainer" class="items-grid"></div></div></div>
-        <div id="socialSection" class="section-page"><div class="card"><div class="card-header"><h3>Social Media</h3><div><button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icons</button><button onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button></div></div><div id="socialContainer" class="items-grid"></div></div></div>
+        <div id="digitalSection" class="section-page">
+            <div class="card">
+                <div class="card-header"><h3>Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshDigital()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="saveDigital()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
+                </div>
+                <div id="digitalServicesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Local Services Section -->
+        <div id="localSection" class="section-page">
+            <div class="card">
+                <div class="card-header"><h3>Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshLocal()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="saveLocal()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
+                </div>
+                <div id="localServicesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Phone Services Section -->
+        <div id="phoneSection" class="section-page">
+            <div class="card">
+                <div class="card-header"><h3>Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshPhone()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="savePhone()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
+                </div>
+                <div id="phoneServicesContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="productsSection" class="section-page">
+            <div class="card">
+                <div class="card-header"><h3>Products</h3><button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshProducts()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="saveProducts()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
+                </div>
+                <div id="productsContainer" class="items-grid"></div>
+            </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div id="socialSection" class="section-page">
+            <div class="card">
+                <div class="card-header"><h3>Social Media</h3><div><button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icons</button><button onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button></div></div>
+                <div class="action-buttons-row">
+                    <button onclick="refreshSocial()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button onclick="saveSocial()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
+                </div>
+                <div id="socialContainer" class="items-grid"></div>
+            </div>
+        </div>
     </main>
 </div>
 <div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
@@ -341,6 +413,7 @@
 <script>
     // ==================== CONFIG ====================
     const API_BASE = '';
+    
     // Data stores
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
     let nextId = { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
@@ -390,8 +463,8 @@
         }
     }
 
-    // ==================== DATA LOAD/SAVE (no auto-refresh) ====================
-    async function loadFromServer() {
+    // ==================== DATA LOAD/SAVE (manual only) ====================
+    async function loadAllData() {
         try {
             const response = await fetch(`${API_BASE}/api/data`);
             if (!response.ok) throw new Error('Network error');
@@ -408,16 +481,14 @@
                 nextId = record.nextId || { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
             }
             renderAll();
+            showToast('Data loaded');
         } catch (err) {
             console.error('Load failed:', err);
             showToast('Failed to load data', true);
         }
     }
 
-    let isSaving = false;
-    async function saveToServer() {
-        if (isSaving) return;
-        isSaving = true;
+    async function saveAllData() {
         const payload = {
             images: homeImages, news: newsItems,
             digital: digitalServices, local: localServices, phone: phoneServices,
@@ -430,16 +501,30 @@
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Save failed');
-            showToast('Saved');
+            showToast('All changes saved');
         } catch (err) {
             console.error('Save failed:', err);
             showToast('Save failed', true);
-        } finally {
-            isSaving = false;
         }
     }
 
-    function autoSave() { setTimeout(saveToServer, 500); }
+    // Section-specific save functions
+    async function saveImages() { await saveAllData(); }
+    async function saveNews() { await saveAllData(); }
+    async function saveDigital() { await saveAllData(); }
+    async function saveLocal() { await saveAllData(); }
+    async function savePhone() { await saveAllData(); }
+    async function saveProducts() { await saveAllData(); }
+    async function saveSocial() { await saveAllData(); }
+    
+    async function refreshImages() { await loadAllData(); }
+    async function refreshNews() { await loadAllData(); }
+    async function refreshDigital() { await loadAllData(); }
+    async function refreshLocal() { await loadAllData(); }
+    async function refreshPhone() { await loadAllData(); }
+    async function refreshProducts() { await loadAllData(); }
+    async function refreshSocial() { await loadAllData(); }
+    async function refreshSupport() { await loadAllData(); }
 
     // ==================== ICON LIBRARY ====================
     function openIconLibrary(callback) {
@@ -452,6 +537,15 @@
     function closeIconModal() { document.getElementById('iconModal').classList.remove('active'); currentIconCallback = null; }
     function openIconLibraryForBroadcast() { openIconLibrary((icon) => { broadcastIcon = icon; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${icon}" style="color: ${broadcastColor}"></i>`; }); }
     function openIconLibraryForIndividual() { openIconLibrary((icon) => { individualIcon = icon; document.getElementById('individualIconPreview').innerHTML = `<i class="${icon}" style="color: ${individualColor}"></i>`; }); }
+    function openIconLibraryForSocial(socialId) {
+        openIconLibrary((icon) => {
+            const item = socialLinks.find(s => s.id === socialId);
+            if (item) {
+                item.icon = icon;
+                renderSocial();
+            }
+        });
+    }
 
     // ==================== NOTIFICATIONS ====================
     async function sendNotification(type) {
@@ -502,10 +596,9 @@
                 </div>
             </div>
         `).join('');
-        autoSave();
     }
-    function deleteSupportMessage(idx) { if (confirm('Delete this message?')) { supportMessages.splice(idx, 1); renderSupportMessages(); autoSave(); showToast('Message deleted'); } }
-    function clearAllSupportMessages() { if (confirm('Delete ALL messages?')) { supportMessages = []; renderSupportMessages(); autoSave(); showToast('All messages cleared'); } }
+    function deleteSupportMessage(idx) { if (confirm('Delete this message?')) { supportMessages.splice(idx, 1); renderSupportMessages(); } }
+    function clearAllSupportMessages() { if (confirm('Delete ALL messages?')) { supportMessages = []; renderSupportMessages(); } }
     function replyToMessage(recipient, subject) {
         showSection('notifications');
         document.getElementById('individualRecipient').value = recipient;
@@ -526,7 +619,6 @@
                 if (url) {
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
-                    autoSave();
                 } else showToast('Upload failed', true);
             }
         };
@@ -539,10 +631,10 @@
             <div class="item-card">
                 <div class="item-info">
                     <img src="${img.imageUrl}" class="image-preview" alt="preview">
-                    <input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImage(${img.id}, 'alt', this.value)">
+                    <input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImageLocally(${img.id}, 'alt', this.value)">
                     <button class="btn-outline" onclick="replaceImage(${img.id})">Replace</button>
                 </div>
-                <div class="item-actions"><button class="btn-danger" onclick="removeImage(${img.id})">Delete</button></div>
+                <div class="item-actions"><button class="btn-danger" onclick="removeImageLocal(${img.id})">Delete</button></div>
             </div>
         `).join('');
         if (!homeImages.length) container.innerHTML = '<div class="item-card"><div class="item-info">No images. Click "Add Image"</div></div>';
@@ -556,13 +648,13 @@
             if (file) {
                 showToast('Uploading...');
                 const url = await uploadToServer(file);
-                if (url) { img.imageUrl = url; renderImages(); autoSave(); }
+                if (url) { img.imageUrl = url; renderImages(); }
             }
         };
         input.click();
     }
-    function updateImage(id, field, val) { const img = homeImages.find(i => i.id === id); if (img) img[field] = val; renderImages(); autoSave(); }
-    function removeImage(id) { homeImages = homeImages.filter(i => i.id !== id); renderImages(); autoSave(); }
+    function updateImageLocally(id, field, val) { const img = homeImages.find(i => i.id === id); if (img) img[field] = val; renderImages(); }
+    function removeImageLocal(id) { homeImages = homeImages.filter(i => i.id !== id); renderImages(); }
 
     // ==================== NEWS ====================
     function renderNews() {
@@ -574,28 +666,26 @@
                     <div class="icon-color-row">
                         <i class="${item.icon || 'fas fa-newspaper'}" style="font-size: 1.5rem; color: ${item.color || '#3b82f6'}"></i>
                         <button class="btn-outline" onclick="selectNewsIcon(${item.id})">Icon</button>
-                        <input type="color" value="${item.color || '#3b82f6'}" onchange="updateNewsColor(${item.id}, this.value)">
+                        <input type="color" value="${item.color || '#3b82f6'}" onchange="updateNewsLocally(${item.id}, 'color', this.value)">
                     </div>
-                    <input type="text" value="${escapeHtml(item.title)}" placeholder="Title" onchange="updateNews(${item.id}, 'title', this.value)">
-                    <textarea rows="2" placeholder="Description" onchange="updateNews(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
+                    <input type="text" value="${escapeHtml(item.title)}" placeholder="Title" onchange="updateNewsLocally(${item.id}, 'title', this.value)">
+                    <textarea rows="2" placeholder="Description" onchange="updateNewsLocally(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
                 </div>
                 <div class="item-actions">
-                    <label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleNews(${item.id}, this.checked)"><span class="toggle-slider"></span></label>
-                    <button class="btn-danger" onclick="deleteNews(${item.id})">Delete</button>
+                    <label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleNewsLocally(${item.id}, this.checked)"><span class="toggle-slider"></span></label>
+                    <button class="btn-danger" onclick="deleteNewsLocal(${item.id})">Delete</button>
                 </div>
             </div>
         `).join('');
         if (!newsItems.length) container.innerHTML = '<div class="item-card"><div class="item-info">No news. Click "Add News"</div></div>';
-        autoSave();
     }
-    function addNews() { newsItems.push({ id: nextId.news++, title: "New News", description: "", enabled: true, icon: "fas fa-newspaper", color: "#3b82f6" }); renderNews(); autoSave(); }
-    function updateNews(id, f, v) { const i = newsItems.find(i => i.id === id); if (i) i[f] = v; renderNews(); autoSave(); }
-    function updateNewsColor(id, color) { const i = newsItems.find(i => i.id === id); if (i) i.color = color; renderNews(); autoSave(); }
-    function selectNewsIcon(id) { openIconLibrary((icon) => { const i = newsItems.find(i => i.id === id); if (i) i.icon = icon; renderNews(); autoSave(); }); }
-    function toggleNews(id, val) { const i = newsItems.find(i => i.id === id); if (i) i.enabled = val; renderNews(); autoSave(); }
-    function deleteNews(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); autoSave(); }
+    function addNews() { newsItems.push({ id: nextId.news++, title: "New News", description: "", enabled: true, icon: "fas fa-newspaper", color: "#3b82f6" }); renderNews(); }
+    function updateNewsLocally(id, f, v) { const i = newsItems.find(i => i.id === id); if (i) i[f] = v; renderNews(); }
+    function selectNewsIcon(id) { openIconLibrary((icon) => { const i = newsItems.find(i => i.id === id); if (i) i.icon = icon; renderNews(); }); }
+    function toggleNewsLocally(id, val) { const i = newsItems.find(i => i.id === id); if (i) i.enabled = val; renderNews(); }
+    function deleteNewsLocal(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); }
 
-    // ==================== GENERIC SERVICES RENDERER ====================
+    // ==================== GENERIC SERVICES ====================
     function renderImageBased(containerId, items, updateFn, deleteFn, typeName) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -608,13 +698,12 @@
                     <textarea rows="2" placeholder="Description" onchange="window.${updateFn}(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
                 </div>
                 <div class="item-actions">
-                    <label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="window.toggleItemStatus('${containerId}', ${item.id}, this.checked)"><span class="toggle-slider"></span></label>
+                    <label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="window.toggleItemStatusLocal('${containerId}', ${item.id}, this.checked)"><span class="toggle-slider"></span></label>
                     <button class="btn-danger" onclick="window.${deleteFn}(${item.id})">Delete</button>
                 </div>
             </div>
         `).join('');
         if (!items.length) container.innerHTML = `<div class="item-card"><div class="item-info">No ${typeName}</div></div>`;
-        autoSave();
     }
     window.replaceServiceImage = async (id, containerId, updateFn) => {
         let arr; if (containerId === 'digitalServicesContainer') arr = digitalServices; else if (containerId === 'localServicesContainer') arr = localServices; else if (containerId === 'phoneServicesContainer') arr = phoneServices; else if (containerId === 'productsContainer') arr = products; else return;
@@ -625,36 +714,39 @@
             if (file) {
                 showToast('Uploading...');
                 const url = await uploadToServer(file);
-                if (url) { item.imageUrl = url; renderAll(); autoSave(); }
+                if (url) { item.imageUrl = url; renderAll(); }
             }
         };
         input.click();
     };
-    window.toggleItemStatus = (containerId, id, val) => {
-        if (containerId === 'digitalServicesContainer') { const i = digitalServices.find(i => i.id === id); if (i) i.enabled = val; renderDigital(); autoSave(); }
-        else if (containerId === 'localServicesContainer') { const i = localServices.find(i => i.id === id); if (i) i.enabled = val; renderLocal(); autoSave(); }
-        else if (containerId === 'phoneServicesContainer') { const i = phoneServices.find(i => i.id === id); if (i) i.enabled = val; renderPhone(); autoSave(); }
-        else if (containerId === 'productsContainer') { const i = products.find(i => i.id === id); if (i) i.enabled = val; renderProducts(); autoSave(); }
+    window.toggleItemStatusLocal = (containerId, id, val) => {
+        if (containerId === 'digitalServicesContainer') { const i = digitalServices.find(i => i.id === id); if (i) i.enabled = val; renderDigital(); }
+        else if (containerId === 'localServicesContainer') { const i = localServices.find(i => i.id === id); if (i) i.enabled = val; renderLocal(); }
+        else if (containerId === 'phoneServicesContainer') { const i = phoneServices.find(i => i.id === id); if (i) i.enabled = val; renderPhone(); }
+        else if (containerId === 'productsContainer') { const i = products.find(i => i.id === id); if (i) i.enabled = val; renderProducts(); }
     };
 
-    function addDigital() { digitalServices.push({ id: nextId.digital++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderDigital(); autoSave(); }
-    function renderDigital() { renderImageBased('digitalServicesContainer', digitalServices, 'updateDigital', 'deleteDigital', 'digital services'); }
-    function updateDigital(id, f, v) { const i = digitalServices.find(i => i.id === id); if (i) i[f] = v; renderDigital(); autoSave(); }
-    function deleteDigital(id) { digitalServices = digitalServices.filter(i => i.id !== id); renderDigital(); autoSave(); }
-    function addLocal() { localServices.push({ id: nextId.local++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderLocal(); autoSave(); }
-    function renderLocal() { renderImageBased('localServicesContainer', localServices, 'updateLocal', 'deleteLocal', 'local services'); }
-    function updateLocal(id, f, v) { const i = localServices.find(i => i.id === id); if (i) i[f] = v; renderLocal(); autoSave(); }
-    function deleteLocal(id) { localServices = localServices.filter(i => i.id !== id); renderLocal(); autoSave(); }
-    function addPhone() { phoneServices.push({ id: nextId.phone++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderPhone(); autoSave(); }
-    function renderPhone() { renderImageBased('phoneServicesContainer', phoneServices, 'updatePhone', 'deletePhone', 'phone services'); }
-    function updatePhone(id, f, v) { const i = phoneServices.find(i => i.id === id); if (i) i[f] = v; renderPhone(); autoSave(); }
-    function deletePhone(id) { phoneServices = phoneServices.filter(i => i.id !== id); renderPhone(); autoSave(); }
-    function addProduct() { products.push({ id: nextId.product++, name: "New Product", description: "", imageUrl: "https://placehold.co/400x200?text=Product", enabled: true, order: products.length }); renderProducts(); autoSave(); }
-    function renderProducts() { renderImageBased('productsContainer', products, 'updateProduct', 'deleteProduct', 'products'); }
-    function updateProduct(id, f, v) { const i = products.find(i => i.id === id); if (i) i[f] = v; renderProducts(); autoSave(); }
-    function deleteProduct(id) { products = products.filter(i => i.id !== id); products.forEach((p, idx) => p.order = idx); renderProducts(); autoSave(); }
+    function addDigital() { digitalServices.push({ id: nextId.digital++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderDigital(); }
+    function renderDigital() { renderImageBased('digitalServicesContainer', digitalServices, 'updateDigitalLocal', 'deleteDigitalLocal', 'digital services'); }
+    function updateDigitalLocal(id, f, v) { const i = digitalServices.find(i => i.id === id); if (i) i[f] = v; renderDigital(); }
+    function deleteDigitalLocal(id) { digitalServices = digitalServices.filter(i => i.id !== id); renderDigital(); }
+    
+    function addLocal() { localServices.push({ id: nextId.local++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderLocal(); }
+    function renderLocal() { renderImageBased('localServicesContainer', localServices, 'updateLocalLocal', 'deleteLocalLocal', 'local services'); }
+    function updateLocalLocal(id, f, v) { const i = localServices.find(i => i.id === id); if (i) i[f] = v; renderLocal(); }
+    function deleteLocalLocal(id) { localServices = localServices.filter(i => i.id !== id); renderLocal(); }
+    
+    function addPhone() { phoneServices.push({ id: nextId.phone++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderPhone(); }
+    function renderPhone() { renderImageBased('phoneServicesContainer', phoneServices, 'updatePhoneLocal', 'deletePhoneLocal', 'phone services'); }
+    function updatePhoneLocal(id, f, v) { const i = phoneServices.find(i => i.id === id); if (i) i[f] = v; renderPhone(); }
+    function deletePhoneLocal(id) { phoneServices = phoneServices.filter(i => i.id !== id); renderPhone(); }
+    
+    function addProduct() { products.push({ id: nextId.product++, name: "New Product", description: "", imageUrl: "https://placehold.co/400x200?text=Product", enabled: true, order: products.length }); renderProducts(); }
+    function renderProducts() { renderImageBased('productsContainer', products, 'updateProductLocal', 'deleteProductLocal', 'products'); }
+    function updateProductLocal(id, f, v) { const i = products.find(i => i.id === id); if (i) i[f] = v; renderProducts(); }
+    function deleteProductLocal(id) { products = products.filter(i => i.id !== id); products.forEach((p, idx) => p.order = idx); renderProducts(); }
 
-    // ==================== SOCIAL MEDIA (fixed icon selection) ====================
+    // ==================== SOCIAL MEDIA ====================
     function renderSocial() {
         const container = document.getElementById('socialContainer');
         if (!container) return;
@@ -667,28 +759,15 @@
                         <i class="${s.icon}" style="font-size: 2rem; color: ${s.color}"></i>
                         <button class="btn-outline" onclick="openIconLibraryForSocial(${s.id})">Change</button>
                     </div>
-                    <input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocial(${s.id}, 'name', this.value)">
-                    <div><input type="color" value="${s.color}" onchange="updateSocial(${s.id}, 'color', this.value)"></div>
-                    <input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocial(${s.id}, 'url', this.value)">
+                    <input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocialLocal(${s.id}, 'name', this.value)">
+                    <div><input type="color" value="${s.color}" onchange="updateSocialLocal(${s.id}, 'color', this.value)"></div>
+                    <input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocialLocal(${s.id}, 'url', this.value)">
                 </div>
-                <div class="item-actions"><button class="btn-danger" onclick="deleteSocial(${s.id})">Delete</button></div>
+                <div class="item-actions"><button class="btn-danger" onclick="deleteSocialLocal(${s.id})">Delete</button></div>
             </div>
         `).join('');
         if (!socialLinks.length) container.innerHTML = '<div class="item-card"><div class="item-info">No social links</div></div>';
-        autoSave();
     }
-    
-    function openIconLibraryForSocial(socialId) {
-        openIconLibrary((icon) => {
-            const item = socialLinks.find(s => s.id === socialId);
-            if (item) {
-                item.icon = icon;
-                renderSocial();
-                autoSave();
-            }
-        });
-    }
-    
     function addSocial() { 
         socialLinks.push({ 
             id: nextId.social++, 
@@ -699,20 +778,9 @@
             order: socialLinks.length 
         }); 
         renderSocial(); 
-        autoSave(); 
     }
-    function updateSocial(id, f, v) { 
-        const i = socialLinks.find(i => i.id === id); 
-        if (i) i[f] = v; 
-        renderSocial(); 
-        autoSave(); 
-    }
-    function deleteSocial(id) { 
-        socialLinks = socialLinks.filter(i => i.id !== id); 
-        socialLinks.forEach((s, idx) => s.order = idx); 
-        renderSocial(); 
-        autoSave(); 
-    }
+    function updateSocialLocal(id, f, v) { const i = socialLinks.find(i => i.id === id); if (i) i[f] = v; renderSocial(); }
+    function deleteSocialLocal(id) { socialLinks = socialLinks.filter(i => i.id !== id); socialLinks.forEach((s, idx) => s.order = idx); renderSocial(); }
     
     let dragSocialId = null;
     function dragSocialStart(e) { dragSocialId = parseInt(e.target.closest('.item-card').dataset.id); }
@@ -729,7 +797,7 @@
         const [dragged] = socialLinks.splice(dragIdx, 1);
         socialLinks.splice(targetIdx, 0, dragged);
         socialLinks.forEach((s, idx) => s.order = idx);
-        renderSocial(); autoSave();
+        renderSocial();
     }
 
     function renderAll() {
@@ -745,15 +813,6 @@
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        // Refresh current section display
-        if (s === 'support') renderSupportMessages();
-        if (s === 'homeImages') renderImages();
-        if (s === 'news') renderNews();
-        if (s === 'digital') renderDigital();
-        if (s === 'local') renderLocal();
-        if (s === 'phone') renderPhone();
-        if (s === 'products') renderProducts();
-        if (s === 'social') renderSocial();
     }
     document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
     document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
@@ -768,30 +827,34 @@
     window.openIconLibraryForSocial = openIconLibraryForSocial;
     window.sendBroadcast = sendBroadcast; window.sendIndividual = sendIndividual;
     window.replyToMessage = replyToMessage; window.deleteSupportMessage = deleteSupportMessage; window.clearAllSupportMessages = clearAllSupportMessages;
-    window.addImage = addImage; window.replaceImage = replaceImage; window.updateImage = updateImage; window.removeImage = removeImage;
-    window.addNews = addNews; window.updateNews = updateNews; window.updateNewsColor = updateNewsColor; window.selectNewsIcon = selectNewsIcon; window.toggleNews = toggleNews; window.deleteNews = deleteNews;
-    window.addDigital = addDigital; window.updateDigital = updateDigital; window.deleteDigital = deleteDigital;
-    window.addLocal = addLocal; window.updateLocal = updateLocal; window.deleteLocal = deleteLocal;
-    window.addPhone = addPhone; window.updatePhone = updatePhone; window.deletePhone = deletePhone;
-    window.addProduct = addProduct; window.updateProduct = updateProduct; window.deleteProduct = deleteProduct;
+    window.addImage = addImage; window.replaceImage = replaceImage; window.updateImageLocally = updateImageLocally; window.removeImageLocal = removeImageLocal;
+    window.addNews = addNews; window.updateNewsLocally = updateNewsLocally; window.selectNewsIcon = selectNewsIcon; window.toggleNewsLocally = toggleNewsLocally; window.deleteNewsLocal = deleteNewsLocal;
+    window.addDigital = addDigital; window.updateDigitalLocal = updateDigitalLocal; window.deleteDigitalLocal = deleteDigitalLocal;
+    window.addLocal = addLocal; window.updateLocalLocal = updateLocalLocal; window.deleteLocalLocal = deleteLocalLocal;
+    window.addPhone = addPhone; window.updatePhoneLocal = updatePhoneLocal; window.deletePhoneLocal = deletePhoneLocal;
+    window.addProduct = addProduct; window.updateProductLocal = updateProductLocal; window.deleteProductLocal = deleteProductLocal;
+    window.addSocial = addSocial; window.updateSocialLocal = updateSocialLocal; window.deleteSocialLocal = deleteSocialLocal;
     window.dragSocialStart = dragSocialStart; window.dragSocialEnd = dragSocialEnd; window.dropSocial = dropSocial;
-    window.addSocial = addSocial; window.updateSocial = updateSocial; window.deleteSocial = deleteSocial;
+    window.refreshImages = refreshImages; window.refreshNews = refreshNews; window.refreshDigital = refreshDigital;
+    window.refreshLocal = refreshLocal; window.refreshPhone = refreshPhone; window.refreshProducts = refreshProducts;
+    window.refreshSocial = refreshSocial; window.refreshSupport = refreshSupport;
+    window.saveImages = saveImages; window.saveNews = saveNews; window.saveDigital = saveDigital;
+    window.saveLocal = saveLocal; window.savePhone = savePhone; window.saveProducts = saveProducts;
+    window.saveSocial = saveSocial;
     window.showSection = showSection;
 
-    loadFromServer();
+    loadAllData();
 
-    // Real-time SSE for support messages only (no auto-refresh)
+    // Real-time SSE for support messages only (no auto-refresh of edits)
     let eventSource = null;
     function connectToStream() {
         if (eventSource) eventSource.close();
         eventSource = new EventSource('/api/events');
         eventSource.onmessage = (e) => {
             const data = JSON.parse(e.data);
-            if (data.type === 'support_new' || data.type === 'data_update') {
-                loadFromServer();
-                if (data.type === 'support_new') {
-                    showToast(`New support message from ${data.data?.sender || 'user'}`);
-                }
+            if (data.type === 'support_new') {
+                loadAllData();
+                showToast(`New support message from ${data.data?.sender || 'user'}`);
             }
         };
         eventSource.onerror = () => setTimeout(connectToStream, 5000);
