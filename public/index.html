@@ -26,6 +26,7 @@
             --card-radius: 24px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --skeleton-gradient: linear-gradient(90deg, #e5e5e5 0%, #f0f0f0 50%, #e5e5e5 100%);
         }
         .dark-theme {
             --bg: #000000;
@@ -34,6 +35,7 @@
             --text-muted: #b0b0b0;
             --border: #333333;
             --primary: #3b82f6;
+            --skeleton-gradient: linear-gradient(90deg, #2a2a2a 0%, #3a3a3a 50%, #2a2a2a 100%);
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -41,76 +43,52 @@
             color: var(--text);
             transition: all 0.2s;
             overflow-x: hidden;
-        }
-        /* Splash Screen */
-        .splash-screen {
+            /* منع السحب لإعادة التحميل */
+            overscroll-behavior-y: contain;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
+            overflow-y: auto;
         }
-        .splash-content {
-            text-align: center;
-            animation: pulse 1.5s ease-in-out infinite;
+        /* Skeleton Loader Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
-        .splash-logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--primary), #6c5ce7);
-            border-radius: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: glow 1.5s ease-in-out infinite alternate;
+        .skeleton {
+            background: var(--surface);
+            background-image: var(--skeleton-gradient);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
+            border-radius: 12px;
         }
-        .splash-logo img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-        }
-        .splash-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), #6c5ce7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        .skeleton-text {
+            height: 16px;
+            width: 100%;
             margin-bottom: 12px;
         }
-        .splash-subtitle {
-            color: var(--text-muted);
-            font-size: 0.85rem;
+        .skeleton-title {
+            height: 24px;
+            width: 60%;
+            margin-bottom: 16px;
         }
-        .splash-progress {
-            width: 200px;
-            height: 3px;
-            background: var(--border);
-            border-radius: 3px;
-            margin: 24px auto 0;
+        .skeleton-card {
+            background: var(--surface);
+            border-radius: var(--card-radius);
             overflow: hidden;
         }
-        .splash-progress-bar {
-            width: 0%;
-            height: 100%;
-            background: var(--primary);
-            border-radius: 3px;
-            transition: width 0.1s linear;
+        .skeleton-card .skeleton-img {
+            height: 160px;
+            width: 100%;
+            background: var(--surface);
+            background-image: var(--skeleton-gradient);
+            background-size: 200% 100%;
+            animation: shimmer 1.2s infinite;
         }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px rgba(0,102,204,0.3); }
-            100% { box-shadow: 0 0 25px rgba(0,102,204,0.6); }
+        .skeleton-card .skeleton-content {
+            padding: 20px;
         }
         .menu-trigger {
             position: fixed;
@@ -148,6 +126,10 @@
             border: 2px solid white;
             display: none;
             animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
         }
         .sidebar {
             width: 280px;
@@ -291,6 +273,7 @@
             overflow: hidden;
             margin-bottom: 32px;
             background: var(--surface);
+            min-height: 200px;
         }
         .carousel-slides {
             position: relative;
@@ -556,21 +539,7 @@
     </style>
 </head>
 <body>
-<!-- Splash Screen -->
-<div class="splash-screen" id="splashScreen">
-    <div class="splash-content">
-        <div class="splash-logo">
-            <img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo">
-        </div>
-        <div class="splash-title">B.Y PRO App</div>
-        <div class="splash-subtitle">Loading your experience...</div>
-        <div class="splash-progress">
-            <div class="splash-progress-bar" id="splashProgress"></div>
-        </div>
-    </div>
-</div>
-
-<div class="app-wrapper" style="display: none;" id="appContent">
+<div class="app-wrapper">
     <div class="menu-trigger" id="menuTrigger">
         <span>&gt;</span>
         <div class="menu-dot" id="menuDot"></div>
@@ -712,32 +681,78 @@
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 
 <script>
-    // ==================== SPLASH SCREEN ====================
-    let splashScreen = document.getElementById('splashScreen');
-    let progressBar = document.getElementById('splashProgress');
-    let progress = 0;
-    let auth = null;
-    let currentUser = null;
-    let appContent = document.getElementById('appContent');
-
-    function updateProgress(percent) {
-        progress = percent;
-        if (progressBar) progressBar.style.width = percent + '%';
-    }
-
-    function hideSplash() {
-        if (splashScreen) {
-            splashScreen.style.opacity = '0';
-            setTimeout(() => {
-                splashScreen.style.display = 'none';
-                appContent.style.display = 'block';
-            }, 500);
-        } else {
-            appContent.style.display = 'block';
+    // منع إعادة تحميل الصفحة بالسحب لأسفل
+    document.body.addEventListener('touchmove', function(e) {
+        if (e.target === document.body && e.cancelable) {
+            e.preventDefault();
         }
+    }, { passive: false });
+    
+    // منع السحب لأسفل من الحاوية الرئيسية
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        mainContent.addEventListener('touchstart', function(e) {
+            if (mainContent.scrollTop === 0 && e.touches[0].clientY > 50) {
+                e.preventDefault();
+            }
+        });
     }
+
+    // ==================== SKELETON LOADER FUNCTIONS ====================
+    function showSkeleton() {
+        const carouselContainer = document.getElementById('carouselContainer');
+        const newsContainer = document.getElementById('newsContainer');
+        const digitalContainer = document.getElementById('digitalContainer');
+        const localContainer = document.getElementById('localContainer');
+        const phoneContainer = document.getElementById('phoneContainer');
+        const productsContainer = document.getElementById('productsContainer');
+        const socialContainer = document.getElementById('socialContainer');
+        
+        // Carousel skeleton
+        if (carouselContainer && carouselContainer.querySelector('.carousel-slides')?.children.length === 0) {
+            carouselContainer.innerHTML = '<div class="skeleton-card" style="height: 200px; width: 100%;"><div class="skeleton-img" style="height: 200px;"></div></div>';
+        }
+        
+        // News skeleton
+        if (newsContainer) {
+            newsContainer.innerHTML = `
+                <div class="skeleton-card"><div class="skeleton-img" style="height: 160px;"></div><div class="skeleton-content"><div class="skeleton-title"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 80%;"></div></div></div>
+                <div class="skeleton-card"><div class="skeleton-img" style="height: 160px;"></div><div class="skeleton-content"><div class="skeleton-title"></div><div class="skeleton-text"></div><div class="skeleton-text" style="width: 80%;"></div></div></div>
+            `;
+        }
+        
+        // Services skeletons
+        const serviceContainers = [digitalContainer, localContainer, phoneContainer, productsContainer, socialContainer];
+        serviceContainers.forEach(container => {
+            if (container) {
+                container.innerHTML = `
+                    <div class="skeleton-card"><div class="skeleton-img" style="height: 160px;"></div><div class="skeleton-content"><div class="skeleton-title"></div><div class="skeleton-text"></div></div></div>
+                    <div class="skeleton-card"><div class="skeleton-img" style="height: 160px;"></div><div class="skeleton-content"><div class="skeleton-title"></div><div class="skeleton-text"></div></div></div>
+                `;
+            }
+        });
+    }
+    
+    function hideSkeleton() {
+        // يتم استبدال الـ skeleton بالبيانات الحقيقية عند تحميلها
+    }
+    
+    // ==================== THEME ====================
+    const themeToggle = document.getElementById('themeToggleSidebar');
+    if (localStorage.getItem('darkTheme') === 'true') {
+        document.documentElement.classList.add('dark-theme');
+        themeToggle.checked = true;
+    }
+    themeToggle.addEventListener('change', (e) => {
+        if (e.target.checked) document.documentElement.classList.add('dark-theme');
+        else document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('darkTheme', e.target.checked);
+    });
 
     // ==================== AUTHENTICATION ====================
+    let currentUser = null;
+    let auth = null;
+    
     function updateUIForUser(user) {
         currentUser = user;
         document.getElementById('userName').textContent = user.name || user.username || 'User';
@@ -753,13 +768,11 @@
         }
     }
 
-    // Initialize authentication
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
         onLogin: (user) => {
             console.log('Login successful:', user);
             updateUIForUser(user);
-            // Load app content after login
             loadNotificationsFromStorage();
             loadContentData();
         },
@@ -768,57 +781,28 @@
             currentUser = null;
             document.getElementById('userName').textContent = 'User';
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
-            // Show login again
             auth.show();
         }
     });
 
-    // Check authentication status and handle splash screen
+    // Check authentication and show skeleton while loading
+    showSkeleton();
+    
     setTimeout(() => {
-        updateProgress(30);
-        // Check if user is already authenticated
         if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
             const user = auth.getCurrentUser();
             if (user) {
                 updateUIForUser(user);
-                updateProgress(80);
-                setTimeout(() => {
-                    updateProgress(100);
-                    setTimeout(hideSplash, 300);
-                }, 500);
+                loadNotificationsFromStorage();
+                loadContentData();
                 return;
             }
         }
-        updateProgress(60);
-        // Show login after splash if not authenticated
+        // Show login if not authenticated
         setTimeout(() => {
-            updateProgress(100);
-            setTimeout(() => {
-                hideSplash();
-                if (auth) auth.show();
-            }, 300);
-        }, 1000);
-    }, 500);
-
-    // Continue loading data in background
-    setTimeout(() => {
-        if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
-            loadNotificationsFromStorage();
-            loadContentData();
-        }
-    }, 1500);
-
-    // ==================== THEME ====================
-    const themeToggle = document.getElementById('themeToggleSidebar');
-    if (localStorage.getItem('darkTheme') === 'true') {
-        document.documentElement.classList.add('dark-theme');
-        themeToggle.checked = true;
-    }
-    themeToggle.addEventListener('change', (e) => {
-        if (e.target.checked) document.documentElement.classList.add('dark-theme');
-        else document.documentElement.classList.remove('dark-theme');
-        localStorage.setItem('darkTheme', e.target.checked);
-    });
+            if (auth) auth.show();
+        }, 500);
+    }, 300);
 
     // ==================== SIDEBAR ====================
     const menuTrigger = document.getElementById('menuTrigger');
