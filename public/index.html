@@ -379,7 +379,16 @@
             border-left: 4px solid var(--success);
         }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
-        .toast-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #d1fae5;
+            color: var(--success);
+        }
         .toast-message { font-size: 0.85rem; font-weight: 500; }
         /* Modal */
         .modal-overlay {
@@ -483,7 +492,7 @@
             justify-content: space-between;
             background: var(--surface);
             border-radius: 60px;
-            padding: 10px 16px;
+            padding: 8px 16px;
             margin-bottom: 20px;
             border: 1px solid var(--border);
         }
@@ -493,13 +502,13 @@
             gap: 12px;
         }
         .card-icon-small {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             object-fit: contain;
         }
         .card-code {
             font-family: monospace;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             letter-spacing: 0.5px;
             background: var(--bg);
             padding: 4px 10px;
@@ -508,12 +517,20 @@
         .copy-card-btn {
             background: transparent;
             border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 6px 12px;
+            border-radius: 30px;
+            padding: 6px 10px;
             font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
             color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .copy-card-btn i {
+            font-size: 1rem;
         }
         .copy-card-btn:hover {
             background: var(--border);
@@ -691,7 +708,7 @@
                     <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
                     <span class="card-code" id="userCardCode">—</span>
                 </div>
-                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i> Copy</button>
+                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
             </div>
             <div class="balance-card">
                 <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
@@ -783,7 +800,7 @@
             <input type="number" id="cardDepositAmount" class="amount-input" placeholder="Or enter custom amount" step="0.01" min="1">
             <div class="card-input-row">
                 <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
-                <input type="text" id="cardCodeInput" class="code-input" placeholder="Card code (byppcn-xxxxxxxxxxxxxxx)" autocomplete="off">
+                <input type="text" id="cardCodeInput" class="code-input" placeholder="Your card code" autocomplete="off">
             </div>
             <div class="modal-buttons">
                 <button class="modal-confirm" id="confirmCardBtn"><i class="fas fa-credit-card"></i> Pay with Card</button>
@@ -931,7 +948,6 @@
         document.getElementById('walletBalance').textContent = balanceFormatted;
         const homeWalletSpan = document.getElementById('homeWalletAmount');
         if (homeWalletSpan) homeWalletSpan.textContent = `$${balanceFormatted}`;
-        // Update card code display
         const cardCodeSpan = document.getElementById('userCardCode');
         if (cardCodeSpan) {
             cardCodeSpan.textContent = userWalletData.cardCode || 'No card assigned';
@@ -1270,7 +1286,7 @@
         await processDeposit(amount, { method: 'binance', id: binanceId });
     };
 
-    // Card confirm
+    // Card confirm (with validation)
     confirmCardBtn.onclick = async () => {
         let amount = parseFloat(cardDepositAmount.value);
         if (isNaN(amount) || amount <= 0) {
@@ -1280,9 +1296,13 @@
         }
         if (amount < 1) { showToast('Minimum deposit is $1', true); return; }
         const cardCode = cardCodeInput.value.trim();
-        const codePattern = /^byppcn-\d{15}$/;
-        if (!codePattern.test(cardCode)) {
-            showToast('Invalid card code. Format: byppcn-xxxxxxxxxxxxxxx (15 digits)', true);
+        // Validate that the entered card code matches the user's own card code
+        if (!userWalletData.cardCode) {
+            showToast('No card code assigned to your account', true);
+            return;
+        }
+        if (cardCode !== userWalletData.cardCode) {
+            showToast('Invalid card code. The code you entered does not match your account card.', true);
             return;
         }
         depositModal.classList.remove('active');
