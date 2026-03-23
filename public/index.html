@@ -476,6 +476,49 @@
             border: 1px solid var(--border);
         }
         .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
+        /* Card Info Row */
+        .card-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border-radius: 60px;
+            padding: 10px 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+        .card-info-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-icon-small {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        .card-code {
+            font-family: monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 40px;
+        }
+        .copy-card-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+        .copy-card-btn:hover {
+            background: var(--border);
+            color: var(--primary);
+        }
         /* Wallet Modal */
         .modal {
             background: var(--surface);
@@ -489,7 +532,6 @@
         .modal-overlay.active .modal { transform: scale(1); }
         .modal h3 { font-size: 20px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
         .modal p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
-        /* Payment method tabs */
         .payment-tabs {
             display: flex;
             gap: 8px;
@@ -510,12 +552,8 @@
             background: var(--success);
             color: white;
         }
-        .payment-content {
-            display: none;
-        }
-        .payment-content.active {
-            display: block;
-        }
+        .payment-content { display: none; }
+        .payment-content.active { display: block; }
         .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
         .quick-amount-btn {
             flex: 1;
@@ -545,17 +583,6 @@
             color: var(--text);
         }
         .amount-input:focus, .code-input:focus { border-color: var(--success); }
-        .card-input-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .card-icon-small {
-            width: 36px;
-            height: 36px;
-            object-fit: contain;
-        }
         .modal-buttons { display: flex; gap: 10px; }
         .modal-buttons button {
             flex: 1;
@@ -577,6 +604,7 @@
             .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; top: calc(50% - 22px); }
             .carousel-slides { height: 160px; }
             .balance-amount { font-size: 40px; }
+            .card-info-row { flex-wrap: wrap; gap: 10px; }
         }
     </style>
 </head>
@@ -657,6 +685,14 @@
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <!-- Wallet Section -->
         <div id="walletPage" class="section-page">
+            <!-- Card Info Row (Top Bar) -->
+            <div class="card-info-row" id="cardInfoRow">
+                <div class="card-info-left">
+                    <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
+                    <span class="card-code" id="userCardCode">—</span>
+                </div>
+                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i> Copy</button>
+            </div>
             <div class="balance-card">
                 <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
                 <div class="balance-amount">$<span id="walletBalance">0.00</span></div>
@@ -877,8 +913,8 @@
         });
         await saveUserWallet();
         updateWalletUI();
-        addNotification('💰 Deposit Successful', `$${amount.toFixed(2)} added to wallet via ${paymentData.method === 'binance' ? 'Binance' : 'Card'}.`, 'fas fa-money-bill-wave', '#10b981');
-        showToast(`✅ $${amount.toFixed(2)} deposited successfully!`);
+        addNotification('Deposit Successful', `$${amount.toFixed(2)} added to wallet via ${paymentData.method === 'binance' ? 'Binance' : 'Card'}.`, 'fas fa-money-bill-wave', '#10b981');
+        showToast(`$${amount.toFixed(2)} deposited successfully!`);
         return true;
     }
 
@@ -895,6 +931,11 @@
         document.getElementById('walletBalance').textContent = balanceFormatted;
         const homeWalletSpan = document.getElementById('homeWalletAmount');
         if (homeWalletSpan) homeWalletSpan.textContent = `$${balanceFormatted}`;
+        // Update card code display
+        const cardCodeSpan = document.getElementById('userCardCode');
+        if (cardCodeSpan) {
+            cardCodeSpan.textContent = userWalletData.cardCode || 'No card assigned';
+        }
         const transactions = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = `${transactions.length} transaction${transactions.length !== 1 ? 's' : ''}`;
         const container = document.getElementById('walletTransactionsContainer');
@@ -1172,6 +1213,18 @@
     const paymentTabs = document.querySelectorAll('.payment-tab');
     const binanceContent = document.getElementById('binanceContent');
     const cardContent = document.getElementById('cardContent');
+
+    // Copy card code
+    const copyCardBtn = document.getElementById('copyCardBtn');
+    copyCardBtn.addEventListener('click', () => {
+        const cardCode = userWalletData?.cardCode;
+        if (cardCode) {
+            navigator.clipboard.writeText(cardCode);
+            showToast('Card code copied!');
+        } else {
+            showToast('No card code available', true);
+        }
+    });
 
     // Payment method switching
     paymentTabs.forEach(tab => {
