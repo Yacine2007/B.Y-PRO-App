@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        /* ... (جميع الأنماط كما هي مع إضافة تعديلات صغيرة) ... */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -490,6 +489,33 @@
         .modal-overlay.active .modal { transform: scale(1); }
         .modal h3 { font-size: 20px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
         .modal p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
+        /* Payment method tabs */
+        .payment-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .payment-tab {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 40px;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+        .payment-tab.active {
+            background: var(--success);
+            color: white;
+        }
+        .payment-content {
+            display: none;
+        }
+        .payment-content.active {
+            display: block;
+        }
         .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
         .quick-amount-btn {
             flex: 1;
@@ -505,7 +531,7 @@
             text-align: center;
         }
         .quick-amount-btn.active { background: var(--success); color: white; border-color: var(--success); }
-        .amount-input, .binance-input {
+        .amount-input, .code-input {
             width: 100%;
             padding: 14px;
             border: 2px solid var(--border);
@@ -518,7 +544,18 @@
             background: var(--bg);
             color: var(--text);
         }
-        .amount-input:focus, .binance-input:focus { border-color: var(--success); }
+        .amount-input:focus, .code-input:focus { border-color: var(--success); }
+        .card-input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .card-icon-small {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
         .modal-buttons { display: flex; gap: 10px; }
         .modal-buttons button {
             flex: 1;
@@ -670,38 +707,52 @@
     </div>
 </div>
 
-<!-- Wallet Modals -->
+<!-- Deposit Modal with Binance and Card options -->
 <div class="modal-overlay" id="depositModal">
     <div class="modal">
         <h3><i class="fas fa-money-bill-wave" style="color: #10b981;"></i> Deposit Funds</h3>
-        <p>Select amount or enter custom value</p>
-        <div class="quick-amounts">
-            <button class="quick-amount-btn" data-amount="1">$1</button>
-            <button class="quick-amount-btn" data-amount="5">$5</button>
-            <button class="quick-amount-btn" data-amount="10">$10</button>
-            <button class="quick-amount-btn" data-amount="15">$15</button>
-            <button class="quick-amount-btn" data-amount="20">$20</button>
+        <p>Select payment method</p>
+        <div class="payment-tabs">
+            <div class="payment-tab active" data-method="binance"><i class="fab fa-binance"></i> Binance</div>
+            <div class="payment-tab" data-method="card"><i class="fas fa-credit-card"></i> Card</div>
         </div>
-        <input type="number" id="depositAmount" class="amount-input" placeholder="Or enter custom amount" step="0.01" min="1">
-        <div class="modal-buttons">
-            <button class="modal-confirm" id="confirmAmountBtn"><i class="fab fa-binance"></i> Continue</button>
-            <button class="modal-cancel" id="cancelDepositBtn">Cancel</button>
+        <!-- Binance Content -->
+        <div id="binanceContent" class="payment-content active">
+            <div class="quick-amounts">
+                <button class="quick-amount-btn" data-amount="1">$1</button>
+                <button class="quick-amount-btn" data-amount="5">$5</button>
+                <button class="quick-amount-btn" data-amount="10">$10</button>
+                <button class="quick-amount-btn" data-amount="15">$15</button>
+                <button class="quick-amount-btn" data-amount="20">$20</button>
+            </div>
+            <input type="number" id="depositAmount" class="amount-input" placeholder="Or enter custom amount" step="0.01" min="1">
+            <div class="card-input-row">
+                <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
+                <input type="text" id="binanceIdInput" class="code-input" placeholder="Binance ID" autocomplete="off">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-confirm" id="confirmAmountBtn"><i class="fab fa-binance"></i> Continue</button>
+                <button class="modal-cancel" id="cancelDepositBtn">Cancel</button>
+            </div>
         </div>
-    </div>
-</div>
-
-<div class="modal-overlay" id="binanceModal">
-    <div class="modal">
-        <h3><i class="fab fa-binance" style="color: #f3ba2f;"></i> Binance Transfer</h3>
-        <p>Enter your Binance ID to verify transfer</p>
-        <div style="background: var(--bg); padding: 12px; border-radius: 16px; margin-bottom: 16px;">
-            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Amount to deposit:</div>
-            <div style="font-size: 24px; font-weight: 700; color: var(--success);" id="confirmAmount">$0.00</div>
-        </div>
-        <input type="text" id="userBinanceId" class="binance-input" placeholder="Enter your Binance ID" autocomplete="off">
-        <div class="modal-buttons">
-            <button class="modal-confirm" id="verifyBinanceBtn"><i class="fas fa-check-circle"></i> Verify Transfer</button>
-            <button class="modal-cancel" id="closeBinanceBtn">Cancel</button>
+        <!-- Card Content -->
+        <div id="cardContent" class="payment-content">
+            <div class="quick-amounts">
+                <button class="quick-amount-btn card-quick" data-amount="1">$1</button>
+                <button class="quick-amount-btn card-quick" data-amount="5">$5</button>
+                <button class="quick-amount-btn card-quick" data-amount="10">$10</button>
+                <button class="quick-amount-btn card-quick" data-amount="15">$15</button>
+                <button class="quick-amount-btn card-quick" data-amount="20">$20</button>
+            </div>
+            <input type="number" id="cardDepositAmount" class="amount-input" placeholder="Or enter custom amount" step="0.01" min="1">
+            <div class="card-input-row">
+                <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
+                <input type="text" id="cardCodeInput" class="code-input" placeholder="Card code (byppcn-xxxxxxxxxxxxxxx)" autocomplete="off">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-confirm" id="confirmCardBtn"><i class="fas fa-credit-card"></i> Pay with Card</button>
+                <button class="modal-cancel" id="cancelDepositBtn2">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
@@ -724,6 +775,7 @@
     let auth = null;
     let userWalletData = null;
     let selectedAmount = null;
+    let selectedPaymentMethod = 'binance';
     let userNotifications = [];
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
 
@@ -793,6 +845,7 @@
                 id: userId,
                 balance: 0,
                 transactions: [],
+                cardCode: null,
                 createdAt: new Date().toISOString()
             };
             await saveWalletData(allData);
@@ -808,23 +861,23 @@
         await saveWalletData(allData);
     }
 
-    async function processDeposit(amount, binanceId) {
+    async function processDeposit(amount, paymentData) {
         if (!currentUser || !userWalletData) return false;
-        showToast(`Verifying Binance ID: ${binanceId}...`);
+        showToast(`Processing ${paymentData.method} payment...`);
         await new Promise(resolve => setTimeout(resolve, 1500));
         userWalletData.balance += amount;
         if (!userWalletData.transactions) userWalletData.transactions = [];
         userWalletData.transactions.push({
             type: 'deposit',
             amount: amount,
-            description: `Binance Deposit (ID: ${binanceId})`,
-            binanceId: binanceId,
+            description: paymentData.method === 'binance' ? `Binance Deposit (ID: ${paymentData.id})` : `Card Deposit (${paymentData.code})`,
+            paymentMethod: paymentData.method,
+            paymentId: paymentData.id || paymentData.code,
             date: new Date().toISOString()
         });
         await saveUserWallet();
         updateWalletUI();
-        // إضافة إشعار مالي
-        addNotification('💰 Deposit Successful', `$${amount.toFixed(2)} has been added to your wallet.`, 'fas fa-money-bill-wave', '#10b981');
+        addNotification('💰 Deposit Successful', `$${amount.toFixed(2)} added to wallet via ${paymentData.method === 'binance' ? 'Binance' : 'Card'}.`, 'fas fa-money-bill-wave', '#10b981');
         showToast(`✅ $${amount.toFixed(2)} deposited successfully!`);
         return true;
     }
@@ -840,7 +893,6 @@
         if (!userWalletData) return;
         const balanceFormatted = userWalletData.balance.toFixed(2);
         document.getElementById('walletBalance').textContent = balanceFormatted;
-        // تحديث الرصيد في شريط Home
         const homeWalletSpan = document.getElementById('homeWalletAmount');
         if (homeWalletSpan) homeWalletSpan.textContent = `$${balanceFormatted}`;
         const transactions = userWalletData.transactions || [];
@@ -864,7 +916,7 @@
         `).join('')}</div>`;
     }
 
-    // ==================== SUPPORT FORM (using JSONBin) ====================
+    // ==================== SUPPORT FORM ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -1107,24 +1159,51 @@
 
     // ==================== WALLET MODALS ====================
     const depositModal = document.getElementById('depositModal');
-    const binanceModal = document.getElementById('binanceModal');
     const depositBtn = document.getElementById('depositBtn');
     const refreshWalletBtn = document.getElementById('refreshWalletBtn');
-    const confirmAmountBtn = document.getElementById('confirmAmountBtn');
     const cancelDepositBtn = document.getElementById('cancelDepositBtn');
-    const verifyBinanceBtn = document.getElementById('verifyBinanceBtn');
-    const closeBinanceBtn = document.getElementById('closeBinanceBtn');
+    const cancelDepositBtn2 = document.getElementById('cancelDepositBtn2');
+    const confirmAmountBtn = document.getElementById('confirmAmountBtn');
+    const confirmCardBtn = document.getElementById('confirmCardBtn');
     const depositAmountInput = document.getElementById('depositAmount');
-    const userBinanceIdInput = document.getElementById('userBinanceId');
+    const binanceIdInput = document.getElementById('binanceIdInput');
+    const cardDepositAmount = document.getElementById('cardDepositAmount');
+    const cardCodeInput = document.getElementById('cardCodeInput');
+    const paymentTabs = document.querySelectorAll('.payment-tab');
+    const binanceContent = document.getElementById('binanceContent');
+    const cardContent = document.getElementById('cardContent');
+
+    // Payment method switching
+    paymentTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            paymentTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            selectedPaymentMethod = tab.dataset.method;
+            if (selectedPaymentMethod === 'binance') {
+                binanceContent.classList.add('active');
+                cardContent.classList.remove('active');
+            } else {
+                binanceContent.classList.remove('active');
+                cardContent.classList.add('active');
+            }
+        });
+    });
 
     depositBtn.onclick = () => {
         depositAmountInput.value = '';
+        binanceIdInput.value = '';
+        cardDepositAmount.value = '';
+        cardCodeInput.value = '';
         selectedAmount = null;
         document.querySelectorAll('.quick-amount-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.card-quick').forEach(btn => btn.classList.remove('active'));
         depositModal.classList.add('active');
     };
     cancelDepositBtn.onclick = () => depositModal.classList.remove('active');
-    confirmAmountBtn.onclick = () => {
+    cancelDepositBtn2.onclick = () => depositModal.classList.remove('active');
+
+    // Binance confirm
+    confirmAmountBtn.onclick = async () => {
         let amount = parseFloat(depositAmountInput.value);
         if (isNaN(amount) || amount <= 0) {
             const activeQuick = document.querySelector('.quick-amount-btn.active');
@@ -1132,24 +1211,32 @@
             else { showToast('Please enter a valid amount', true); return; }
         }
         if (amount < 1) { showToast('Minimum deposit is $1', true); return; }
-        selectedAmount = amount;
+        const binanceId = binanceIdInput.value.trim();
+        if (!binanceId) { showToast('Please enter Binance ID', true); return; }
         depositModal.classList.remove('active');
-        document.getElementById('confirmAmount').textContent = `$${amount.toFixed(2)}`;
-        userBinanceIdInput.value = '';
-        binanceModal.classList.add('active');
+        await processDeposit(amount, { method: 'binance', id: binanceId });
     };
-    verifyBinanceBtn.onclick = async () => {
-        const binanceId = userBinanceIdInput.value.trim();
-        if (!binanceId) { showToast('Please enter your Binance ID', true); return; }
-        if (binanceId.length < 5) { showToast('Please enter a valid Binance ID', true); return; }
-        binanceModal.classList.remove('active');
-        await processDeposit(selectedAmount, binanceId);
-        selectedAmount = null;
+
+    // Card confirm
+    confirmCardBtn.onclick = async () => {
+        let amount = parseFloat(cardDepositAmount.value);
+        if (isNaN(amount) || amount <= 0) {
+            const activeQuick = document.querySelector('.card-quick.active');
+            if (activeQuick && activeQuick.dataset.amount) amount = parseFloat(activeQuick.dataset.amount);
+            else { showToast('Please enter a valid amount', true); return; }
+        }
+        if (amount < 1) { showToast('Minimum deposit is $1', true); return; }
+        const cardCode = cardCodeInput.value.trim();
+        const codePattern = /^byppcn-\d{15}$/;
+        if (!codePattern.test(cardCode)) {
+            showToast('Invalid card code. Format: byppcn-xxxxxxxxxxxxxxx (15 digits)', true);
+            return;
+        }
+        depositModal.classList.remove('active');
+        await processDeposit(amount, { method: 'card', code: cardCode });
     };
-    closeBinanceBtn.onclick = () => binanceModal.classList.remove('active');
-    refreshWalletBtn.onclick = refreshWallet;
-    depositModal.onclick = (e) => { if (e.target === depositModal) depositModal.classList.remove('active'); };
-    binanceModal.onclick = (e) => { if (e.target === binanceModal) binanceModal.classList.remove('active'); };
+
+    // Quick amount buttons for Binance
     document.querySelectorAll('.quick-amount-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.quick-amount-btn').forEach(b => b.classList.remove('active'));
@@ -1158,6 +1245,18 @@
             selectedAmount = parseFloat(btn.dataset.amount);
         });
     });
+    // Quick amount buttons for Card
+    document.querySelectorAll('.card-quick').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.card-quick').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            cardDepositAmount.value = btn.dataset.amount;
+            selectedAmount = parseFloat(btn.dataset.amount);
+        });
+    });
+
+    refreshWalletBtn.onclick = refreshWallet;
+    depositModal.onclick = (e) => { if (e.target === depositModal) depositModal.classList.remove('active'); };
 
     // ==================== CONTENT DATA ====================
     async function loadContentData() {
