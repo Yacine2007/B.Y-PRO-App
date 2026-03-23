@@ -693,6 +693,7 @@
     let userWalletData = null;
     let selectedAmount = null;
     let userNotifications = [];
+    let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
 
     // ==================== UTILITIES ====================
     function showToast(message, isError = false) {
@@ -715,6 +716,8 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
+    function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
+
     // ==================== WALLET API ====================
     async function fetchAllWalletData() {
         try {
@@ -726,10 +729,10 @@
             });
             if (!response.ok) throw new Error('Failed to fetch wallet data');
             const data = await response.json();
-            return data.record || { users: {} };
+            return data.record || { users: {}, supportMessages: [] };
         } catch (error) {
             console.error('Wallet fetch error:', error);
-            return { users: {} };
+            return { users: {}, supportMessages: [] };
         }
     }
 
@@ -821,6 +824,49 @@
                 <div class="transaction-amount">+$${t.amount.toFixed(2)}</div>
             </div>
         `).join('')}</div>`;
+    }
+
+    // ==================== SUPPORT FORM (using JSONBin) ====================
+    const supportForm = document.getElementById('supportRequestForm');
+    const formMsg = document.getElementById('formMessage');
+    if (supportForm) {
+        supportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const topic = document.getElementById('topicInput').value.trim();
+            if (!topic) {
+                formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>';
+                return;
+            }
+            const submitBtn = supportForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
+            const senderName = currentUser ? (currentUser.name || currentUser.username || 'App User') : 'App User';
+            const senderId = currentUser ? (currentUser.id || currentUser.userId || 'Unknown') : 'Unknown';
+            try {
+                const allData = await fetchAllWalletData();
+                if (!allData.supportMessages) allData.supportMessages = [];
+                allData.supportMessages.unshift({
+                    id: Date.now(),
+                    sender: `${senderName} (ID: ${senderId})`,
+                    field: document.getElementById('serviceSelect').value,
+                    subject: topic,
+                    details: document.getElementById('detailsInput').value,
+                    date: new Date().toISOString(),
+                    read: false
+                });
+                await saveWalletData(allData);
+                formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
+                supportForm.reset();
+                setTimeout(() => formMsg.innerHTML = '', 4000);
+                addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
+            } catch (err) {
+                console.error('Support submit error:', err);
+                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again later.</span>';
+                setTimeout(() => formMsg.innerHTML = '', 4000);
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
     }
 
     // ==================== AUTHENTICATION ====================
@@ -1072,7 +1118,6 @@
     });
 
     // ==================== CONTENT DATA ====================
-    let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     async function loadContentData() {
         try {
             const res = await fetch('/api/data');
@@ -1118,7 +1163,6 @@
         if (!social.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No links</div></div></div>'; return; }
         container.innerHTML = social.map(item => `<a href="${escapeHtml(item.url)}" target="_blank" class="slim-card" style="text-decoration: none;"><div class="card-content" style="text-align: center;"><i class="${escapeHtml(item.icon)}" style="font-size: 2.5rem; color: ${item.color}; margin-bottom: 12px; display: inline-block;"></i><div class="card-title" style="justify-content: center;">${escapeHtml(item.name)}</div><div class="card-desc">${escapeHtml(item.url)}</div></div></a>`).join('');
     }
-    function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
     // ==================== CAROUSEL ====================
     let carouselImages = [], currentSlide = 0, slideInterval = null;
@@ -1150,43 +1194,6 @@
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
-    // ==================== SUPPORT FORM ====================
-    const supportForm = document.getElementById('supportRequestForm');
-    const formMsg = document.getElementById('formMessage');
-    if (supportForm) {
-        supportForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) { formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>'; return; }
-            const submitBtn = supportForm.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
-            const senderName = currentUser ? (currentUser.name || currentUser.username || 'App User') : 'App User';
-            const senderId = currentUser ? (currentUser.id || currentUser.userId || 'Unknown') : 'Unknown';
-            try {
-                const res = await fetch('/api/support', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        sender: `${senderName} (ID: ${senderId})`,
-                        field: document.getElementById('serviceSelect').value,
-                        subject: topic,
-                        details: document.getElementById('detailsInput').value
-                    })
-                });
-                if (res.ok) {
-                    formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
-                    supportForm.reset();
-                    setTimeout(() => formMsg.innerHTML = '', 4000);
-                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
-                } else throw new Error();
-            } catch (err) {
-                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again later.</span>';
-                setTimeout(() => formMsg.innerHTML = '', 4000);
-            } finally { submitBtn.disabled = false; }
-        });
-    }
-
     // ==================== SKELETON ====================
     function showSkeleton() {
         const containers = ['newsContainer', 'digitalContainer', 'localContainer', 'phoneContainer', 'productsContainer', 'socialContainer'];
@@ -1198,6 +1205,18 @@
             }
         });
     }
+
+    // ==================== DARK MODE ====================
+    const themeToggleSwitch = document.getElementById('themeToggleSidebar');
+    if (localStorage.getItem('darkTheme') === 'true') {
+        document.documentElement.classList.add('dark-theme');
+        themeToggleSwitch.checked = true;
+    }
+    themeToggleSwitch.addEventListener('change', (e) => {
+        if (e.target.checked) document.documentElement.classList.add('dark-theme');
+        else document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('darkTheme', e.target.checked);
+    });
 
     // ==================== INIT ====================
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
