@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        /* (جميع الأنماط كما هي بدون تغيير) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -163,6 +162,7 @@
             border-radius: 40px;
             font-size: 0.75rem;
         }
+        /* User greeting with avatar and name */
         .user-greeting {
             display: flex;
             justify-content: space-between;
@@ -176,8 +176,8 @@
             cursor: pointer;
         }
         .avatar-icon {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             background: linear-gradient(135deg, var(--primary), #6c5ce7);
             border-radius: 50%;
             display: flex;
@@ -185,10 +185,20 @@
             justify-content: center;
             font-size: 1.2rem;
             color: white;
+            overflow: hidden;
+        }
+        .avatar-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .greeting-text {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 500;
+        }
+        .greeting-text .user-name {
+            font-weight: 700;
+            color: var(--primary);
         }
         .bell-icon {
             background: var(--surface);
@@ -497,7 +507,6 @@
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
-            <!-- Store PRO Link -->
             <a href="https://store-pro.great-site.net" target="_blank" class="nav-item" style="text-decoration: none;">
                 <img src="https://store-pro.great-site.net/favicon.png" style="width: 24px; height: 24px; object-fit: contain;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'">
                 <span>Store PRO</span>
@@ -516,8 +525,12 @@
         <div id="homePage" class="section-page active-page">
             <div class="user-greeting">
                 <div class="greeting-left" id="greetingAvatar">
-                    <div class="avatar-icon"><i class="fas fa-user"></i></div>
-                    <div class="greeting-text">Hello, User</div>
+                    <div class="avatar-icon" id="avatarIcon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="greeting-text">
+                        Hello, <span id="userName" class="user-name">User</span>
+                    </div>
                 </div>
                 <div class="bell-icon" id="homeBellIcon">
                     <i class="fas fa-bell"></i>
@@ -590,17 +603,22 @@
 </div>
 <div class="modal-overlay" id="accountModal">
     <div class="modal-card">
-        <h3><i class="fas fa-user-circle"></i> Account</h3>
-        <div class="info-row"><span>Name:</span><span>Alex Johnson</span></div>
-        <div class="info-row"><span>ID:</span><span>BY-2024-001</span></div>
-        <div class="info-row"><span>Email:</span><span>alex@bypro.com</span></div>
+        <h3><i class="fas fa-user-circle"></i> Account Details</h3>
+        <div class="info-row"><span>Name:</span><span id="modalUserName">Alex Johnson</span></div>
+        <div class="info-row"><span>ID:</span><span id="modalUserId">BY-2024-001</span></div>
+        <div class="info-row"><span>Email:</span><span id="modalUserEmail">alex@bypro.com</span></div>
         <button class="close-modal" id="closeModalBtn">Close</button>
+        <button class="close-modal" id="logoutBtn" style="margin-top: 12px; background: #ef4444;">Logout</button>
     </div>
 </div>
 <div class="toast-notification" id="toast">
     <div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div>
     <div class="toast-message" id="toastMessage"></div>
 </div>
+
+<!-- Authentication SDK -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 
 <script>
     // ==================== THEME ====================
@@ -614,6 +632,50 @@
         else document.documentElement.classList.remove('dark-theme');
         localStorage.setItem('darkTheme', e.target.checked);
     });
+
+    // ==================== AUTHENTICATION ====================
+    let currentUser = null;
+    let auth = null;
+
+    function updateUIForUser(user) {
+        currentUser = user;
+        // Update greeting
+        document.getElementById('userName').textContent = user.name || user.username || 'User';
+        document.getElementById('modalUserName').textContent = user.name || user.username || 'User';
+        document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
+        document.getElementById('modalUserEmail').textContent = user.email || 'No email';
+        
+        // Update avatar if profile image exists
+        const avatarDiv = document.getElementById('avatarIcon');
+        if (user.avatar) {
+            avatarDiv.innerHTML = `<img src="${user.avatar}" alt="avatar" style="width:100%;height:100%;object-fit:cover;">`;
+        } else {
+            avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+        }
+    }
+
+    // Initialize authentication
+    auth = new BYPROAuth({
+        loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
+        onLogin: (user) => {
+            console.log('Login successful:', user);
+            updateUIForUser(user);
+            // Load app content after login
+            loadNotificationsFromStorage();
+            loadContentData();
+        },
+        onLogout: () => {
+            console.log('Logout');
+            currentUser = null;
+            document.getElementById('userName').textContent = 'User';
+            document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
+            // Show login again
+            auth.show();
+        }
+    });
+
+    // Show login modal on page load
+    auth.show();
 
     // ==================== SIDEBAR ====================
     const menuTrigger = document.getElementById('menuTrigger');
@@ -636,12 +698,13 @@
         Object.values(pages).forEach(p => p.classList.remove('active-page'));
         pages[pageId].classList.add('active-page');
         navItems.forEach(nav => nav.classList.remove('active'));
-        document.querySelector(`.nav-item[data-page="${pageId}"]`).classList.add('active');
+        const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+        if (activeNav) activeNav.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         closeSidebar();
     }
     navItems.forEach(item => { 
-        if (!item.hasAttribute('data-external')) {
+        if (!item.hasAttribute('href')) {
             item.addEventListener('click', () => { 
                 const pageId = item.getAttribute('data-page'); 
                 if (pageId && pages[pageId]) navigateTo(pageId); 
@@ -653,8 +716,13 @@
     const greetingAvatar = document.getElementById('greetingAvatar');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     if (greetingAvatar) greetingAvatar.addEventListener('click', () => modal.classList.add('active'));
     closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
+    logoutBtn.addEventListener('click', () => {
+        if (auth) auth.logout();
+        modal.classList.remove('active');
+    });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
     // ==================== TOAST ====================
@@ -882,14 +950,13 @@
     }
     connectToStream();
 
-    // ==================== CONTENT DATA (مع معالجة 500) ====================
+    // ==================== CONTENT DATA ====================
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     async function loadContentData() {
         try {
             const res = await fetch('/api/data');
             if (res.status === 500) {
                 console.error('Server error (500)');
-                showToast('⚠️ Server error. Please try again later.', true);
                 return;
             }
             if (res.ok) {
@@ -897,10 +964,7 @@
                 renderCarousel(contentData.images || []);
                 renderAllContent();
             }
-        } catch(e) { 
-            console.error('Failed to load content:', e);
-            showToast('⚠️ Connection error. Please check your internet.', true);
-        }
+        } catch(e) { console.error('Failed to load content:', e); }
     }
     function renderAllContent() {
         renderNews(contentData.news || []);
@@ -965,7 +1029,7 @@
     }
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
-    // ==================== SUPPORT FORM (مع معالجة 500) ====================
+    // ==================== SUPPORT FORM (with user info) ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -979,20 +1043,23 @@
             const submitBtn = supportForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
+            
+            // Get user info from current session
+            const senderName = currentUser ? (currentUser.name || currentUser.username || 'App User') : 'App User';
+            const senderId = currentUser ? (currentUser.id || currentUser.userId || 'Unknown') : 'Unknown';
+            
             try {
                 const res = await fetch('/api/support', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        sender: "App User",
+                        sender: `${senderName} (ID: ${senderId})`,
                         field: document.getElementById('serviceSelect').value,
                         subject: topic,
                         details: document.getElementById('detailsInput').value
                     })
                 });
-                if (res.status === 500) {
-                    throw new Error('Server error');
-                }
+                if (res.status === 500) throw new Error('Server error');
                 const data = await res.json();
                 if (res.ok && data.success) {
                     formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
@@ -1013,8 +1080,14 @@
     }
 
     // ==================== INITIALIZATION ====================
-    loadNotificationsFromStorage();
-    loadContentData();
+    // Load content only after auth is ready
+    function initializeAfterAuth() {
+        loadNotificationsFromStorage();
+        loadContentData();
+    }
+    
+    // Wait a moment for auth to initialize
+    setTimeout(initializeAfterAuth, 1000);
     setInterval(() => { if (document.hasFocus()) loadContentData(); }, 30000);
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => { regs.forEach(reg => reg.unregister()); });
