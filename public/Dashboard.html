@@ -11,7 +11,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #0f172a; }
         .admin-container { display: flex; min-height: 100vh; }
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: #ffffff;
@@ -47,9 +46,7 @@
             font-weight: 500;
         }
         .nav-item i { width: 24px; font-size: 1.1rem; }
-        .nav-item img { width: 24px; height: 24px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: #eff6ff; color: #3b82f6; }
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -57,7 +54,6 @@
         }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
-        /* Cards */
         .card {
             background: #ffffff;
             border-radius: 24px;
@@ -265,133 +261,23 @@
     </aside>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
     <main class="main-content">
-        <!-- Home Images Section -->
         <div id="homeImagesSection" class="section-page active-page">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-images"></i> Home Page Images</h2>
-                    <button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-images"></i> Home Page Images</h2><button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button></div>
+                <div class="action-buttons-row"><button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button><button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button></div>
                 <div id="imagesContainer" class="items-grid"></div>
             </div>
         </div>
-
-        <!-- News Section -->
-        <div id="newsSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-newspaper"></i> News Management</h2>
-                    <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshNews()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveNews()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="newsContainer" class="items-grid"></div>
-            </div>
+        <div id="newsSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-newspaper"></i> News</h2><button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button></div><div class="action-buttons-row"><button onclick="refreshNews()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button><button onclick="saveNews()" class="btn-success"><i class="fas fa-save"></i> Save All</button></div><div id="newsContainer" class="items-grid"></div></div></div>
+        <div id="notificationsSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-globe"></i> Broadcast</h2></div><div class="form-group"><label>Title</label><input type="text" id="broadcastTitle"></div><div class="form-group"><label>Message</label><textarea id="broadcastDesc" rows="3"></textarea></div><div class="icon-color-row"><button class="btn-outline" onclick="openIconLibraryForBroadcast()"><i class="fas fa-icons"></i> Icon</button><span id="broadcastIconPreview"><i class="fas fa-bell"></i></span><input type="color" id="broadcastColor" value="#3b82f6"></div><button onclick="sendBroadcast()" style="margin-top:16px;">Send</button></div>
+            <div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-user"></i> Individual</h2></div><div class="form-group"><label>Recipient</label><input type="text" id="individualRecipient"></div><div class="form-group"><label>Title</label><input type="text" id="individualTitle"></div><div class="form-group"><label>Message</label><textarea id="individualDesc" rows="3"></textarea></div><div class="icon-color-row"><button class="btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button><span id="individualIconPreview"><i class="fas fa-envelope"></i></span><input type="color" id="individualColor" value="#3b82f6"></div><button onclick="sendIndividual()" style="margin-top:16px;">Send</button></div>
         </div>
-
-        <!-- Notifications Section -->
-        <div id="notificationsSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h2 class="card-title"><i class="fas fa-globe"></i> Broadcast Notification</h2></div>
-                <div class="form-group"><label>Title</label><input type="text" id="broadcastTitle" placeholder="Title"></div>
-                <div class="form-group"><label>Message</label><textarea id="broadcastDesc" rows="3" placeholder="Message"></textarea></div>
-                <div class="icon-color-row">
-                    <button type="button" class="btn-outline" onclick="openIconLibraryForBroadcast()"><i class="fas fa-icons"></i> Icon</button>
-                    <span id="broadcastIconPreview" class="icon-preview"><i class="fas fa-bell"></i></span>
-                    <input type="color" id="broadcastColor" value="#3b82f6">
-                </div>
-                <button onclick="sendBroadcast()" style="margin-top:16px;"><i class="fas fa-paper-plane"></i> Send</button>
-            </div>
-            <div class="card">
-                <div class="card-header"><h2 class="card-title"><i class="fas fa-user"></i> Individual Notification</h2></div>
-                <div class="form-group"><label>Recipient (Name/ID)</label><input type="text" id="individualRecipient" placeholder="e.g., John / USR-001"></div>
-                <div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Title"></div>
-                <div class="form-group"><label>Message</label><textarea id="individualDesc" rows="3" placeholder="Message"></textarea></div>
-                <div class="icon-color-row">
-                    <button type="button" class="btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button>
-                    <span id="individualIconPreview" class="icon-preview"><i class="fas fa-envelope"></i></span>
-                    <input type="color" id="individualColor" value="#3b82f6">
-                </div>
-                <button onclick="sendIndividual()" style="margin-top:16px;"><i class="fas fa-envelope"></i> Send</button>
-            </div>
-        </div>
-
-        <!-- Support Messages Section -->
-        <div id="supportSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2>
-                    <button onclick="refreshSupport()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                </div>
-                <div id="supportMessagesContainer"></div>
-            </div>
-        </div>
-
-        <!-- Digital Services Section -->
-        <div id="digitalSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshDigital()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveDigital()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="digitalServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Local Services Section -->
-        <div id="localSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshLocal()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveLocal()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="localServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Phone Services Section -->
-        <div id="phoneSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshPhone()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="savePhone()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="phoneServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Products Section -->
-        <div id="productsSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Products</h3><button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshProducts()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveProducts()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="productsContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropProduct(event)"></div>
-            </div>
-        </div>
-
-        <!-- Social Media Section -->
-        <div id="socialSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Social Media</h3><div><button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icons</button><button onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button></div></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshSocial()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveSocial()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div>
-            </div>
-        </div>
+        <div id="supportSection" class="section-page"><div class="card"><div class="card-header"><h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2><button onclick="refreshSupport()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button></div><div id="supportMessagesContainer"></div></div></div>
+        <div id="digitalSection" class="section-page"><div class="card"><div class="card-header"><h3>Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshDigital()" class="btn-outline">Refresh</button><button onclick="saveDigital()" class="btn-success">Save All</button></div><div id="digitalServicesContainer" class="items-grid"></div></div></div>
+        <div id="localSection" class="section-page"><div class="card"><div class="card-header"><h3>Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshLocal()" class="btn-outline">Refresh</button><button onclick="saveLocal()" class="btn-success">Save All</button></div><div id="localServicesContainer" class="items-grid"></div></div></div>
+        <div id="phoneSection" class="section-page"><div class="card"><div class="card-header"><h3>Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshPhone()" class="btn-outline">Refresh</button><button onclick="savePhone()" class="btn-success">Save All</button></div><div id="phoneServicesContainer" class="items-grid"></div></div></div>
+        <div id="productsSection" class="section-page"><div class="card"><div class="card-header"><h3>Products</h3><button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshProducts()" class="btn-outline">Refresh</button><button onclick="saveProducts()" class="btn-success">Save All</button></div><div id="productsContainer" class="items-grid"></div></div></div>
+        <div id="socialSection" class="section-page"><div class="card"><div class="card-header"><h3>Social Media</h3><div><button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icons</button><button onclick="addSocial()" style="margin-left:8px;">Add</button></div></div><div class="action-buttons-row"><button onclick="refreshSocial()" class="btn-outline">Refresh</button><button onclick="saveSocial()" class="btn-success">Save All</button></div><div id="socialContainer" class="items-grid"></div></div></div>
     </main>
 </div>
 <div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
@@ -399,12 +285,16 @@
 
 <script>
     // ==================== CONFIG ====================
-    const API_BASE = '';
     const JSONBIN_CONFIG = {
         API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
         ACCESS_KEY: 'B.Y PRO App',
         BIN_ID: '69c12accaa77b81da90ed823'
     };
+    
+    // Cloudinary direct upload
+    const CLOUDINARY_CLOUD_NAME = 'dfxde2mbi';
+    const CLOUDINARY_UPLOAD_PRESET = 'B.Y PRO App';
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
     // Data stores
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
@@ -420,7 +310,6 @@
         'fas fa-graduation-cap', 'fas fa-headset', 'fas fa-store', 'fas fa-cube'
     ];
 
-    // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
         const toast = document.getElementById('toast');
         const toastMsg = document.getElementById('toastMessage');
@@ -441,28 +330,28 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    async function uploadToServer(file) {
+    // Direct upload to Cloudinary
+    async function uploadToCloudinary(file) {
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('file', file);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
         try {
-            const response = await fetch(`${API_BASE}/api/upload`, { method: 'POST', body: formData });
+            const response = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
             const data = await response.json();
-            if (data.url) return data.url;
+            if (data.secure_url) return data.secure_url;
             throw new Error('Upload failed');
         } catch (err) {
+            console.error('Cloudinary upload error:', err);
             showToast('Image upload failed', true);
             return null;
         }
     }
 
-    // ==================== DATA LOAD/SAVE (Manual) ====================
+    // ==================== DATA LOAD/SAVE ====================
     async function loadAllData() {
         try {
             const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
-                headers: {
-                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
-                    'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY
-                }
+                headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY }
             });
             if (!response.ok) throw new Error('Network error');
             const record = await response.json();
@@ -509,7 +398,7 @@
         }
     }
 
-    // Section-specific functions
+    // Section save/refresh
     async function saveImages() { await saveAllData(); }
     async function saveNews() { await saveAllData(); }
     async function saveDigital() { await saveAllData(); }
@@ -517,7 +406,6 @@
     async function savePhone() { await saveAllData(); }
     async function saveProducts() { await saveAllData(); }
     async function saveSocial() { await saveAllData(); }
-    
     async function refreshImages() { await loadAllData(); }
     async function refreshNews() { await loadAllData(); }
     async function refreshDigital() { await loadAllData(); }
@@ -541,10 +429,7 @@
     function openIconLibraryForSocial(socialId) {
         openIconLibrary((icon) => {
             const item = socialLinks.find(s => s.id === socialId);
-            if (item) {
-                item.icon = icon;
-                renderSocial();
-            }
+            if (item) { item.icon = icon; renderSocial(); }
         });
     }
 
@@ -606,7 +491,7 @@
         document.getElementById('individualDesc').focus();
     }
 
-    // ==================== HOME IMAGES ====================
+    // ==================== HOME IMAGES (with Cloudinary upload) ====================
     async function addImage() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -615,11 +500,12 @@
             const file = e.target.files[0];
             if (file) {
                 showToast('Uploading...');
-                const url = await uploadToServer(file);
+                const url = await uploadToCloudinary(file);
                 if (url) {
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
-                } else showToast('Upload failed', true);
+                    showToast('Image uploaded!');
+                }
             }
         };
         input.click();
@@ -647,7 +533,7 @@
             const file = e.target.files[0];
             if (file) {
                 showToast('Uploading...');
-                const url = await uploadToServer(file);
+                const url = await uploadToCloudinary(file);
                 if (url) { img.imageUrl = url; renderImages(); }
             }
         };
@@ -713,7 +599,7 @@
             const file = e.target.files[0];
             if (file) {
                 showToast('Uploading...');
-                const url = await uploadToServer(file);
+                const url = await uploadToCloudinary(file);
                 if (url) { item.imageUrl = url; renderAll(); }
             }
         };
@@ -826,7 +712,6 @@
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        // Refresh current section display
         if (s === 'support') renderSupportMessages();
         if (s === 'homeImages') renderImages();
         if (s === 'news') renderNews();
@@ -839,7 +724,6 @@
     document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
     document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
 
-    // Color preview updates
     document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}"></i>`; });
     document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}"></i>`; });
 
@@ -868,7 +752,6 @@
 
     loadAllData();
 
-    // Real-time SSE for support messages only (no auto-refresh of edits)
     let eventSource = null;
     function connectToStream() {
         if (eventSource) eventSource.close();
