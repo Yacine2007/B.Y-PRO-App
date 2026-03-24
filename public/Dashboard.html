@@ -285,13 +285,8 @@
 
 <script>
     // ==================== CONFIG ====================
-    const API_BASE = ''; // same origin
-    const JSONBIN_CONFIG = {
-        API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
-        ACCESS_KEY: 'B.Y PRO App',
-        BIN_ID: '69c12accaa77b81da90ed823'
-    };
-
+    const API_BASE = '';
+    
     // Data stores
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
     let nextId = { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
@@ -326,7 +321,7 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    // Upload to server (which uploads to Cloudinary)
+    // Upload image via server API (which uses Cloudinary)
     async function uploadToServer(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -337,7 +332,7 @@
             throw new Error('Upload failed');
         } catch (err) {
             console.error('Upload error:', err);
-            showToast('Upload failed: ' + err.message, true);
+            showToast('Image upload failed', true);
             return null;
         }
     }
@@ -345,9 +340,7 @@
     // ==================== DATA LOAD/SAVE ====================
     async function loadAllData() {
         try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
-                headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY }
-            });
+            const response = await fetch(`${API_BASE}/api/data`);
             if (!response.ok) throw new Error('Network error');
             const record = await response.json();
             if (record) {
@@ -376,13 +369,9 @@
             products, social: socialLinks, support: supportMessages, nextId
         };
         try {
-            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`, {
+            const response = await fetch(`${API_BASE}/api/data`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
-                    'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Save failed');
@@ -393,7 +382,7 @@
         }
     }
 
-    // Section save/refresh
+    // Section-specific save/refresh
     async function saveImages() { await saveAllData(); }
     async function saveNews() { await saveAllData(); }
     async function saveDigital() { await saveAllData(); }
@@ -486,7 +475,7 @@
         document.getElementById('individualDesc').focus();
     }
 
-    // ==================== HOME IMAGES (using server upload) ====================
+    // ==================== HOME IMAGES (with server upload) ====================
     async function addImage() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -494,12 +483,12 @@
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                showToast('Uploading to server...');
+                showToast('Uploading...');
                 const url = await uploadToServer(file);
                 if (url) {
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
-                    showToast('Image uploaded successfully!');
+                    showToast('Image uploaded!');
                 }
             }
         };
