@@ -157,8 +157,6 @@
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
         .hours-badge { background: var(--success); color: white; padding: 6px 12px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; margin-bottom: 12px; }
         /* Wallet Page */
-        .wallet-header-img { width: 100%; border-radius: 20px; margin-bottom: 16px; background: var(--surface); padding: 16px; text-align: center; border: 1px solid var(--border); }
-        .wallet-header-img img { max-width: 80px; height: auto; }
         .card-info-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 60px; padding: 8px 12px; margin-bottom: 16px; border: 1px solid var(--border); }
         .card-info-left { display: flex; align-items: center; gap: 10px; }
         .card-icon-small { width: 28px; height: 28px; object-fit: contain; }
@@ -171,7 +169,7 @@
         .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-deposit, .btn-refresh { flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-deposit { background: var(--success); color: white; border: none; }
-        .btn-deposit:hover { background: var(--success-dark); transform: translateY(-1px); }
+        .btn-deposit:hover { background: #059669; transform: translateY(-1px); }
         .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
         .btn-refresh:hover { background: var(--border); transform: none; }
         .transactions-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
@@ -275,10 +273,13 @@
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
 
+        <!-- Wallet Section - بدون صورة wallet في الأعلى -->
         <div id="walletPage" class="section-page">
-            <div class="wallet-header-img"><img src="https://b-y-pro-app.onrender.com/wallet.png" alt="Wallet" onerror="this.style.display='none'"></div>
             <div class="card-info-row">
-                <div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'"><span class="card-code" id="userCardCode">—</span></div>
+                <div class="card-info-left">
+                    <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
+                    <span class="card-code" id="userCardCode">—</span>
+                </div>
                 <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
             </div>
             <div class="balance-card">
@@ -389,6 +390,7 @@
             const response = await fetch('/api/data');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
+            console.log('Fetched data:', data);
             return data;
         } catch (e) {
             console.error('Fetch error:', e);
@@ -414,21 +416,24 @@
     async function loadUserWallet(userId) {
         try {
             const allData = await fetchAllData();
+            console.log('All data users:', allData.users);
+            
             if (!allData.users || !allData.users[userId]) {
                 if (!allData.users) allData.users = {};
                 const newCardCode = generateCardCode();
                 allData.users[userId] = {
                     id: userId,
                     name: currentUser?.name || 'User',
-                    balance: 0,
+                    balance: 100, // تعيين رصيد تجريبي 100$ للمستخدم الجديد
                     transactions: [],
                     cardCode: newCardCode,
                     createdAt: new Date().toISOString()
                 };
                 await saveAllData(allData);
-                showToast(`New wallet created! Card: ${newCardCode}`);
+                showToast(`New wallet created! Card: ${newCardCode} - Balance: $100`);
             }
             userWalletData = allData.users[userId];
+            console.log('User wallet data loaded:', userWalletData);
             updateWalletUI();
             return userWalletData;
         } catch (err) {
