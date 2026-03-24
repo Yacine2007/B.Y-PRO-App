@@ -285,17 +285,12 @@
 
 <script>
     // ==================== CONFIG ====================
+    const API_BASE = ''; // same origin
     const JSONBIN_CONFIG = {
         API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
         ACCESS_KEY: 'B.Y PRO App',
         BIN_ID: '69c12accaa77b81da90ed823'
     };
-    
-    // Cloudinary configuration - استخدم upload_preset فقط بدون API key
-    const CLOUDINARY_CLOUD_NAME = 'dfxde2mbi';
-    // IMPORTANT: يجب أن يكون هذا الupload_preset مضبوطاً على "Unsigned" في لوحة Cloudinary
-    const CLOUDINARY_UPLOAD_PRESET = 'by_pro_unsigned'; // جرب هذا الاسم
-    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
     // Data stores
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
@@ -331,33 +326,17 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    // Direct upload to Cloudinary without API key (using unsigned preset)
-    async function uploadToCloudinary(file) {
+    // Upload to server (which uploads to Cloudinary)
+    async function uploadToServer(file) {
         const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-        
+        formData.append('image', file);
         try {
-            console.log('Uploading to Cloudinary with preset:', CLOUDINARY_UPLOAD_PRESET);
-            const response = await fetch(CLOUDINARY_URL, { 
-                method: 'POST', 
-                body: formData,
-                mode: 'cors'
-            });
-            
-            if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Cloudinary error response:', errorText);
-                throw new Error(`HTTP ${response.status}: ${errorText}`);
-            }
-            
+            const response = await fetch(`${API_BASE}/api/upload`, { method: 'POST', body: formData });
             const data = await response.json();
-            if (data.secure_url) {
-                return data.secure_url;
-            }
-            throw new Error('No secure_url in response');
+            if (data.url) return data.url;
+            throw new Error('Upload failed');
         } catch (err) {
-            console.error('Cloudinary upload error:', err);
+            console.error('Upload error:', err);
             showToast('Upload failed: ' + err.message, true);
             return null;
         }
@@ -507,7 +486,7 @@
         document.getElementById('individualDesc').focus();
     }
 
-    // ==================== HOME IMAGES (with Cloudinary upload) ====================
+    // ==================== HOME IMAGES (using server upload) ====================
     async function addImage() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -515,8 +494,8 @@
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                showToast('Uploading to Cloudinary...');
-                const url = await uploadToCloudinary(file);
+                showToast('Uploading to server...');
+                const url = await uploadToServer(file);
                 if (url) {
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
@@ -549,7 +528,7 @@
             const file = e.target.files[0];
             if (file) {
                 showToast('Uploading...');
-                const url = await uploadToCloudinary(file);
+                const url = await uploadToServer(file);
                 if (url) { img.imageUrl = url; renderImages(); }
             }
         };
@@ -615,7 +594,7 @@
             const file = e.target.files[0];
             if (file) {
                 showToast('Uploading...');
-                const url = await uploadToCloudinary(file);
+                const url = await uploadToServer(file);
                 if (url) { item.imageUrl = url; renderAll(); }
             }
         };
