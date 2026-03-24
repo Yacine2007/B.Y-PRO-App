@@ -23,6 +23,7 @@
             --primary: #0066cc;
             --danger: #ef4444;
             --success: #10b981;
+            --warning: #f59e0b;
             --card-radius: 24px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
@@ -42,14 +43,13 @@
             transition: all 0.2s;
             overflow-x: hidden;
             overflow-y: auto;
-            height: auto;
-            position: relative;
         }
         /* Menu Trigger */
         .menu-trigger {
             position: fixed;
             left: 16px;
-            top: calc(50% - 24px);
+            top: 50%;
+            transform: translateY(-50%);
             width: 48px;
             height: 48px;
             background: rgba(255,255,255,0.95);
@@ -65,6 +65,7 @@
             color: var(--primary);
             margin: 0 !important;
             padding: 0 !important;
+            transition: all 0.2s;
         }
         .dark-theme .menu-trigger { background: rgba(30,30,40,0.8); border-color: rgba(255,255,255,0.2); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
@@ -76,7 +77,7 @@
             height: 12px;
             background: var(--danger);
             border-radius: 50%;
-            border: 2px solid white;
+            border: 2px solid var(--surface);
             display: none;
             animation: pulse 1.5s infinite;
         }
@@ -111,9 +112,9 @@
             cursor: pointer;
             font-weight: 500;
             text-decoration: none;
+            transition: all 0.2s;
         }
         .nav-item i { width: 24px; }
-        .nav-item img.nav-icon { width: 24px; height: 24px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
         .theme-switch-sidebar { margin: 20px 16px; padding: 16px; background: var(--bg); border-radius: 16px; display: flex; justify-content: space-between; border: 1px solid var(--border); }
         /* Main Content */
@@ -125,22 +126,34 @@
         }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
-        .section-header {
+        /* Welcome Toast - only once */
+        .welcome-toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--surface);
+            border-radius: 60px;
+            padding: 12px 24px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
             gap: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 1500;
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--success);
         }
-        .section-title { font-size: 1.5rem; font-weight: 700; }
-        .section-badge { background: var(--primary); color: white; padding: 6px 14px; border-radius: 40px; font-size: 0.75rem; }
+        .welcome-toast.show { transform: translateX(-50%) translateY(0); }
         /* User greeting */
         .user-greeting {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            background: var(--surface);
+            padding: 16px 20px;
+            border-radius: 60px;
+            border: 1px solid var(--border);
         }
         .greeting-left { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .avatar-icon {
@@ -156,21 +169,22 @@
             overflow: hidden;
         }
         .avatar-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .greeting-text { font-size: 1.1rem; font-weight: 500; }
+        .greeting-text { font-size: 1rem; font-weight: 500; }
         .greeting-text .user-name { font-weight: 700; color: var(--primary); }
-        .bell-section { display: flex; align-items: center; gap: 12px; }
         .wallet-badge {
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: var(--success);
+            color: white;
             border-radius: 40px;
-            padding: 6px 12px;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
+            gap: 8px;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--success);
+            cursor: pointer;
+            transition: all 0.2s;
         }
+        .wallet-badge:hover { transform: scale(1.02); opacity: 0.95; }
         .bell-icon {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -180,8 +194,17 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s;
         }
-        .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 2px 8px; font-size: 0.7rem; font-weight: 600; }
+        .bell-icon:hover { background: var(--border); }
+        .bell-count {
+            background: var(--danger);
+            color: white;
+            border-radius: 20px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
         /* Carousel */
         .carousel-container {
             position: relative;
@@ -222,6 +245,17 @@
             cursor: pointer;
         }
         .indicator.active { background: var(--primary); width: 20px; border-radius: 4px; }
+        /* Section Header */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .section-title { font-size: 1.5rem; font-weight: 700; }
+        .section-badge { background: var(--primary); color: white; padding: 6px 14px; border-radius: 40px; font-size: 0.75rem; }
         /* Cards Grid */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
         .slim-card {
@@ -250,10 +284,7 @@
             border: 1px solid var(--border);
             padding: 20px;
         }
-        .notification-card.unread {
-            border-left: 4px solid var(--primary);
-            background: rgba(59,130,246,0.05);
-        }
+        .notification-card.unread { border-left: 4px solid var(--primary); background: rgba(59,130,246,0.05); }
         .notification-delete {
             position: absolute;
             right: 0;
@@ -386,11 +417,57 @@
         }
         .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
         .close-modal { margin-top: 24px; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
+        /* Wallet styles */
+        .balance-card {
+            background: var(--surface);
+            border-radius: 24px;
+            padding: 28px 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .balance-label { font-size: 13px; color: var(--text-muted); margin-bottom: 10px; }
+        .balance-amount { font-size: 48px; font-weight: 700; color: var(--success); line-height: 1.2; }
+        .action-buttons { display: flex; gap: 12px; margin-bottom: 28px; }
+        .btn-deposit, .btn-refresh {
+            flex: 1;
+            padding: 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-deposit { background: var(--success); color: white; border: none; }
+        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        .divider { border: none; height: 1px; background: var(--border); margin: 20px 0; }
+        .transactions-header { display: flex; justify-content: space-between; margin-bottom: 16px; }
+        .transactions-list { display: flex; flex-direction: column; gap: 8px; }
+        .transaction-item {
+            background: var(--surface);
+            padding: 12px 14px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+        .empty-transactions {
+            background: var(--surface);
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 20px;
+        }
         @media (max-width: 768px) {
             .main-content { padding: 20px; }
             .cards-grid { grid-template-columns: 1fr; }
             .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; top: calc(50% - 22px); }
             .carousel-slides { height: 160px; }
+            .balance-amount { font-size: 40px; }
         }
     </style>
 </head>
@@ -435,14 +512,12 @@
                     <div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div>
                     <div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div>
                 </div>
-                <div class="bell-section">
-                    <div class="wallet-badge" id="homeWalletBadge">
-                        <i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span>
-                    </div>
-                    <div class="bell-icon" id="homeBellIcon">
-                        <i class="fas fa-bell"></i>
-                        <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
-                    </div>
+                <div class="wallet-badge" id="homeWalletBtn">
+                    <i class="fas fa-wallet"></i> $<span id="homeWalletAmount">0.00</span>
+                </div>
+                <div class="bell-icon" id="homeBellIcon">
+                    <i class="fas fa-bell"></i>
+                    <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
                 </div>
             </div>
             <div class="carousel-container" id="carouselContainer">
@@ -536,12 +611,6 @@
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 
 <script>
-    // ==================== FIX SCROLLING ====================
-    // Remove any previous restrictions on body scrolling
-    document.body.style.position = 'relative';
-    document.body.style.height = 'auto';
-    document.body.style.overflow = 'auto';
-    
     // ==================== CONFIGURATION ====================
     const JSONBIN_CONFIG = {
         API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
@@ -555,6 +624,7 @@
     let userWalletData = null;
     let userNotifications = [];
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    let welcomeShown = false;
 
     // ==================== UTILITIES ====================
     function showToast(message, isError = false) {
@@ -577,16 +647,27 @@
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
+    function showWelcomeToast(name) {
+        if (welcomeShown) return;
+        welcomeShown = true;
+        const welcomeToast = document.createElement('div');
+        welcomeToast.className = 'welcome-toast';
+        welcomeToast.innerHTML = `<i class="fas fa-hand-wave"></i> Welcome back, ${name}!`;
+        document.body.appendChild(welcomeToast);
+        setTimeout(() => welcomeToast.classList.add('show'), 100);
+        setTimeout(() => {
+            welcomeToast.classList.remove('show');
+            setTimeout(() => welcomeToast.remove(), 500);
+        }, 3000);
+    }
+
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
     // ==================== WALLET API ====================
     async function fetchAllWalletData() {
         try {
             const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
-                headers: {
-                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
-                    'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY
-                }
+                headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY }
             });
             if (!response.ok) throw new Error('Failed to fetch wallet data');
             const data = await response.json();
@@ -618,12 +699,7 @@
     async function loadUserWallet(userId) {
         const allData = await fetchAllWalletData();
         if (!allData.users[userId]) {
-            allData.users[userId] = {
-                id: userId,
-                balance: 0,
-                transactions: [],
-                createdAt: new Date().toISOString()
-            };
+            allData.users[userId] = { id: userId, balance: 0, transactions: [], createdAt: new Date().toISOString() };
             await saveWalletData(allData);
         }
         userWalletData = allData.users[userId];
@@ -631,18 +707,11 @@
         return userWalletData;
     }
 
-    async function saveUserWallet() {
-        const allData = await fetchAllWalletData();
-        allData.users[currentUser.id] = userWalletData;
-        await saveWalletData(allData);
-    }
-
     function updateWalletUI() {
         if (!userWalletData) return;
         const balanceFormatted = userWalletData.balance.toFixed(2);
         document.getElementById('walletBalance').textContent = balanceFormatted;
-        const homeWalletSpan = document.getElementById('homeWalletAmount');
-        if (homeWalletSpan) homeWalletSpan.textContent = `$${balanceFormatted}`;
+        document.getElementById('homeWalletAmount').textContent = balanceFormatted;
         const transactions = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = `${transactions.length} transaction${transactions.length !== 1 ? 's' : ''}`;
         const container = document.getElementById('walletTransactionsContainer');
@@ -652,16 +721,9 @@
         }
         container.innerHTML = `<div class="transactions-list">${transactions.slice().reverse().map(t => `
             <div class="transaction-item">
-                <div class="transaction-info">
-                    <div class="transaction-icon deposit"><i class="fas fa-plus-circle"></i></div>
-                    <div class="transaction-details">
-                        <div class="transaction-name">${escapeHtml(t.description)}</div>
-                        <div class="transaction-date"><i class="far fa-calendar-alt"></i> ${new Date(t.date).toLocaleString()}</div>
-                    </div>
-                </div>
+                <div class="transaction-info"><div class="transaction-icon deposit"><i class="fas fa-plus-circle"></i></div><div><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div>
                 <div class="transaction-amount">+$${t.amount.toFixed(2)}</div>
-            </div>
-        `).join('')}</div>`;
+            </div>`).join('')}</div>`;
     }
 
     // ==================== SUPPORT FORM (FIXED) ====================
@@ -698,16 +760,12 @@
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 4000);
                     addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
-                } else {
-                    throw new Error('Save failed');
-                }
+                } else throw new Error('Save failed');
             } catch (err) {
                 console.error('Support submit error:', err);
                 formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again later.</span>';
                 setTimeout(() => formMsg.innerHTML = '', 4000);
-            } finally {
-                submitBtn.disabled = false;
-            }
+            } finally { submitBtn.disabled = false; }
         });
     }
 
@@ -722,6 +780,7 @@
         if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" alt="avatar">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         if (user.id) loadUserWallet(user.id);
+        showWelcomeToast(user.name || user.username || 'User');
     }
 
     auth = new BYPROAuth({
@@ -736,7 +795,8 @@
             userWalletData = null;
             document.getElementById('userName').textContent = 'User';
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
-            document.getElementById('homeWalletAmount').textContent = '$0.00';
+            document.getElementById('homeWalletAmount').textContent = '0.00';
+            welcomeShown = false;
             auth.show();
         }
     });
@@ -746,26 +806,19 @@
             const user = auth.getCurrentUser();
             if (user) updateUIForUser(user);
             else auth.show();
-        } else {
-            auth.show();
-        }
+        } else { auth.show(); }
     }, 500);
 
     // ==================== NOTIFICATIONS STORAGE ====================
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
-        if (saved) {
-            try { userNotifications = JSON.parse(saved); } catch(e) { userNotifications = []; }
-        }
+        if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) { userNotifications = []; } }
         if (!userNotifications.length) {
             userNotifications = [{
-                id: Date.now(),
-                title: 'Welcome to B.Y PRO App!',
+                id: Date.now(), title: 'Welcome to B.Y PRO App!',
                 message: 'You will receive important updates and notifications here.',
-                date: new Date().toISOString(),
-                read: false,
-                icon: 'fas fa-smile-wink',
-                color: '#3b82f6'
+                date: new Date().toISOString(), read: false,
+                icon: 'fas fa-smile-wink', color: '#3b82f6'
             }];
             saveNotificationsToStorage();
         }
@@ -787,11 +840,7 @@
     }
 
     function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
-        userNotifications.unshift({
-            id: Date.now(), title, message, icon, color,
-            date: new Date().toISOString(),
-            read: false
-        });
+        userNotifications.unshift({ id: Date.now(), title, message, icon, color, date: new Date().toISOString(), read: false });
         saveNotificationsToStorage();
         showToast(title);
         if (Notification.permission === 'granted') new Notification(title, { body: message, icon: 'https://by-pro.kesug.com/App.png?v=3' });
@@ -805,21 +854,12 @@
         const menuDot = document.getElementById('menuDot');
         const unreadCount = userNotifications.filter(n => !n.read).length;
 
-        if (countSpan) {
-            countSpan.style.display = unreadCount ? 'inline-block' : 'none';
-            if (unreadCount) countSpan.textContent = unreadCount;
-        }
+        if (countSpan) { countSpan.style.display = unreadCount ? 'inline-block' : 'none'; if (unreadCount) countSpan.textContent = unreadCount; }
         if (pageBadge) pageBadge.textContent = `${unreadCount} new`;
-        if (homeBellCount) {
-            homeBellCount.style.display = unreadCount ? 'inline-block' : 'none';
-            if (unreadCount) homeBellCount.textContent = unreadCount;
-        }
+        if (homeBellCount) { homeBellCount.style.display = unreadCount ? 'inline-block' : 'none'; if (unreadCount) homeBellCount.textContent = unreadCount; }
         if (menuDot) menuDot.style.display = unreadCount ? 'block' : 'none';
         if (!container) return;
-        if (!userNotifications.length) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
-            return;
-        }
+        if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>'; return; }
         container.innerHTML = userNotifications.sort((a,b) => new Date(b.date) - new Date(a.date)).map(n => `
             <div class="notification-card-wrapper" data-id="${n.id}">
                 <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
@@ -834,7 +874,6 @@
                 </div>
             </div>
         `).join('');
-        // Swipe to delete
         document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
             let startX = 0;
             wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
@@ -845,19 +884,9 @@
         });
     }
 
-    function markRead(id) {
-        const n = userNotifications.find(n => n.id === id);
-        if (n) { n.read = true; saveNotificationsToStorage(); }
-    }
-
-    function deleteNotification(id) {
-        userNotifications = userNotifications.filter(n => n.id !== id);
-        saveNotificationsToStorage();
-        showToast('Notification deleted');
-    }
-
-    window.markRead = markRead;
-    window.deleteNotification = deleteNotification;
+    function markRead(id) { const n = userNotifications.find(n => n.id === id); if (n) { n.read = true; saveNotificationsToStorage(); } }
+    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('Notification deleted'); }
+    window.markRead = markRead; window.deleteNotification = deleteNotification;
 
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
 
@@ -893,15 +922,23 @@
         }
     });
 
-    // Account modal
+    // Account modal & wallet navigation
     const greetingAvatar = document.getElementById('greetingAvatar');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const homeWalletBtn = document.getElementById('homeWalletBtn');
     if (greetingAvatar) greetingAvatar.addEventListener('click', () => modal.classList.add('active'));
     closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
     logoutBtn.addEventListener('click', () => { if (auth) auth.logout(); modal.classList.remove('active'); });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    if (homeWalletBtn) homeWalletBtn.addEventListener('click', () => navigateTo('wallet'));
+
+    // ==================== WALLET MODALS ====================
+    const depositBtn = document.getElementById('depositBtn');
+    const refreshWalletBtn = document.getElementById('refreshWalletBtn');
+    depositBtn.onclick = () => { showToast('Deposit feature coming soon!', true); };
+    refreshWalletBtn.onclick = async () => { if (currentUser) await loadUserWallet(currentUser.id); showToast('Balance refreshed!'); };
 
     // ==================== CONTENT DATA ====================
     async function loadContentData() {
@@ -980,11 +1017,17 @@
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
-    // ==================== WALLET MODALS (simple) ====================
-    const depositBtn = document.getElementById('depositBtn');
-    const refreshWalletBtn = document.getElementById('refreshWalletBtn');
-    depositBtn.onclick = () => { showToast('Deposit feature coming soon!', true); };
-    refreshWalletBtn.onclick = async () => { if (currentUser) await loadUserWallet(currentUser.id); showToast('Balance refreshed!'); };
+    // ==================== DARK MODE ====================
+    const themeToggleSwitch = document.getElementById('themeToggleSidebar');
+    if (localStorage.getItem('darkTheme') === 'true') {
+        document.documentElement.classList.add('dark-theme');
+        themeToggleSwitch.checked = true;
+    }
+    themeToggleSwitch.addEventListener('change', (e) => {
+        if (e.target.checked) document.documentElement.classList.add('dark-theme');
+        else document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('darkTheme', e.target.checked);
+    });
 
     // ==================== INIT ====================
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
