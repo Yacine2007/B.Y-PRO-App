@@ -24,9 +24,9 @@
             --primary-dark: #0052a3;
             --danger: #ef4444;
             --success: #10b981;
-            --card-radius: 20px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --card-radius: 18px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.05);
         }
         .dark-theme {
             --bg: #000000;
@@ -44,174 +44,264 @@
             transition: all 0.2s;
             overflow-x: hidden;
             overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.4;
         }
         /* Menu Trigger */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
-            width: 48px; height: 80px; background: rgba(255,255,255,0.95);
+            width: 44px; height: 70px; background: rgba(255,255,255,0.96);
             backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.15);
-            border-left: none; border-radius: 0 20px 20px 0; font-size: 1.4rem; color: var(--primary);
-            transition: all 0.2s;
+            cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12);
+            border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem;
+            color: var(--primary); transition: all 0.2s;
         }
-        .dark-theme .menu-trigger { background: rgba(30,30,40,0.8); }
+        .dark-theme .menu-trigger { background: rgba(30,30,40,0.85); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
-        .menu-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.7;transform:scale(1.2);} }
+        .menu-dot {
+            position: absolute; top: 6px; right: 8px; width: 8px; height: 8px;
+            background: var(--danger); border-radius: 50%; display: none;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
         /* Sidebar */
         .sidebar {
-            width: 280px; background: var(--surface); border-right: 1px solid var(--border);
+            width: 260px; background: var(--surface); border-right: 1px solid var(--border);
             position: fixed; left: 0; top: 0; bottom: 0; z-index: 100;
-            transform: translateX(-100%); transition: transform 0.3s ease; overflow-y: auto;
+            transform: translateX(-100%); transition: transform 0.25s ease; overflow-y: auto;
         }
         .sidebar.mobile-open { transform: translateX(0); }
-        .sidebar-header { padding: 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-        .sidebar-logo img { width: 40px; height: 40px; object-fit: contain; }
-        .sidebar-title { font-weight: 700; font-size: 1.1rem; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .sidebar-nav { padding: 16px 12px; }
+        .sidebar-header { padding: 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .sidebar-logo img { width: 36px; height: 36px; object-fit: contain; }
+        .sidebar-title { font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .sidebar-nav { padding: 12px 10px; }
         .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+            display: flex; align-items: center; gap: 12px; padding: 8px 12px;
             margin-bottom: 4px; border-radius: 12px; color: var(--text-muted);
-            cursor: pointer; font-weight: 500; font-size: 0.9rem; text-decoration: none;
-            transition: all 0.2s;
+            cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s;
         }
         .nav-item i { width: 24px; font-size: 1rem; }
-        .nav-item img { width: 24px; height: 24px; object-fit: contain; }
+        .nav-item img { width: 22px; height: 22px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
-        .theme-switch-sidebar { margin: 16px 12px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.85rem; cursor: pointer; }
-        /* Toggle Switch */
-        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+        .theme-switch-sidebar {
+            margin: 12px 10px; padding: 10px; background: var(--bg); border-radius: 12px;
+            display: flex; justify-content: space-between; border: 1px solid var(--border);
+            font-size: 0.8rem; cursor: pointer;
+        }
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.2s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.2s; border-radius: 50%; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.2s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(24px); }
+        input:checked + .slider:before { transform: translateX(22px); }
         /* Main Content */
-        .main-content { flex: 1; margin-left: 0; padding: 16px 20px; width: 100%; }
+        .main-content { flex: 1; margin-left: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
-        /* Buttons */
-        button, .btn-submit {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        button:hover, .btn-submit:hover { background: var(--primary-dark); transform: translateY(-1px); }
         /* Home Header */
-        .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
-        .greeting-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .avatar-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), #6c5ce7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; overflow: hidden; }
-        .greeting-text { font-size: 0.95rem; font-weight: 500; }
+        .home-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+        }
+        .greeting-section { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .avatar-icon {
+            width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), #6c5ce7);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: white; overflow: hidden;
+        }
+        .greeting-text { font-size: 0.85rem; font-weight: 500; }
         .greeting-text .user-name { font-weight: 700; color: var(--primary); }
-        .wallet-badge { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: var(--success); cursor: pointer; transition: all 0.2s; }
-        .wallet-badge:hover { background: var(--border); }
-        .bell-icon { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
-        .bell-icon:hover { background: var(--border); }
-        .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 2px 6px; font-size: 0.65rem; font-weight: 600; }
+        .wallet-badge, .bell-icon {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 40px; padding: 4px 10px; display: flex; align-items: center;
+            gap: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer;
+        }
+        .wallet-badge { color: var(--success); }
+        .bell-icon { color: var(--text-muted); }
+        .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
         /* Carousel */
-        .carousel-container { position: relative; width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 24px; background: var(--surface); aspect-ratio: 16 / 9; max-height: 280px; }
+        .carousel-container {
+            position: relative; width: 100%; border-radius: 14px; overflow: hidden;
+            margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9;
+            max-height: 200px;
+        }
         .carousel-slides { position: relative; width: 100%; height: 100%; }
-        .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease; }
+        .carousel-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 0.5s ease;
+        }
         .carousel-slide.active { opacity: 1; }
         .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .carousel-indicators { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; z-index: 2; }
-        .indicator { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s; }
-        .indicator.active { background: var(--primary); width: 24px; border-radius: 4px; }
-        /* Section */
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
-        .section-title { font-size: 1.2rem; font-weight: 700; }
-        .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
+        .carousel-indicators {
+            position: absolute; bottom: 8px; left: 0; right: 0; display: flex;
+            justify-content: center; gap: 6px; z-index: 2;
+        }
+        .indicator {
+            width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6);
+            cursor: pointer;
+        }
+        .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
+        /* Section Headers */
+        .section-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+        }
+        .section-title { font-size: 1rem; font-weight: 700; }
+        .section-badge {
+            background: var(--primary); color: white; padding: 2px 8px;
+            border-radius: 30px; font-size: 0.6rem; font-weight: 600;
+        }
         /* Cards Grid */
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .slim-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
-        .slim-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-        .card-media { height: 140px; overflow: hidden; }
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 12px; margin-bottom: 20px;
+        }
+        .slim-card {
+            background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
+            overflow: hidden; transition: all 0.2s;
+        }
+        .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .card-media { height: 110px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
-        .card-content { padding: 14px; }
-        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-        .card-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.4; }
+        .card-content { padding: 10px; }
+        .card-title {
+            font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
         /* Notifications */
-        .notification-card-wrapper { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 10px; }
-        .notification-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); padding: 14px; }
+        .notification-card-wrapper {
+            position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px;
+        }
+        .notification-card {
+            background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
+            padding: 12px;
+        }
         .notification-card.unread { border-left: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
-        .notification-delete { position: absolute; right: 0; top: 0; bottom: 0; width: 50px; background: var(--danger); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; cursor: pointer; border-radius: 16px; opacity: 0; transition: opacity 0.2s; }
+        .notification-delete {
+            position: absolute; right: 0; top: 0; bottom: 0; width: 45px;
+            background: var(--danger); color: white; display: flex; align-items: center;
+            justify-content: center; font-size: 0.9rem; cursor: pointer; border-radius: 14px;
+            opacity: 0; transition: opacity 0.2s;
+        }
         .notification-card-wrapper:hover .notification-delete { opacity: 1; }
-        .notification-time { font-size: 0.6rem; color: var(--text-muted); margin-top: 6px; }
-        .notification-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
-        .notification-actions button { background: transparent; padding: 4px 8px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 0.7rem; color: var(--text-muted); transition: all 0.2s; }
-        .notification-actions button:hover { background: var(--border); }
+        .notification-time { font-size: 0.55rem; color: var(--text-muted); margin-top: 6px; }
+        .notification-actions {
+            display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;
+        }
+        .notification-actions button {
+            background: transparent; padding: 3px 8px; border: 1px solid var(--border);
+            border-radius: 20px; cursor: pointer; font-size: 0.65rem;
+        }
         /* Support Form */
         .support-form { margin-top: 12px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.85rem; font-family: inherit; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
-        .hours-badge { background: var(--success); color: white; padding: 6px 12px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; margin-bottom: 12px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 8px 12px; background: var(--bg);
+            border: 1px solid var(--border); border-radius: 12px;
+            color: var(--text); font-size: 0.8rem; font-family: inherit;
+        }
+        .hours-badge {
+            background: var(--success); color: white; padding: 5px 10px;
+            border-radius: 40px; display: inline-flex; align-items: center;
+            gap: 6px; font-size: 0.65rem; margin-bottom: 12px;
+        }
         /* Wallet Page */
-        .card-info-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 60px; padding: 8px 12px; margin-bottom: 16px; border: 1px solid var(--border); }
-        .card-info-left { display: flex; align-items: center; gap: 10px; }
-        .card-icon-small { width: 28px; height: 28px; object-fit: contain; }
-        .card-code { font-family: monospace; font-size: 0.7rem; background: var(--bg); padding: 4px 8px; border-radius: 40px; }
-        .copy-card-btn { background: transparent; border: 1px solid var(--border); border-radius: 30px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
-        .copy-card-btn:hover { background: var(--border); color: var(--primary); }
-        .balance-card { background: var(--surface); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--border); margin-bottom: 16px; }
-        .balance-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
-        .balance-amount { font-size: 2rem; font-weight: 700; color: var(--success); }
-        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-deposit, .btn-refresh { flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .card-info-row {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--surface); border-radius: 50px; padding: 6px 12px;
+            margin-bottom: 14px; border: 1px solid var(--border);
+        }
+        .card-info-left { display: flex; align-items: center; gap: 8px; }
+        .card-icon-small { width: 24px; height: 24px; object-fit: contain; }
+        .card-code { font-family: monospace; font-size: 0.65rem; background: var(--bg); padding: 2px 6px; border-radius: 20px; }
+        .copy-card-btn {
+            background: transparent; border: 1px solid var(--border); border-radius: 30px;
+            width: 28px; height: 28px; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; color: var(--text-muted);
+        }
+        .balance-card {
+            background: var(--surface); border-radius: 18px; padding: 16px;
+            text-align: center; border: 1px solid var(--border); margin-bottom: 14px;
+        }
+        .balance-label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
+        .balance-amount { font-size: 1.8rem; font-weight: 700; color: var(--success); }
+        .action-buttons { display: flex; gap: 8px; margin-bottom: 16px; }
+        .btn-deposit, .btn-refresh {
+            flex: 1; padding: 6px; border-radius: 40px; font-weight: 600;
+            font-size: 0.7rem; cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 6px;
+        }
         .btn-deposit { background: var(--success); color: white; border: none; }
-        .btn-deposit:hover { background: #059669; transform: translateY(-1px); }
         .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-        .btn-refresh:hover { background: var(--border); transform: none; }
-        .transactions-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .transactions-title { font-size: 0.85rem; font-weight: 600; }
-        .transactions-count { font-size: 0.65rem; color: var(--text-muted); }
-        .transactions-list { display: flex; flex-direction: column; gap: 8px; }
-        .transaction-item { background: var(--surface); padding: 10px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .transactions-header {
+            display: flex; justify-content: space-between; margin-bottom: 8px;
+        }
+        .transactions-title { font-size: 0.75rem; font-weight: 600; }
+        .transactions-count { font-size: 0.6rem; color: var(--text-muted); }
+        .transactions-list { display: flex; flex-direction: column; gap: 6px; }
+        .transaction-item {
+            background: var(--surface); padding: 8px; border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid var(--border);
+        }
         .transaction-info { display: flex; align-items: center; gap: 8px; }
-        .transaction-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; background: rgba(16,185,129,0.1); color: var(--success); }
-        .transaction-amount { font-weight: 700; font-size: 0.75rem; color: var(--success); }
-        .empty-transactions { background: var(--surface); padding: 24px; text-align: center; border-radius: 16px; border: 1px solid var(--border); }
-        .empty-icon { font-size: 1.8rem; margin-bottom: 6px; opacity: 0.4; }
+        .transaction-icon {
+            width: 24px; height: 24px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 0.7rem;
+            background: rgba(16,185,129,0.1); color: var(--success);
+        }
+        .transaction-amount { font-weight: 700; font-size: 0.7rem; color: var(--success); }
+        .empty-transactions {
+            background: var(--surface); padding: 20px; text-align: center;
+            border-radius: 14px; border: 1px solid var(--border);
+        }
+        .empty-icon { font-size: 1.5rem; margin-bottom: 4px; opacity: 0.5; }
+        .empty-text { font-size: 0.65rem; }
         /* Toast */
-        .toast-notification { position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border-radius: 40px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success); }
+        .toast-notification {
+            position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--surface); border-radius: 40px; padding: 8px 16px;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success);
+        }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
-        .toast-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; background: #d1fae5; color: var(--success); }
-        .toast-message { font-size: 0.8rem; font-weight: 500; }
+        .toast-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: #d1fae5; color: var(--success); }
+        .toast-message { font-size: 0.7rem; font-weight: 500; }
         /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s;
+        }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-card { background: var(--surface); border-radius: 24px; padding: 24px; width: 85%; max-width: 340px; text-align: center; }
-        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-        .close-modal { margin-top: 16px; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.85rem; }
+        .modal-card {
+            background: var(--surface); border-radius: 24px; padding: 20px;
+            width: 85%; max-width: 300px; text-align: center;
+        }
+        .info-row {
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px solid var(--border); font-size: 0.75rem;
+        }
+        .close-modal {
+            margin-top: 12px; background: var(--primary); color: white;
+            border: none; padding: 8px; border-radius: 40px; width: 100%;
+            cursor: pointer; font-size: 0.8rem;
+        }
         @media (max-width: 768px) {
-            .main-content { padding: 12px; }
+            .main-content { padding: 10px; }
             .cards-grid { grid-template-columns: 1fr; }
-            .menu-trigger { width: 40px; height: 70px; font-size: 1.2rem; }
+            .menu-trigger { width: 38px; height: 60px; font-size: 1.1rem; }
             .carousel-container { aspect-ratio: 4 / 3; }
         }
     </style>
 </head>
 <body>
 <div class="app-wrapper">
-    <div class="menu-trigger" id="menuTrigger">
-        <span>&gt;</span>
-        <div class="menu-dot" id="menuDot"></div>
-    </div>
+    <div class="menu-trigger" id="menuTrigger"><span>&gt;</span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div>
-            <span class="sidebar-title">B.Y PRO App</span>
-        </div>
+        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
         <nav class="sidebar-nav">
             <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
             <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
@@ -219,142 +309,58 @@
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
-            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png" style="width: 20px; height: 20px;"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto;"></i></a>
-            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
+            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
+            <div class="nav-item" data-page="wallet"><img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 22px; height: 22px;"><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
-        <div class="theme-switch-sidebar">
-            <span><i class="fas fa-moon"></i> Dark Mode</span>
-            <label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label>
-        </div>
+        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> Dark Mode</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
             <div class="home-header">
-                <div class="greeting-section" id="greetingAvatar">
-                    <div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div>
-                    <div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <div class="wallet-badge" id="homeWalletBadge">
-                        <i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span>
-                    </div>
-                    <div class="bell-icon" id="homeBellIcon">
-                        <i class="fas fa-bell"></i>
-                        <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
-                    </div>
-                </div>
+                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div></div>
+                <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
-            <div class="carousel-container" id="carouselContainer">
-                <div class="carousel-slides" id="carouselSlides"></div>
-                <div class="carousel-indicators" id="carouselIndicators"></div>
-            </div>
-            <div class="section-header">
-                <h2 class="section-title">Latest News</h2>
-                <span class="section-badge">Updates</span>
-            </div>
-            <div id="newsContainer" class="cards-grid">
-                <div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading news...</div></div></div>
-            </div>
+            <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
+            <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
+            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div></div></div>
         </div>
-
-        <div id="notificationsPage" class="section-page">
-            <div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div>
-            <div id="notificationsContainer" class="cards-grid"></div>
-        </div>
-
+        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
         <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
         <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
-
-        <!-- Wallet Section -->
         <div id="walletPage" class="section-page">
-            <div class="card-info-row">
-                <div class="card-info-left">
-                    <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
-                    <span class="card-code" id="userCardCode">—</span>
-                </div>
-                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
-            </div>
-            <div class="balance-card">
-                <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
-                <div class="balance-amount">$<span id="walletBalance">0.00</span></div>
-            </div>
-            <div class="action-buttons">
-                <button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button>
-                <button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
-            </div>
-            <hr class="divider">
-            <div class="transactions-header">
-                <div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div>
-                <div class="transactions-count" id="walletTransactionsCount">0 transactions</div>
-            </div>
-            <div id="walletTransactionsContainer">
-                <div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>
-            </div>
+            <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
+            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
+            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+            <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
+            <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
+            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
         </div>
-
         <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
-
         <div id="supportPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
-            <div class="slim-card">
-                <div class="card-content">
-                    <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
-                    <form id="supportRequestForm" class="support-form">
-                        <div class="form-group">
-                            <select id="serviceSelect" required>
-                                <option value="">Select service</option>
-                                <option>Digital Services</option>
-                                <option>Local Services</option>
-                                <option>Phone Services</option>
-                                <option>Products</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="topicInput" placeholder="Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="detailsInput" rows="3" placeholder="Details"></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Message</button>
-                    </form>
-                    <div id="formMessage" style="margin-top: 12px;"></div>
-                </div>
-            </div>
+            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
+            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect"><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button></form><div id="formMessage" style="margin-top: 8px; font-size: 0.7rem;"></div></div></div>
         </div>
     </main>
 </div>
 
-<div class="modal-overlay" id="accountModal">
-    <div class="modal-card">
-        <h3><i class="fas fa-user-circle"></i> Account Details</h3>
-        <div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div>
-        <div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div>
-        <div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div>
-        <button class="close-modal" id="closeModalBtn">Close</button>
-        <button class="close-modal" id="logoutBtn" style="margin-top: 10px; background: #ef4444;">Logout</button>
-    </div>
-</div>
-
-<div class="toast-notification" id="toast">
-    <div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div>
-    <div class="toast-message" id="toastMessage"></div>
-</div>
+<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn" style="margin-top: 8px; background: #ef4444;">Logout</button></div></div>
+<div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
-
 <script>
-    // ==================== CONFIGURATION ====================
-    let currentUser = null;
-    let auth = null;
-    let userWalletData = null;
-    let userNotifications = [];
-    let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    // ==================== JSONBin CONFIG ====================
+    const BIN_ID = "69c12accaa77b81da90ed823";
+    const MASTER_KEY = "$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK";
+    const ACCESS_KEY = "B.Y PRO App";
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+    let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
 
     function generateCardCode() {
@@ -362,136 +368,78 @@
         return `byppcn-${randomNum}`;
     }
 
-    function showToast(message, isError = false) {
-        const toast = document.getElementById('toast'), toastMsg = document.getElementById('toastMessage'), toastIcon = document.getElementById('toastIcon');
-        toastMsg.textContent = message;
-        if (isError) {
-            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            toastIcon.style.background = '#fee2e2';
-            toastIcon.style.color = '#ef4444';
+    function showToast(msg, isErr = false) {
+        const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
+        tMsg.textContent = msg;
+        if (isErr) {
+            tIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            tIcon.style.background = '#fee2e2';
+            tIcon.style.color = '#ef4444';
             toast.style.borderLeftColor = '#ef4444';
         } else {
-            toastIcon.innerHTML = '<i class="fas fa-check"></i>';
-            toastIcon.style.background = '#d1fae5';
-            toastIcon.style.color = '#10b981';
+            tIcon.innerHTML = '<i class="fas fa-check"></i>';
+            tIcon.style.background = '#d1fae5';
+            tIcon.style.color = '#10b981';
             toast.style.borderLeftColor = '#10b981';
         }
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+        setTimeout(() => toast.classList.remove('show'), 2200);
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== API ====================
+    // ==================== DATA ====================
     async function fetchAllData() {
         try {
-            const response = await fetch('/api/data');
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            console.log('Fetched data:', data);
-            return data;
-        } catch (e) {
-            console.error('Fetch error:', e);
-            return { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
-        }
+            const res = await fetch(`${JSONBIN_URL}/latest`, { headers: { 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY } });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            return data.record || { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+        } catch (e) { console.error('Fetch error:', e); return { users: {}, supportMessages: [] }; }
     }
-
     async function saveAllData(data) {
         try {
-            const response = await fetch('/api/data', {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return response.ok;
-        } catch (e) {
-            console.error('Save error:', e);
-            return false;
-        }
+            const res = await fetch(JSONBIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY }, body: JSON.stringify(data) });
+            return res.ok;
+        } catch (e) { console.error('Save error:', e); return false; }
     }
 
-    // ==================== WALLET - التحقق من الحساب قبل الإنشاء ====================
+    // ==================== WALLET ====================
     async function loadUserWallet(userId) {
-        try {
-            const allData = await fetchAllData();
-            console.log('All data users:', allData.users);
-            
-            // التحقق: هل الحساب موجود بالفعل؟
-            if (allData.users && allData.users[userId]) {
-                // الحساب موجود - استخدم بياناته الحالية
-                userWalletData = allData.users[userId];
-                console.log('Existing wallet loaded:', userWalletData);
-                updateWalletUI();
-                showToast(`Welcome back! Balance: $${userWalletData.balance.toFixed(2)}`);
-                return userWalletData;
-            }
-            
-            // الحساب غير موجود - إنشاء حساب جديد مع بطاقة عشوائية
-            if (!allData.users) allData.users = {};
-            const newCardCode = generateCardCode();
-            allData.users[userId] = {
-                id: userId,
-                name: currentUser?.name || 'User',
-                balance: 0,
-                transactions: [],
-                cardCode: newCardCode,
-                createdAt: new Date().toISOString()
-            };
-            const saved = await saveAllData(allData);
-            if (saved) {
-                userWalletData = allData.users[userId];
-                console.log('New wallet created:', userWalletData);
-                updateWalletUI();
-                showToast(`New wallet created! Card: ${newCardCode} - Balance: $0`);
-            } else {
-                throw new Error('Failed to save new wallet');
-            }
-            return userWalletData;
-        } catch (err) {
-            console.error('Load wallet error:', err);
-            showToast('Failed to load wallet data', true);
-            return null;
+        const allData = await fetchAllData();
+        if (allData.users && allData.users[userId]) {
+            userWalletData = allData.users[userId];
+            console.log('Loaded existing wallet:', userWalletData);
+        } else {
+            const newCard = generateCardCode();
+            userWalletData = { id: userId, name: currentUser?.name || 'User', balance: 0, transactions: [], cardCode: newCard, createdAt: new Date().toISOString() };
+            allData.users[userId] = userWalletData;
+            await saveAllData(allData);
+            showToast(`New wallet created! Card: ${newCard}`);
         }
+        updateWalletUI();
+        return userWalletData;
     }
-
     async function saveUserWallet() {
         const allData = await fetchAllData();
         allData.users[currentUser.id] = userWalletData;
         await saveAllData(allData);
     }
-
     async function refreshWallet() {
         if (!currentUser) return;
         showToast('Refreshing...');
         await loadUserWallet(currentUser.id);
         showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
     }
-
     function updateWalletUI() {
         if (!userWalletData) return;
-        const balance = userWalletData.balance.toFixed(2);
-        document.getElementById('walletBalance').textContent = balance;
-        document.getElementById('homeWalletAmount').textContent = `$${balance}`;
+        document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
+        document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
-        
-        const transactions = userWalletData.transactions || [];
-        document.getElementById('walletTransactionsCount').textContent = `${transactions.length} transaction${transactions.length !== 1 ? 's' : ''}`;
+        const tx = userWalletData.transactions || [];
+        document.getElementById('walletTransactionsCount').textContent = tx.length;
         const container = document.getElementById('walletTransactionsContainer');
-        if (transactions.length === 0) {
-            container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
-            return;
-        }
-        container.innerHTML = `<div class="transactions-list">${transactions.slice().reverse().map(t => `
-            <div class="transaction-item">
-                <div class="transaction-info">
-                    <div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div>
-                    <div class="transaction-details">
-                        <div class="transaction-name">${escapeHtml(t.description)}</div>
-                        <div class="transaction-date">${new Date(t.date).toLocaleString()}</div>
-                    </div>
-                </div>
-                <div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div>
-            </div>
-        `).join('')}</div>`;
+        if (!tx.length) { container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`; return; }
+        container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
     // ==================== SUPPORT FORM ====================
@@ -500,40 +448,32 @@
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) {
-                formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>';
-                return;
-            }
+            if (!topic) { formMsg.innerHTML = '<span style="color:#ef4444;">Enter subject</span>'; return; }
             const btn = supportForm.querySelector('button');
             btn.disabled = true;
-            formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
-            const senderName = currentUser ? (currentUser.name || currentUser.username || 'App User') : 'App User';
-            const senderId = currentUser ? (currentUser.id || currentUser.userId || 'Unknown') : 'Unknown';
+            formMsg.innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
+            const sender = currentUser ? `${currentUser.name || 'User'} (ID: ${currentUser.id || '?'})` : 'App User';
             try {
                 const allData = await fetchAllData();
                 if (!allData.supportMessages) allData.supportMessages = [];
                 allData.supportMessages.unshift({
                     id: Date.now(),
-                    sender: `${senderName} (ID: ${senderId})`,
+                    sender: sender,
                     field: document.getElementById('serviceSelect').value,
                     subject: topic,
                     details: document.getElementById('detailsInput').value,
                     date: new Date().toISOString(),
                     read: false
                 });
-                const saved = await saveAllData(allData);
-                if (saved) {
-                    formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
+                if (await saveAllData(allData)) {
+                    formMsg.innerHTML = '<span style="color:#10b981;">✓ Sent! We\'ll reply within 24h.</span>';
                     supportForm.reset();
-                    setTimeout(() => formMsg.innerHTML = '', 3000);
-                    addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
-                } else {
-                    throw new Error('Save failed');
-                }
+                    setTimeout(() => formMsg.innerHTML = '', 2500);
+                    addNotification('Support Request Sent', `Your request "${topic}" submitted.`, 'fas fa-headset', '#10b981');
+                } else throw new Error('Save failed');
             } catch (err) {
-                console.error('Support submit error:', err);
-                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again later.</span>';
-                setTimeout(() => formMsg.innerHTML = '', 3000);
+                formMsg.innerHTML = '<span style="color:#ef4444;">Failed. Try again.</span>';
+                setTimeout(() => formMsg.innerHTML = '', 2000);
             } finally { btn.disabled = false; }
         });
     }
@@ -546,196 +486,63 @@
         document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
         document.getElementById('modalUserEmail').textContent = user.email || 'No email';
         const avatarDiv = document.getElementById('avatarIcon');
-        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" alt="avatar">`;
-        else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
-        // تحميل بيانات المحفظة بعد تسجيل الدخول
+        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}">`; else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         if (user.id) loadUserWallet(user.id);
-        if (!welcomeShown) {
-            welcomeShown = true;
-            setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 500);
-        }
+        if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); }
     }
-
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
-        onLogin: (user) => {
-            updateUIForUser(user);
-            loadNotificationsFromStorage();
-            loadContentData();
-        },
-        onLogout: () => {
-            currentUser = null;
-            userWalletData = null;
-            document.getElementById('userName').textContent = 'User';
-            document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
-            document.getElementById('homeWalletAmount').textContent = '$0.00';
-            welcomeShown = false;
-            auth.show();
-        }
+        onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadContentData(); },
+        onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').textContent = '$0.00'; welcomeShown = false; auth.show(); }
     });
-
-    setTimeout(() => {
-        if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
-            const u = auth.getCurrentUser();
-            if (u) updateUIForUser(u);
-            else auth.show();
-        } else {
-            auth.show();
-        }
-    }, 500);
+    setTimeout(() => { if (auth && auth.isAuthenticated && auth.isAuthenticated()) { const u = auth.getCurrentUser(); if (u) updateUIForUser(u); else auth.show(); } else auth.show(); }, 500);
 
     // ==================== NOTIFICATIONS ====================
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
-        if (saved) {
-            try { userNotifications = JSON.parse(saved); } catch(e) {}
-        }
-        if (!userNotifications.length) {
-            userNotifications = [{
-                id: Date.now(),
-                title: 'Welcome!',
-                message: 'You will receive updates here.',
-                date: new Date().toISOString(),
-                read: false,
-                icon: 'fas fa-smile-wink',
-                color: '#3b82f6'
-            }];
-            saveNotificationsToStorage();
-        }
-        updateNotificationUI();
+        if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} }
+        if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'Welcome!', message: 'You will receive updates.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }];
+        saveNotificationsToStorage();
     }
-
-    function saveNotificationsToStorage() {
-        localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications));
-        updateNotificationUI();
-    }
-
-    function formatDate(d) {
-        const date = new Date(d);
-        const diff = Math.floor((Date.now() - date) / 60000);
-        if (diff < 1) return 'Just now';
-        if (diff < 60) return `${diff}m ago`;
-        if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
-        return date.toLocaleDateString();
-    }
-
-    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
-        userNotifications.unshift({
-            id: Date.now(), title, message, icon, color,
-            date: new Date().toISOString(),
-            read: false
-        });
+    function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
+    function formatDate(d) { const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000); if (diff < 1) return 'Just now'; if (diff < 60) return `${diff}m ago`; if (diff < 1440) return `${Math.floor(diff / 60)}h ago`; return date.toLocaleDateString(); }
+    function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') {
+        userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false });
         saveNotificationsToStorage();
         showToast(title);
-        if (Notification.permission === 'granted') new Notification(title, { body: message, icon: 'https://by-pro.kesug.com/App.png?v=3' });
+        if (Notification.permission === 'granted') new Notification(title, { body: msg, icon: 'https://by-pro.kesug.com/App.png?v=3' });
     }
-
     function updateNotificationUI() {
-        const container = document.getElementById('notificationsContainer');
-        const countSpan = document.getElementById('notificationsCount');
-        const pageBadge = document.getElementById('notificationsPageBadge');
-        const homeBellCount = document.getElementById('homeBellCount');
-        const menuDot = document.getElementById('menuDot');
+        const container = document.getElementById('notificationsContainer'), countSpan = document.getElementById('notificationsCount'), pageBadge = document.getElementById('notificationsPageBadge'), homeBellCount = document.getElementById('homeBellCount'), menuDot = document.getElementById('menuDot');
         const unread = userNotifications.filter(n => !n.read).length;
-
-        if (countSpan) {
-            countSpan.style.display = unread ? 'inline-block' : 'none';
-            if (unread) countSpan.textContent = unread;
-        }
+        if (countSpan) { countSpan.style.display = unread ? 'inline-block' : 'none'; if (unread) countSpan.textContent = unread; }
         if (pageBadge) pageBadge.textContent = `${unread} new`;
-        if (homeBellCount) {
-            homeBellCount.style.display = unread ? 'inline-block' : 'none';
-            if (unread) homeBellCount.textContent = unread;
-        }
+        if (homeBellCount) { homeBellCount.style.display = unread ? 'inline-block' : 'none'; if (unread) homeBellCount.textContent = unread; }
         if (menuDot) menuDot.style.display = unread ? 'block' : 'none';
         if (!container) return;
-        if (!userNotifications.length) {
-            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
-            return;
-        }
-        container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `
-            <div class="notification-card-wrapper" data-id="${n.id}">
-                <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
-                <div class="notification-card ${!n.read ? 'unread' : ''}">
-                    <div class="card-title"><i class="${n.icon}" style="color: ${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background: var(--primary); margin-left: 8px;">New</span>' : ''}</div>
-                    <div class="card-desc">${escapeHtml(n.message)}</div>
-                    <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(n.date)}</div>
-                    <div class="notification-actions">
-                        ${!n.read ? `<button onclick="markRead(${n.id})"><i class="fas fa-check"></i> Read</button>` : ''}
-                        <button onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i> Delete</button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-        
-        document.querySelectorAll('.notification-card-wrapper').forEach(w => {
-            let sx = 0;
-            w.addEventListener('touchstart', e => { sx = e.touches[0].clientX; });
-            w.addEventListener('touchend', e => {
-                const delta = e.changedTouches[0].clientX - sx;
-                if (Math.abs(delta) > 80) deleteNotification(parseInt(w.dataset.id));
-            });
-        });
+        if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>'; return; }
+        container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `<div class="notification-card-wrapper" data-id="${n.id}"><div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div><div class="notification-card ${!n.read ? 'unread' : ''}"><div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div><div class="card-desc">${escapeHtml(n.message)}</div><div class="notification-time">${formatDate(n.date)}</div><div class="notification-actions">${!n.read ? `<button onclick="markRead(${n.id})">Read</button>` : ''}<button onclick="deleteNotification(${n.id})">Delete</button></div></div></div>`).join('');
+        document.querySelectorAll('.notification-card-wrapper').forEach(w => { let sx = 0; w.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }); w.addEventListener('touchend', e => { if (Math.abs(e.changedTouches[0].clientX - sx) > 70) deleteNotification(parseInt(w.dataset.id)); }); });
     }
-
-    function markRead(id) {
-        const n = userNotifications.find(n => n.id === id);
-        if (n) { n.read = true; saveNotificationsToStorage(); }
-    }
-
-    function deleteNotification(id) {
-        userNotifications = userNotifications.filter(n => n.id !== id);
-        saveNotificationsToStorage();
-        showToast('Notification deleted');
-    }
-
-    window.markRead = markRead;
-    window.deleteNotification = deleteNotification;
-
+    function markRead(id) { const n = userNotifications.find(n => n.id === id); if (n) { n.read = true; saveNotificationsToStorage(); } }
+    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('Notification deleted'); }
+    window.markRead = markRead; window.deleteNotification = deleteNotification;
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
-    document.getElementById('copyCardBtn')?.addEventListener('click', () => {
-        if (userWalletData?.cardCode) {
-            navigator.clipboard.writeText(userWalletData.cardCode);
-            showToast('Card code copied!');
-        } else showToast('No card code', true);
-    });
+    document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
 
-    // ==================== NAVIGATION & SIDEBAR ====================
+    // ==================== NAVIGATION ====================
     const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
     function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
     function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
     menuTrigger.addEventListener('click', e => { e.stopPropagation(); sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar(); });
     overlay.addEventListener('click', closeSidebar);
-    document.addEventListener('click', e => {
-        if (sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuTrigger.contains(e.target)) closeSidebar();
-    });
+    document.addEventListener('click', e => { if (sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuTrigger.contains(e.target)) closeSidebar(); });
 
     const navItems = document.querySelectorAll('.nav-item');
-    const pages = {
-        home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'),
-        digital: document.getElementById('digitalPage'), local: document.getElementById('localPage'),
-        phone: document.getElementById('phonePage'), products: document.getElementById('productsPage'),
-        wallet: document.getElementById('walletPage'), social: document.getElementById('socialPage'),
-        support: document.getElementById('supportPage')
-    };
-    function navigateTo(p) {
-        Object.values(pages).forEach(v => v.classList.remove('active-page'));
-        pages[p].classList.add('active-page');
-        navItems.forEach(n => n.classList.remove('active'));
-        const a = document.querySelector(`.nav-item[data-page="${p}"]`);
-        if (a) a.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        closeSidebar();
-    }
-    navItems.forEach(i => {
-        if (!i.hasAttribute('href')) {
-            i.addEventListener('click', () => {
-                const p = i.getAttribute('data-page');
-                if (p && pages[p]) navigateTo(p);
-            });
-        }
-    });
+    const pages = { home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'), digital: document.getElementById('digitalPage'), local: document.getElementById('localPage'), phone: document.getElementById('phonePage'), products: document.getElementById('productsPage'), wallet: document.getElementById('walletPage'), social: document.getElementById('socialPage'), support: document.getElementById('supportPage') };
+    function navigateTo(p) { Object.values(pages).forEach(v => v.classList.remove('active-page')); pages[p].classList.add('active-page'); navItems.forEach(n => n.classList.remove('active')); const a = document.querySelector(`.nav-item[data-page="${p}"]`); if (a) a.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); closeSidebar(); }
+    navItems.forEach(i => { if (!i.hasAttribute('href')) i.addEventListener('click', () => { const p = i.getAttribute('data-page'); if (p && pages[p]) navigateTo(p); }); });
 
     const gAvatar = document.getElementById('greetingAvatar'), accModal = document.getElementById('accountModal'), closeModal = document.getElementById('closeModalBtn'), logout = document.getElementById('logoutBtn');
     if (gAvatar) gAvatar.addEventListener('click', () => accModal.classList.add('active'));
@@ -743,128 +550,53 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // ==================== CONTENT DATA ====================
+    // ==================== CONTENT ====================
     async function loadContentData() {
-        try {
-            const allData = await fetchAllData();
-            contentData = {
-                images: allData.images || [],
-                news: allData.news || [],
-                digital: allData.digital || [],
-                local: allData.local || [],
-                phone: allData.phone || [],
-                products: allData.products || [],
-                social: allData.social || []
-            };
-            renderCarousel(contentData.images || []);
-            renderAllContent();
-        } catch(e) { console.error('Failed to load content:', e); }
+        const all = await fetchAllData();
+        contentData = {
+            images: all.images || [], news: all.news || [], digital: all.digital || [], local: all.local || [], phone: all.phone || [], products: all.products || [], social: all.social || []
+        };
+        renderCarousel(contentData.images);
+        renderAllContent();
     }
-
     function renderAllContent() {
-        renderNews(contentData.news || []);
-        renderServices('digitalContainer', contentData.digital || [], 'fas fa-code');
-        renderServices('localContainer', contentData.local || [], 'fas fa-print');
-        renderServices('phoneContainer', contentData.phone || [], 'fas fa-mobile-alt');
-        renderProducts(contentData.products || []);
-        renderSocial(contentData.social || []);
+        renderNews(contentData.news); renderServices('digitalContainer', contentData.digital, 'fas fa-code');
+        renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
+        renderProducts(contentData.products); renderSocial(contentData.social);
     }
+    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
+    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
+    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
+    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
 
-    function renderNews(news) {
-        const c = document.getElementById('newsContainer');
-        if (!c) return;
-        const active = news.filter(n => n.enabled !== false);
-        if (!active.length) {
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news available</div></div></div>';
-            return;
-        }
-        c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color: ${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join('');
-    }
-
-    function renderServices(cid, services, icon) {
-        const c = document.getElementById(cid);
-        if (!c) return;
-        const active = services.filter(s => s.enabled !== false);
-        if (!active.length) {
-            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services available</div></div></div>`;
-            return;
-        }
-        c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join('');
-    }
-
-    function renderProducts(products) {
-        const c = document.getElementById('productsContainer');
-        if (!c) return;
-        const active = products.filter(p => p.enabled !== false);
-        if (!active.length) {
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products available</div></div></div>';
-            return;
-        }
-        c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join('');
-    }
-
-    function renderSocial(social) {
-        const c = document.getElementById('socialContainer');
-        if (!c) return;
-        if (!social.length) {
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>';
-            return;
-        }
-        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration: none;"><div class="card-content" style="text-align: center;"><i class="${escapeHtml(i.icon)}" style="font-size: 1.8rem; color: ${i.color}; margin-bottom: 6px; display: inline-block;"></i><div class="card-title" style="justify-content: center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join('');
-    }
-
-    // ==================== CAROUSEL ====================
     let carouselImages = [], currentSlide = 0, slideInterval = null;
     function renderCarousel(images) {
-        const slides = document.getElementById('carouselSlides'), indicators = document.getElementById('carouselIndicators');
-        if (!slides || !indicators) return;
-        if (!images || !images.length) {
-            slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images"></div>';
-            indicators.innerHTML = '';
-            return;
-        }
+        const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators');
+        if (!slides || !inds) return;
+        if (!images || !images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images"></div>'; inds.innerHTML = ''; return; }
         carouselImages = images;
-        slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'Slide'}"></div>`).join('');
-        indicators.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
-        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => {
-            const idx = parseInt(ind.dataset.index);
-            if (!isNaN(idx)) goToSlide(idx);
-        }));
+        slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt||'Slide'}"></div>`).join('');
+        inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
+        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if (!isNaN(idx)) goToSlide(idx); }));
         startAutoSlide();
     }
-
-    function goToSlide(i) {
-        const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator');
-        if (!slides.length) return;
-        slides[currentSlide].classList.remove('active');
-        if (inds[currentSlide]) inds[currentSlide].classList.remove('active');
-        currentSlide = (i + slides.length) % slides.length;
-        slides[currentSlide].classList.add('active');
-        if (inds[currentSlide]) inds[currentSlide].classList.add('active');
-    }
-
+    function goToSlide(i) { const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator'); if (!slides.length) return; slides[currentSlide].classList.remove('active'); if (inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide = (i + slides.length) % slides.length; slides[currentSlide].classList.add('active'); if (inds[currentSlide]) inds[currentSlide].classList.add('active'); }
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
     // ==================== DARK MODE ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
-    if (localStorage.getItem('darkTheme') === 'true') {
-        document.documentElement.classList.add('dark-theme');
-        themeToggle.checked = true;
-    }
-    themeToggle.addEventListener('change', e => {
-        if (e.target.checked) document.documentElement.classList.add('dark-theme');
-        else document.documentElement.classList.remove('dark-theme');
-        localStorage.setItem('darkTheme', e.target.checked);
-    });
+    if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
+    themeToggle.addEventListener('change', e => { if (e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
 
     const depositBtn = document.getElementById('depositBtn'), refreshBtn = document.getElementById('refreshWalletBtn');
-    depositBtn.onclick = () => { showToast('Deposit feature coming soon!', true); };
+    depositBtn.onclick = () => showToast('Deposit feature coming soon!', true);
     refreshBtn.onclick = refreshWallet;
 
     setInterval(() => { if (document.hasFocus() && currentUser) loadContentData(); }, 30000);
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
     window.copyUserId = () => { if (currentUser?.id) { navigator.clipboard.writeText(currentUser.id); showToast('User ID copied!'); } };
+    loadContentData();
 </script>
 </body>
 </html>
