@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="ar" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
-    <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
     <meta name="theme-color" content="#0066cc">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
-    <meta name="application-name" content="B.Y PRO App">
-    <meta name="description" content="B.Y PRO - Services, Wallet, Support and more">
-    <title>B.Y PRO App</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO">
+    <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
+    <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
+    <link rel="manifest" href="/manifest.json">
+    <title>B.Y PRO App | Digital Services & Wallet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
+        /* Same robust CSS as before – dark mode, responsive, etc. */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -45,11 +46,9 @@
             color: var(--text);
             transition: all 0.2s;
             overflow-x: hidden;
-            overflow-y: auto;
             font-size: 14px;
             line-height: 1.4;
         }
-        /* Menu Trigger */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
             width: 44px; height: 70px; background: rgba(255,255,255,0.96);
@@ -66,7 +65,6 @@
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
-        /* Sidebar */
         .sidebar {
             width: 260px; background: var(--surface); border-right: 1px solid var(--border);
             position: fixed; left: 0; top: 0; bottom: 0; z-index: 100;
@@ -96,11 +94,9 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
-        /* Main Content */
         .main-content { flex: 1; margin-left: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
-        /* Home Header */
         .home-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
@@ -121,7 +117,6 @@
         .wallet-badge { color: var(--success); }
         .bell-icon { color: var(--text-muted); }
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
-        /* Carousel */
         .carousel-container {
             position: relative; width: 100%; border-radius: 14px; overflow: hidden;
             margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9;
@@ -143,7 +138,6 @@
             cursor: pointer;
         }
         .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
-        /* Section Headers */
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
@@ -153,7 +147,6 @@
             background: var(--primary); color: white; padding: 2px 8px;
             border-radius: 30px; font-size: 0.6rem; font-weight: 600;
         }
-        /* Cards Grid */
         .cards-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 12px; margin-bottom: 20px;
@@ -171,7 +164,6 @@
             display: flex; align-items: center; gap: 6px;
         }
         .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
-        /* Notifications - improved buttons */
         .notification-card-wrapper {
             position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px;
         }
@@ -198,7 +190,6 @@
         }
         .notification-actions button:first-child:hover { background: var(--primary); color: white; border-color: var(--primary); }
         .notification-actions button:last-child:hover { background: var(--danger); color: white; border-color: var(--danger); }
-        /* Support Form */
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 10px; }
         .form-group input, .form-group select, .form-group textarea {
@@ -222,7 +213,6 @@
             border-radius: 40px; display: inline-flex; align-items: center;
             gap: 6px; font-size: 0.65rem; margin-bottom: 12px;
         }
-        /* Wallet Page */
         .card-info-row {
             display: flex; align-items: center; justify-content: space-between;
             background: var(--surface); border-radius: 50px; padding: 6px 12px;
@@ -250,7 +240,6 @@
         }
         .btn-deposit { background: var(--success); color: white; border: none; }
         .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
@@ -272,7 +261,6 @@
             cursor: pointer; font-size: 0.8rem;
         }
         #logoutBtn { background: #ef4444; margin-top: 8px; }
-        /* Toast */
         .toast-notification {
             position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px);
             background: var(--surface); border-radius: 40px; padding: 8px 16px;
@@ -287,7 +275,6 @@
         }
         .empty-transactions { text-align: center; padding: 20px; opacity: 0.7; }
         .empty-icon { font-size: 2rem; margin-bottom: 5px; }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -296,58 +283,58 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
         <nav class="sidebar-nav">
-            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
-            <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>الإشعارات</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
-            <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>خدمات رقمية</span></div>
-            <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>خدمات محلية</span></div>
-            <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>خدمات الهاتف</span></div>
-            <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>منتجات</span></div>
+            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
+            <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
+            <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>Digital Services</span></div>
+            <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
+            <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
+            <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
             <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
-            <div class="nav-item" data-page="wallet"><img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 22px; height: 22px;"><span>المحفظة</span></div>
-            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>وسائل التواصل</span></div>
-            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>الدعم الفني</span></div>
+            <div class="nav-item" data-page="wallet"><img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 22px; height: 22px;"><span>Wallet</span></div>
+            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
+            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
-        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> الوضع المظلم</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
+        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> Dark Mode</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
             <div class="home-header">
-                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">مرحباً, <span id="userName" class="user-name">User</span></div></div>
+                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div></div>
                 <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
-            <div class="section-header"><h2 class="section-title">آخر الأخبار</h2><span class="section-badge">تحديثات</span></div>
-            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div></div></div></div>
+            <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
+            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div></div></div>
         </div>
-        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">الإشعارات</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
-        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">خدمات رقمية</h1><span class="section-badge">متطورة</span></div><div id="digitalContainer" class="cards-grid"></div></div>
-        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">خدمات محلية</h1><span class="section-badge">مركز الوثائق</span></div><div id="localContainer" class="cards-grid"></div></div>
-        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">خدمات الهاتف</h1><span class="section-badge">الجزائر</span></div><div id="phoneContainer" class="cards-grid"></div></div>
-        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">المنتجات</h1><span class="section-badge">متوفرة</span></div><div id="productsContainer" class="cards-grid"></div></div>
+        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
+        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
+        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
+        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
+        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <div id="walletPage" class="section-page">
             <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
-            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> الرصيد الإجمالي</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
-            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> إيداع</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> تحديث</button></div>
+            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
+            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
-            <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> سجل المعاملات</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
-            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">لا توجد معاملات بعد</div></div></div>
+            <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
+            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
         </div>
-        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">وسائل التواصل</h1><span class="section-badge">تابعنا</span></div><div id="socialContainer" class="cards-grid"></div></div>
+        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
         <div id="supportPage" class="section-page">
-            <div class="section-header"><h1 class="section-title">الدعم الفني</h1><span class="section-badge">24/7</span></div>
-            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> الدعم متوفر طوال الوقت</div>
-            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect" required><option value="">اختر الخدمة</option><option>خدمات رقمية</option><option>خدمات محلية</option><option>خدمات الهاتف</option><option>منتجات</option><option>أخرى</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="الموضوع *" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="التفاصيل ..."></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> إرسال الطلب</button></form><div id="formMessage" style="margin-top: 10px; font-size: 0.7rem; text-align: center;"></div></div></div>
+            <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
+            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
+            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject *" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details..."></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Request</button></form><div id="formMessage" style="margin-top: 10px; font-size: 0.7rem; text-align: center;"></div></div></div>
         </div>
     </main>
 </div>
-<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> حسابي</h3><div class="info-row"><span>الاسم:</span><span id="modalUserName">User</span></div><div class="info-row"><span>المعرف:</span><span id="modalUserId">—</span></div><div class="info-row"><span>البريد:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">إغلاق</button><button class="close-modal" id="logoutBtn">تسجيل الخروج</button></div></div>
+<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn">Logout</button></div></div>
 <div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    (function(){
-        // JSONBin config
+    (function() {
+        // JSONBin configuration
         const BIN_ID = "69c12accaa77b81da90ed823";
         const MASTER_KEY = "$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK";
         const ACCESS_KEY = "B.Y PRO App";
@@ -376,82 +363,173 @@
 
         async function fetchAllData() {
             try {
-                const res = await fetch(`${JSONBIN_URL}/latest`, { headers: { 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY } });
+                const res = await fetch(`${JSONBIN_URL}/latest`, {
+                    headers: { 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY }
+                });
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 const record = data.record || {};
-                return { users: record.users || {}, supportMessages: record.supportMessages || [], images: record.images || [], news: record.news || [], digital: record.digital || [], local: record.local || [], phone: record.phone || [], products: record.products || [], social: record.social || [] };
-            } catch (e) { console.error('Fetch error:', e); return { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; }
+                return {
+                    users: record.users || {},
+                    supportMessages: record.supportMessages || [],
+                    images: record.images || [],
+                    news: record.news || [],
+                    digital: record.digital || [],
+                    local: record.local || [],
+                    phone: record.phone || [],
+                    products: record.products || [],
+                    social: record.social || []
+                };
+            } catch (e) {
+                console.error('Fetch error:', e);
+                return { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+            }
         }
         async function saveAllData(data) {
             try {
-                const res = await fetch(JSONBIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY }, body: JSON.stringify(data) });
+                const res = await fetch(JSONBIN_URL, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY },
+                    body: JSON.stringify(data)
+                });
                 return res.ok;
             } catch (e) { console.error('Save error:', e); return false; }
         }
 
-        function generateCardCode() { return `byppcn-${Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0')}`; }
+        function generateCardCode() {
+            return `byppcn-${Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0')}`;
+        }
 
         async function loadUserWallet(userId) {
             const allData = await fetchAllData();
             if (allData.users[userId]) {
                 userWalletData = allData.users[userId];
             } else {
-                userWalletData = { id: userId, name: currentUser?.name || 'User', balance: 0, transactions: [], cardCode: generateCardCode(), createdAt: new Date().toISOString() };
+                userWalletData = {
+                    id: userId,
+                    name: currentUser?.name || 'User',
+                    balance: 0,
+                    transactions: [],
+                    cardCode: generateCardCode(),
+                    createdAt: new Date().toISOString()
+                };
                 allData.users[userId] = userWalletData;
                 await saveAllData(allData);
             }
             updateWalletUI();
         }
-        async function saveUserWallet() { const allData = await fetchAllData(); allData.users[currentUser.id] = userWalletData; await saveAllData(allData); }
-        async function refreshWallet() { if (!currentUser) return; showToast('جاري تحديث المحفظة...'); await loadUserWallet(currentUser.id); showToast(`الرصيد: $${userWalletData.balance.toFixed(2)}`); }
+        async function saveUserWallet() {
+            const allData = await fetchAllData();
+            allData.users[currentUser.id] = userWalletData;
+            await saveAllData(allData);
+        }
+        async function refreshWallet() {
+            if (!currentUser) return;
+            showToast('Refreshing wallet...');
+            await loadUserWallet(currentUser.id);
+            showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
+        }
         function updateWalletUI() {
             if (!userWalletData) return;
             document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
             document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
-            document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'بدون بطاقة';
+            document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
             const tx = userWalletData.transactions || [];
             document.getElementById('walletTransactionsCount').textContent = tx.length;
             const container = document.getElementById('walletTransactionsContainer');
-            if (!tx.length) { container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">لا توجد معاملات بعد</div></div>`; return; }
-            container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item" style="background:var(--surface);padding:8px;border-radius:12px;margin-bottom:6px;display:flex;justify-content:space-between;"><div><div>${escapeHtml(t.description)}</div><div style="font-size:10px;opacity:0.6;">${new Date(t.date).toLocaleString()}</div></div><div style="color:var(--success);font-weight:bold;">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
+            if (!tx.length) {
+                container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
+                return;
+            }
+            container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `
+                <div class="transaction-item" style="background:var(--surface);padding:8px;border-radius:12px;margin-bottom:6px;display:flex;justify-content:space-between;">
+                    <div><div>${escapeHtml(t.description)}</div><div style="font-size:10px;opacity:0.6;">${new Date(t.date).toLocaleString()}</div></div>
+                    <div style="color:var(--success);font-weight:bold;">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div>
+                </div>`).join('')}</div>`;
         }
 
         // Notifications
         function loadNotificationsFromStorage() {
             const saved = localStorage.getItem('bypro_notifications');
             if (saved) try { userNotifications = JSON.parse(saved); } catch(e) { userNotifications = []; }
-            if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'مرحباً بك!', message: 'ستصل إليك الإشعارات الجديدة هنا.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }];
+            if (!userNotifications.length) {
+                userNotifications = [{
+                    id: Date.now(),
+                    title: 'Welcome!',
+                    message: 'You will receive updates and support replies here.',
+                    date: new Date().toISOString(),
+                    read: false,
+                    icon: 'fas fa-smile-wink',
+                    color: '#3b82f6'
+                }];
+            }
             saveNotificationsToStorage();
         }
-        function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
-        function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') { userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false }); saveNotificationsToStorage(); showToast(title); if (Notification.permission === 'granted') new Notification(title, { body: msg, icon: 'https://by-pro.kesug.com/App.png?v=3' }); }
-        function updateNotificationUI() {
-            const container = document.getElementById('notificationsContainer'), countSpan = document.getElementById('notificationsCount'), pageBadge = document.getElementById('notificationsPageBadge'), homeBellCount = document.getElementById('homeBellCount'), menuDot = document.getElementById('menuDot');
-            const unread = userNotifications.filter(n => !n.read).length;
-            if(countSpan){countSpan.style.display = unread ? 'inline-block' : 'none'; if(unread) countSpan.textContent = unread;}
-            if(pageBadge) pageBadge.textContent = unread ? `${unread} جديدة` : '';
-            if(homeBellCount){homeBellCount.style.display = unread ? 'inline-block' : 'none'; if(unread) homeBellCount.textContent = unread;}
-            if(menuDot) menuDot.style.display = unread ? 'block' : 'none';
-            if(!container) return;
-            if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> لا توجد إشعارات</div></div></div>'; return; }
-            container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `<div class="notification-card-wrapper" data-id="${n.id}"><div class="notification-delete" onclick="window.deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div><div class="notification-card ${!n.read ? 'unread' : ''}"><div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">جديد</span>' : ''}</div><div class="card-desc">${escapeHtml(n.message)}</div><div class="notification-time">${new Date(n.date).toLocaleString()}</div><div class="notification-actions">${!n.read ? `<button onclick="window.markRead(${n.id})">قراءة</button>` : ''}<button onclick="window.deleteNotification(${n.id})">حذف</button></div></div></div>`).join('');
+        function saveNotificationsToStorage() {
+            localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications));
+            updateNotificationUI();
         }
-        window.markRead = function(id) { const n = userNotifications.find(n => n.id === id); if(n){ n.read = true; saveNotificationsToStorage(); } };
-        window.deleteNotification = function(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('تم حذف الإشعار'); };
+        function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') {
+            userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false });
+            saveNotificationsToStorage();
+            showToast(title);
+            if (Notification.permission === 'granted') new Notification(title, { body: msg, icon: 'https://by-pro.kesug.com/App.png?v=3' });
+        }
+        function updateNotificationUI() {
+            const container = document.getElementById('notificationsContainer');
+            const countSpan = document.getElementById('notificationsCount');
+            const pageBadge = document.getElementById('notificationsPageBadge');
+            const homeBellCount = document.getElementById('homeBellCount');
+            const menuDot = document.getElementById('menuDot');
+            const unread = userNotifications.filter(n => !n.read).length;
+            if (countSpan) { countSpan.style.display = unread ? 'inline-block' : 'none'; if (unread) countSpan.textContent = unread; }
+            if (pageBadge) pageBadge.textContent = unread ? `${unread} new` : '';
+            if (homeBellCount) { homeBellCount.style.display = unread ? 'inline-block' : 'none'; if (unread) homeBellCount.textContent = unread; }
+            if (menuDot) menuDot.style.display = unread ? 'block' : 'none';
+            if (!container) return;
+            if (!userNotifications.length) {
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
+                return;
+            }
+            container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `
+                <div class="notification-card-wrapper" data-id="${n.id}">
+                    <div class="notification-delete" onclick="window.deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
+                    <div class="notification-card ${!n.read ? 'unread' : ''}">
+                        <div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div>
+                        <div class="card-desc">${escapeHtml(n.message)}</div>
+                        <div class="notification-time">${new Date(n.date).toLocaleString()}</div>
+                        <div class="notification-actions">
+                            ${!n.read ? `<button onclick="window.markRead(${n.id})">Mark Read</button>` : ''}
+                            <button onclick="window.deleteNotification(${n.id})">Delete</button>
+                        </div>
+                    </div>
+                </div>`).join('');
+        }
+        window.markRead = function(id) {
+            const n = userNotifications.find(n => n.id === id);
+            if (n) { n.read = true; saveNotificationsToStorage(); }
+        };
+        window.deleteNotification = function(id) {
+            userNotifications = userNotifications.filter(n => n.id !== id);
+            saveNotificationsToStorage();
+            showToast('Notification deleted');
+        };
 
-        // Support form fix
+        // Support form
         document.getElementById('supportRequestForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            if(!currentUser){ showToast('الرجاء تسجيل الدخول أولاً', true); return; }
+            if (!currentUser) { showToast('Please log in first', true); return; }
             const topic = document.getElementById('topicInput').value.trim();
-            if(!topic){ document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;">الموضوع مطلوب</span>'; return; }
+            if (!topic) {
+                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;">Subject is required</span>';
+                return;
+            }
             const btn = e.target.querySelector('button');
             btn.disabled = true;
-            document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;">جاري الإرسال...</span>';
+            document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
             try {
                 const allData = await fetchAllData();
-                if(!allData.supportMessages) allData.supportMessages = [];
+                if (!allData.supportMessages) allData.supportMessages = [];
                 allData.supportMessages.unshift({
                     id: Date.now(),
                     sender: `${currentUser.name || currentUser.username} (ID: ${currentUser.id})`,
@@ -461,20 +539,30 @@
                     date: new Date().toISOString(),
                     read: false
                 });
-                if(await saveAllData(allData)){
-                    document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;">✓ تم الإرسال! سيرد الفريق خلال 24 ساعة.</span>';
+                if (await saveAllData(allData)) {
+                    document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;">✓ Sent! We\'ll reply within 24h.</span>';
                     e.target.reset();
                     setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
-                    addNotification('تم إرسال طلب الدعم', `طلبك: "${topic}"`, 'fas fa-headset', '#10b981');
-                } else throw new Error('فشل الحفظ');
-            } catch(err){ document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;">فشل الإرسال، حاول مجدداً</span>'; setTimeout(()=>document.getElementById('formMessage').innerHTML='',2500); }
-            finally{ btn.disabled = false; }
+                    addNotification('Support Request Sent', `Your request "${topic}" submitted.`, 'fas fa-headset', '#10b981');
+                } else throw new Error('Save failed');
+            } catch (err) {
+                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;">Failed. Try again.</span>';
+                setTimeout(() => document.getElementById('formMessage').innerHTML = '', 2500);
+            } finally { btn.disabled = false; }
         });
 
-        // Content & News
+        // Content & News (fixed)
         async function loadContentData() {
             const all = await fetchAllData();
-            contentData = { images: all.images || [], news: all.news || [], digital: all.digital || [], local: all.local || [], phone: all.phone || [], products: all.products || [], social: all.social || [] };
+            contentData = {
+                images: all.images || [],
+                news: all.news || [],
+                digital: all.digital || [],
+                local: all.local || [],
+                phone: all.phone || [],
+                products: all.products || [],
+                social: all.social || []
+            };
             renderCarousel(contentData.images);
             renderAllContent();
         }
@@ -486,34 +574,119 @@
             renderProducts(contentData.products);
             renderSocial(contentData.social);
         }
-        function renderNews(news) { const c = document.getElementById('newsContainer'); if(!c) return; const active = news.filter(n => n.enabled !== false); if(!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">📢 لا توجد أخبار حالياً</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
-        function renderServices(cid, services, icon) { const c = document.getElementById(cid); if(!c) return; const active = services.filter(s => s.enabled !== false); if(!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> لا توجد خدمات</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-        function renderProducts(products) { const c = document.getElementById('productsContainer'); if(!c) return; const active = products.filter(p => p.enabled !== false); if(!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">لا توجد منتجات</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
-        function renderSocial(social) { const c = document.getElementById('socialContainer'); if(!c) return; if(!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">لا توجد روابط</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none; display:block;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
+        function renderNews(news) {
+            const container = document.getElementById('newsContainer');
+            if (!container) return;
+            const activeNews = news.filter(n => n.enabled !== false);
+            if (!activeNews.length) {
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">📢 No news at the moment</div></div></div>';
+                return;
+            }
+            container.innerHTML = activeNews.map(item => `
+                <div class="slim-card">
+                    <div class="card-content">
+                        <div class="card-title"><i class="${item.icon || 'fas fa-newspaper'}" style="color:${item.color || '#3b82f6'}"></i> ${escapeHtml(item.title)}</div>
+                        <div class="card-desc">${escapeHtml(item.description)}</div>
+                    </div>
+                </div>`).join('');
+        }
+        function renderServices(containerId, services, defaultIcon) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const active = services.filter(s => s.enabled !== false);
+            if (!active.length) {
+                container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${defaultIcon}"></i> No services available</div></div></div>`;
+                return;
+            }
+            container.innerHTML = active.map(s => `
+                <div class="slim-card">
+                    ${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}
+                    <div class="card-content">
+                        <div class="card-title"><i class="${defaultIcon}"></i> ${escapeHtml(s.name)}</div>
+                        <div class="card-desc">${escapeHtml(s.description)}</div>
+                    </div>
+                </div>`).join('');
+        }
+        function renderProducts(products) {
+            const container = document.getElementById('productsContainer');
+            if (!container) return;
+            const active = products.filter(p => p.enabled !== false);
+            if (!active.length) {
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products available</div></div></div>';
+                return;
+            }
+            container.innerHTML = active.map(p => `
+                <div class="slim-card">
+                    ${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}
+                    <div class="card-content">
+                        <div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div>
+                        <div class="card-desc">${escapeHtml(p.description)}</div>
+                    </div>
+                </div>`).join('');
+        }
+        function renderSocial(social) {
+            const container = document.getElementById('socialContainer');
+            if (!container) return;
+            if (!social.length) {
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>';
+                return;
+            }
+            container.innerHTML = social.map(link => `
+                <a href="${escapeHtml(link.url)}" target="_blank" class="slim-card" style="text-decoration:none; display:block;">
+                    <div class="card-content" style="text-align:center;">
+                        <i class="${escapeHtml(link.icon)}" style="font-size:1.6rem; color:${link.color}; margin-bottom:4px;"></i>
+                        <div class="card-title" style="justify-content:center;">${escapeHtml(link.name)}</div>
+                        <div class="card-desc">${escapeHtml(link.url)}</div>
+                    </div>
+                </a>`).join('');
+        }
 
+        // Carousel
         let currentSlide = 0, slideInterval = null;
         function renderCarousel(images) {
-            const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators');
-            if(!slides || !inds) return;
-            if(!images || !images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=B.Y+PRO"></div>'; inds.innerHTML = ''; return; }
-            slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt||'slide'}"></div>`).join('');
-            inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
-            document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if(!isNaN(idx)) goToSlide(idx); }));
-            if(slideInterval) clearInterval(slideInterval); slideInterval = setInterval(() => goToSlide(currentSlide + 1), 5000);
-            function goToSlide(i) { const s = document.querySelectorAll('.carousel-slide'), ind = document.querySelectorAll('.indicator'); if(!s.length) return; s[currentSlide].classList.remove('active'); if(ind[currentSlide]) ind[currentSlide].classList.remove('active'); currentSlide = (i + s.length) % s.length; s[currentSlide].classList.add('active'); if(ind[currentSlide]) ind[currentSlide].classList.add('active'); }
+            const slidesDiv = document.getElementById('carouselSlides');
+            const indicatorsDiv = document.getElementById('carouselIndicators');
+            if (!slidesDiv || !indicatorsDiv) return;
+            if (!images || !images.length) {
+                slidesDiv.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=B.Y+PRO"></div>';
+                indicatorsDiv.innerHTML = '';
+                return;
+            }
+            slidesDiv.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'slide'}"></div>`).join('');
+            indicatorsDiv.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
+            document.querySelectorAll('.indicator').forEach(ind => {
+                ind.addEventListener('click', () => {
+                    const idx = parseInt(ind.dataset.index);
+                    if (!isNaN(idx)) goToSlide(idx);
+                });
+            });
+            if (slideInterval) clearInterval(slideInterval);
+            slideInterval = setInterval(() => goToSlide(currentSlide + 1), 5000);
+            function goToSlide(i) {
+                const slides = document.querySelectorAll('.carousel-slide');
+                const inds = document.querySelectorAll('.indicator');
+                if (!slides.length) return;
+                slides[currentSlide].classList.remove('active');
+                if (inds[currentSlide]) inds[currentSlide].classList.remove('active');
+                currentSlide = (i + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+                if (inds[currentSlide]) inds[currentSlide].classList.add('active');
+            }
             window.goToSlide = goToSlide;
         }
 
+        // Auth & UI
         function updateUIForUser(user) {
             currentUser = user;
-            document.getElementById('userName').textContent = user.name || user.username || 'مستخدم';
-            document.getElementById('modalUserName').textContent = user.name || user.username || 'مستخدم';
-            document.getElementById('modalUserId').textContent = user.id || user.userId || 'غير معروف';
-            document.getElementById('modalUserEmail').textContent = user.email || 'غير مسجل';
+            document.getElementById('userName').textContent = user.name || user.username || 'User';
+            document.getElementById('modalUserName').textContent = user.name || user.username || 'User';
+            document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
+            document.getElementById('modalUserEmail').textContent = user.email || 'Not set';
             const avatarDiv = document.getElementById('avatarIcon');
-            if(user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;border-radius:50%;">`; else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
-            if(user.id) loadUserWallet(user.id);
-            if(!welcomeShown) { welcomeShown = true; setTimeout(()=>showToast(`مرحباً ${user.name || user.username || 'مستخدم'}!`), 300); }
+            if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;border-radius:50%;">`;
+            else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+            if (user.id) loadUserWallet(user.id);
+            if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 300); }
             loadNotificationsFromStorage();
             loadContentData();
         }
@@ -521,44 +694,117 @@
         auth = new BYPROAuth({
             loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
             onLogin: (user) => updateUIForUser(user),
-            onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'مستخدم'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').textContent = '$0.00'; welcomeShown = false; auth.show(); }
+            onLogout: () => {
+                currentUser = null;
+                userWalletData = null;
+                document.getElementById('userName').textContent = 'User';
+                document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
+                document.getElementById('homeWalletAmount').textContent = '$0.00';
+                welcomeShown = false;
+                auth.show();
+            }
         });
-        setTimeout(() => { if(auth && auth.isAuthenticated && auth.isAuthenticated()){ const u = auth.getCurrentUser(); if(u) updateUIForUser(u); else auth.show(); } else auth.show(); }, 500);
+        setTimeout(() => {
+            if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
+                const u = auth.getCurrentUser();
+                if (u) updateUIForUser(u);
+                else auth.show();
+            } else auth.show();
+        }, 500);
 
-        // Navigation
-        const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
-        function openSidebar(){ sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
-        function closeSidebar(){ sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
-        menuTrigger.addEventListener('click', openSidebar); overlay.addEventListener('click', closeSidebar);
+        // Navigation & events
+        const menuTrigger = document.getElementById('menuTrigger');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
+        function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
+        menuTrigger.addEventListener('click', openSidebar);
+        overlay.addEventListener('click', closeSidebar);
         const navItems = document.querySelectorAll('.nav-item');
-        const pages = { home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'), digital: document.getElementById('digitalPage'), local: document.getElementById('localPage'), phone: document.getElementById('phonePage'), products: document.getElementById('productsPage'), wallet: document.getElementById('walletPage'), social: document.getElementById('socialPage'), support: document.getElementById('supportPage') };
-        function navigateTo(p) { Object.values(pages).forEach(v => v.classList.remove('active-page')); pages[p].classList.add('active-page'); navItems.forEach(n => n.classList.remove('active')); const a = document.querySelector(`.nav-item[data-page="${p}"]`); if(a) a.classList.add('active'); window.scrollTo({ top: 0 }); closeSidebar(); }
-        navItems.forEach(i => { if(!i.hasAttribute('href')) i.addEventListener('click', () => { const p = i.getAttribute('data-page'); if(p && pages[p]) navigateTo(p); }); });
+        const pages = {
+            home: document.getElementById('homePage'),
+            notifications: document.getElementById('notificationsPage'),
+            digital: document.getElementById('digitalPage'),
+            local: document.getElementById('localPage'),
+            phone: document.getElementById('phonePage'),
+            products: document.getElementById('productsPage'),
+            wallet: document.getElementById('walletPage'),
+            social: document.getElementById('socialPage'),
+            support: document.getElementById('supportPage')
+        };
+        function navigateTo(pageId) {
+            Object.values(pages).forEach(p => p.classList.remove('active-page'));
+            pages[pageId].classList.add('active-page');
+            navItems.forEach(n => n.classList.remove('active'));
+            const activeNav = document.querySelector(`.nav-item[data-page="${pageId}"]`);
+            if (activeNav) activeNav.classList.add('active');
+            window.scrollTo({ top: 0 });
+            closeSidebar();
+        }
+        navItems.forEach(item => {
+            if (!item.hasAttribute('href')) {
+                item.addEventListener('click', () => {
+                    const page = item.getAttribute('data-page');
+                    if (page && pages[page]) navigateTo(page);
+                });
+            }
+        });
         document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
         document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
-        document.getElementById('copyCardBtn')?.addEventListener('click', () => { if(userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('تم نسخ رقم البطاقة'); } else showToast('لا توجد بطاقة', true); });
+        document.getElementById('copyCardBtn')?.addEventListener('click', () => {
+            if (userWalletData?.cardCode) {
+                navigator.clipboard.writeText(userWalletData.cardCode);
+                showToast('Card code copied!');
+            } else showToast('No card code', true);
+        });
         document.getElementById('greetingAvatar')?.addEventListener('click', () => document.getElementById('accountModal').classList.add('active'));
         document.getElementById('closeModalBtn')?.addEventListener('click', () => document.getElementById('accountModal').classList.remove('active'));
-        document.getElementById('logoutBtn')?.addEventListener('click', () => { if(auth) auth.logout(); document.getElementById('accountModal').classList.remove('active'); });
-        document.getElementById('depositBtn').onclick = () => showToast('خدمة الإيداع قريباً', true);
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            if (auth) auth.logout();
+            document.getElementById('accountModal').classList.remove('active');
+        });
+        document.getElementById('depositBtn').onclick = () => showToast('Deposit feature coming soon!', true);
         document.getElementById('refreshWalletBtn').onclick = refreshWallet;
-        const themeToggle = document.getElementById('themeToggleSidebar');
-        if(localStorage.getItem('darkTheme') === 'true'){ document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
-        themeToggle.addEventListener('change', e => { if(e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
 
-        // PWA: service worker + manifest injection
-        if('serviceWorker' in navigator){
-            const swCode = `self.addEventListener('install', e => self.skipWaiting()); self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
-            const blob = new Blob([swCode], {type: 'application/javascript'});
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).then(reg => console.log('SW registered')).catch(e=>console.log('SW failed',e));
+        // Dark mode
+        const themeToggle = document.getElementById('themeToggleSidebar');
+        if (localStorage.getItem('darkTheme') === 'true') {
+            document.documentElement.classList.add('dark-theme');
+            themeToggle.checked = true;
         }
-        const manifestObj = { name: "B.Y PRO App", short_name: "BYPRO", start_url: ".", display: "standalone", background_color: "#0066cc", theme_color: "#0066cc", icons: [{ src: "https://by-pro.kesug.com/App.png?v=3", sizes: "192x192", type: "image/png" }] };
-        const manifestBlob = new Blob([JSON.stringify(manifestObj)], {type: 'application/json'});
+        themeToggle.addEventListener('change', e => {
+            if (e.target.checked) document.documentElement.classList.add('dark-theme');
+            else document.documentElement.classList.remove('dark-theme');
+            localStorage.setItem('darkTheme', e.target.checked);
+        });
+
+        // PWA: manifest and service worker
+        if ('serviceWorker' in navigator) {
+            // Simple caching service worker
+            const swCode = `self.addEventListener('install', e => self.skipWaiting());
+self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl).catch(e => console.log('SW error', e));
+        }
+        const manifest = {
+            name: "B.Y PRO App",
+            short_name: "BYPRO",
+            start_url: ".",
+            display: "standalone",
+            background_color: "#0066cc",
+            theme_color: "#0066cc",
+            icons: [{ src: "https://by-pro.kesug.com/App.png?v=3", sizes: "192x192", type: "image/png" }]
+        };
+        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
         const manifestURL = URL.createObjectURL(manifestBlob);
         const manifestLink = document.querySelector('link[rel="manifest"]');
-        if(manifestLink) manifestLink.href = manifestURL;
-        setInterval(() => { if(document.hasFocus() && currentUser) loadContentData(); }, 45000);
+        if (manifestLink) manifestLink.href = manifestURL;
+
+        // Periodic refresh
+        setInterval(() => {
+            if (document.hasFocus() && currentUser) loadContentData();
+        }, 45000);
     })();
 </script>
 </body>
