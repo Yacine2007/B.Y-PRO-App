@@ -9,8 +9,6 @@
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
     <title>B.Y PRO App | Digital Services & Wallet</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -96,7 +94,6 @@
         .card-content { padding: 10px; }
         .card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
         .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
-        .error-message { color: var(--danger); text-align: center; padding: 20px; }
         .error-box { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); border-radius: 12px; padding: 16px; text-align: center; margin: 10px 0; }
         .error-box i { font-size: 2rem; margin-bottom: 8px; color: var(--danger); }
         
@@ -111,7 +108,6 @@
         .notification-actions button { background: transparent; padding: 4px 12px; border: 1px solid var(--border); border-radius: 40px; cursor: pointer; font-size: 0.7rem; font-weight: 500; transition: 0.2s; color: var(--text); }
         
         /* Support Form */
-        .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 10px; }
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.8rem; font-family: inherit; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
@@ -208,16 +204,10 @@
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
     (function() {
-        // ========== JSONBin CONFIGURATION ==========
-        const BIN_ID = "69c12accaa77b81da90ed823";
-        const MASTER_KEY = "$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK";
-        const ACCESS_KEY = "B.Y PRO App";
-        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-        
-        // CORS proxy for GitHub Pages
-        const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-        const isGitHubPages = window.location.hostname.includes('github.io');
-        const API_URL = isGitHubPages ? `${CORS_PROXY}${JSONBIN_URL}` : JSONBIN_URL;
+        // ========== USE YOUR OWN SERVER ==========
+        // Direct connection to your Render server (no CORS proxy)
+        const SERVER_URL = 'https://b-y-pro-app.onrender.com';
+        const API_BASE = `${SERVER_URL}/api`;
         
         let currentUser = null, auth = null, userWalletData = null;
         let userNotifications = [];
@@ -247,70 +237,45 @@
             }
         }
         
-        // ========== JSONBin API Functions ==========
-        async function fetchAllData() {
+        // ========== API Calls to Your Server ==========
+        async function fetchDataFromServer() {
             try {
-                const headers = {
-                    'X-Master-Key': MASTER_KEY,
-                    'X-Access-Key': ACCESS_KEY
-                };
-                
-                const response = await fetch(`${API_URL}/latest`, { headers });
+                const response = await fetch(`${API_BASE}/data`);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                const data = await response.json();
-                const record = data.record || {};
-                return {
-                    users: record.users || {},
-                    supportMessages: record.supportMessages || [],
-                    notifications: record.notifications || [],
-                    images: record.images || [],
-                    news: record.news || [],
-                    digital: record.digital || [],
-                    local: record.local || [],
-                    phone: record.phone || [],
-                    products: record.products || [],
-                    social: record.social || []
-                };
+                return await response.json();
             } catch (error) {
-                console.error('Fetch error:', error);
-                throw new Error(`Failed to load data from server: ${error.message}`);
+                console.error('Server fetch error:', error);
+                throw new Error(`Cannot connect to server: ${error.message}`);
             }
         }
         
-        async function saveAllData(data) {
+        async function sendSupportToServer(messageData) {
             try {
-                const headers = {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': MASTER_KEY,
-                    'X-Access-Key': ACCESS_KEY
-                };
-                const response = await fetch(JSONBIN_URL, {
-                    method: 'PUT',
-                    headers,
-                    body: JSON.stringify(data)
+                const response = await fetch(`${API_BASE}/support`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(messageData)
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                return true;
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
             } catch (error) {
-                console.error('Save error:', error);
-                throw new Error(`Failed to save data: ${error.message}`);
+                throw new Error(`Failed to send: ${error.message}`);
             }
         }
         
-        // ========== WALLET MANAGEMENT ==========
+        // ========== WALLET ==========
         async function loadUserWallet(userId) {
             try {
-                const allData = await fetchAllData();
-                if (allData.users && allData.users[userId]) {
-                    userWalletData = allData.users[userId];
+                const serverData = await fetchDataFromServer();
+                if (serverData.users && serverData.users[userId]) {
+                    userWalletData = serverData.users[userId];
+                    updateWalletUI();
                 } else {
-                    throw new Error(`Wallet not found for user ${userId}`);
+                    showError('walletTransactionsContainer', `Wallet not found for user ${userId}`);
+                    showToast(`Wallet not found`, true);
                 }
-                updateWalletUI();
             } catch (error) {
                 console.error('Wallet error:', error);
                 showError('walletTransactionsContainer', `Error: ${error.message}`);
@@ -323,14 +288,14 @@
             showToast('Refreshing wallet...');
             await loadUserWallet(currentUser.id);
             if (userWalletData) {
-                showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
+                showToast(`Balance: $${userWalletData.balance?.toFixed(2) || '0.00'}`);
             }
         }
         
         function updateWalletUI() {
             if (!userWalletData) return;
-            document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
-            document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
+            document.getElementById('walletBalance').textContent = (userWalletData.balance || 0).toFixed(2);
+            document.getElementById('homeWalletAmount').textContent = `$${(userWalletData.balance || 0).toFixed(2)}`;
             document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
             const tx = userWalletData.transactions || [];
             document.getElementById('walletTransactionsCount').textContent = tx.length;
@@ -349,8 +314,8 @@
         // ========== NOTIFICATIONS ==========
         async function loadNotifications() {
             try {
-                const allData = await fetchAllData();
-                userNotifications = allData.notifications || [];
+                const serverData = await fetchDataFromServer();
+                userNotifications = serverData.notifications || [];
                 updateNotificationUI();
             } catch (error) {
                 console.error('Notifications error:', error);
@@ -363,9 +328,13 @@
                 const notification = userNotifications.find(n => n.id === id);
                 if (notification) {
                     notification.read = true;
-                    const allData = await fetchAllData();
-                    allData.notifications = userNotifications;
-                    await saveAllData(allData);
+                    const serverData = await fetchDataFromServer();
+                    serverData.notifications = userNotifications;
+                    await fetch(`${API_BASE}/data`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(serverData)
+                    });
                     updateNotificationUI();
                 }
             } catch (error) {
@@ -376,9 +345,13 @@
         async function deleteNotification(id) {
             try {
                 userNotifications = userNotifications.filter(n => n.id !== id);
-                const allData = await fetchAllData();
-                allData.notifications = userNotifications;
-                await saveAllData(allData);
+                const serverData = await fetchDataFromServer();
+                serverData.notifications = userNotifications;
+                await fetch(`${API_BASE}/data`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(serverData)
+                });
                 updateNotificationUI();
                 showToast('Notification deleted');
             } catch (error) {
@@ -439,20 +412,15 @@
             document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;"><i class="fas fa-spinner fa-pulse"></i> Sending...</span>';
             
             try {
-                const allData = await fetchAllData();
-                if (!allData.supportMessages) allData.supportMessages = [];
-                allData.supportMessages.unshift({
-                    id: Date.now(),
+                await sendSupportToServer({
                     sender: `${currentUser.name || currentUser.username} (ID: ${currentUser.id})`,
                     field: document.getElementById('serviceSelect').value,
                     subject: topic,
                     details: document.getElementById('detailsInput').value,
                     userId: currentUser.id,
-                    date: new Date().toISOString(),
-                    read: false
+                    userName: currentUser.name || currentUser.username
                 });
                 
-                await saveAllData(allData);
                 document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Sent! We\'ll reply within 24h.</span>';
                 e.target.reset();
                 setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
@@ -466,15 +434,15 @@
         // ========== CONTENT MANAGEMENT ==========
         async function loadContentData() {
             try {
-                const allData = await fetchAllData();
+                const serverData = await fetchDataFromServer();
                 contentData = {
-                    images: allData.images || [],
-                    news: allData.news || [],
-                    digital: allData.digital || [],
-                    local: allData.local || [],
-                    phone: allData.phone || [],
-                    products: allData.products || [],
-                    social: allData.social || []
+                    images: serverData.images || [],
+                    news: serverData.news || [],
+                    digital: serverData.digital || [],
+                    local: serverData.local || [],
+                    phone: serverData.phone || [],
+                    products: serverData.products || [],
+                    social: serverData.social || []
                 };
                 
                 renderCarousel(contentData.images);
@@ -486,7 +454,7 @@
                 renderSocial(contentData.social);
             } catch (error) {
                 console.error('Content error:', error);
-                showError('newsContainer', `Error loading news: ${error.message}`);
+                showError('newsContainer', `Error: ${error.message}`);
                 showError('digitalContainer', `Error: ${error.message}`);
                 showError('localContainer', `Error: ${error.message}`);
                 showError('phoneContainer', `Error: ${error.message}`);
@@ -498,18 +466,11 @@
         function renderNews(news) {
             const container = document.getElementById('newsContainer');
             if (!container) return;
-            
             if (!news || !news.length) {
-                container.innerHTML = '<div class="error-box"><i class="fas fa-newspaper"></i><p>No news available in JSONBin</p></div>';
+                container.innerHTML = '<div class="error-box"><i class="fas fa-newspaper"></i><p>No news available in database</p></div>';
                 return;
             }
-            
             const activeNews = news.filter(n => n.enabled !== false);
-            if (!activeNews.length) {
-                container.innerHTML = '<div class="error-box"><i class="fas fa-newspaper"></i><p>No enabled news items found</p></div>';
-                return;
-            }
-            
             container.innerHTML = activeNews.map(item => `
                 <div class="slim-card">
                     <div class="card-content">
@@ -522,18 +483,11 @@
         function renderServices(containerId, services, defaultIcon) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            
             if (!services || !services.length) {
-                container.innerHTML = `<div class="error-box"><i class="${defaultIcon}"></i><p>No services available in JSONBin</p></div>`;
+                container.innerHTML = `<div class="error-box"><i class="${defaultIcon}"></i><p>No services available in database</p></div>`;
                 return;
             }
-            
             const active = services.filter(s => s.enabled !== false);
-            if (!active.length) {
-                container.innerHTML = `<div class="error-box"><i class="${defaultIcon}"></i><p>No enabled services found</p></div>`;
-                return;
-            }
-            
             container.innerHTML = active.map(s => `
                 <div class="slim-card">
                     ${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}
@@ -547,18 +501,11 @@
         function renderProducts(products) {
             const container = document.getElementById('productsContainer');
             if (!container) return;
-            
             if (!products || !products.length) {
-                container.innerHTML = '<div class="error-box"><i class="fas fa-cubes"></i><p>No products available in JSONBin</p></div>';
+                container.innerHTML = '<div class="error-box"><i class="fas fa-cubes"></i><p>No products available in database</p></div>';
                 return;
             }
-            
             const active = products.filter(p => p.enabled !== false);
-            if (!active.length) {
-                container.innerHTML = '<div class="error-box"><i class="fas fa-cubes"></i><p>No enabled products found</p></div>';
-                return;
-            }
-            
             container.innerHTML = active.map(p => `
                 <div class="slim-card">
                     ${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}
@@ -572,12 +519,10 @@
         function renderSocial(social) {
             const container = document.getElementById('socialContainer');
             if (!container) return;
-            
             if (!social || !social.length) {
-                container.innerHTML = '<div class="error-box"><i class="fas fa-share-alt"></i><p>No social links available in JSONBin</p></div>';
+                container.innerHTML = '<div class="error-box"><i class="fas fa-share-alt"></i><p>No social links available in database</p></div>';
                 return;
             }
-            
             container.innerHTML = social.map(link => `
                 <a href="${escapeHtml(link.url)}" target="_blank" class="slim-card" style="text-decoration:none; display:block;">
                     <div class="card-content" style="text-align:center;">
@@ -597,7 +542,7 @@
             if (!slidesDiv || !indicatorsDiv) return;
             
             if (!images || !images.length) {
-                slidesDiv.innerHTML = '<div class="carousel-slide active"><div class="error-box" style="height:100%; display:flex; align-items:center; justify-content:center;"><i class="fas fa-image"></i> No images in JSONBin</div></div>';
+                slidesDiv.innerHTML = '<div class="carousel-slide active"><div class="error-box" style="height:100%; display:flex; align-items:center; justify-content:center;"><i class="fas fa-image"></i> No images in database</div></div>';
                 indicatorsDiv.innerHTML = '';
                 return;
             }
