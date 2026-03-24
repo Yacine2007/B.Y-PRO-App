@@ -47,6 +47,7 @@
             font-weight: 500;
         }
         .nav-item i { width: 24px; font-size: 1.1rem; }
+        .nav-item img { width: 24px; height: 24px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: #eff6ff; color: #3b82f6; }
         /* Main Content */
         .main-content {
@@ -79,14 +80,6 @@
             align-items: center;
             gap: 10px;
         }
-        /* Action Buttons Row */
-        .action-buttons-row {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            justify-content: flex-end;
-        }
-        /* Forms */
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.85rem; color: #475569; }
         input, select, textarea {
@@ -98,7 +91,6 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.9rem;
         }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
         button {
             background: #3b82f6;
             color: white;
@@ -119,53 +111,20 @@
         .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
         .btn-success { background: #10b981; }
-        .btn-warning { background: #f59e0b; }
-        /* Grids */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
-        }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
         .item-card {
             background: #f8fafc;
             border-radius: 16px;
             border: 1px solid #e2e8f0;
             padding: 16px;
             transition: all 0.2s;
-            position: relative;
         }
-        .item-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .drag-handle { cursor: grab; color: #64748b; position: absolute; top: 16px; right: 16px; }
-        .item-info { display: flex; flex-direction: column; gap: 12px; }
-        .item-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; }
-        .image-preview {
-            width: 100%;
-            max-height: 140px;
-            object-fit: cover;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-        }
-        /* Toggle Switch */
-        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #cbd5e1; transition: 0.2s; border-radius: 24px;
-        }
-        .toggle-slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
-            background-color: white; transition: 0.2s; border-radius: 50%;
-        }
-        input:checked + .toggle-slider { background-color: #10b981; }
-        input:checked + .toggle-slider:before { transform: translateX(24px); }
-        /* Support Messages */
         .support-card {
             background: #f8fafc;
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 12px;
             border: 1px solid #e2e8f0;
-            transition: all 0.2s;
         }
         .support-card:hover { background: #ffffff; }
         .support-header {
@@ -191,32 +150,6 @@
         .support-date { font-size: 0.7rem; color: #64748b; }
         .empty-state { text-align: center; padding: 40px; color: #64748b; }
         .empty-state i { font-size: 3rem; margin-bottom: 12px; }
-        /* Notifications section */
-        .notifications-grid { display: flex; flex-direction: column; gap: 28px; }
-        .notification-card { background: #f8fafc; border-radius: 20px; padding: 24px; border: 1px solid #e2e8f0; }
-        .icon-color-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
-        .icon-preview { font-size: 1.5rem; width: 40px; text-align: center; }
-        /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: #ffffff; border-radius: 28px; width: 90%; max-width: 700px;
-            max-height: 80vh; overflow: auto; padding: 24px; border: 1px solid #e2e8f0;
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
-        .icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 16px; }
-        .icon-item {
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
-            padding: 12px; border-radius: 12px; cursor: pointer; border: 1px solid #e2e8f0;
-        }
-        .icon-item:hover { background: #eff6ff; border-color: #3b82f6; }
-        .icon-item i { font-size: 1.8rem; color: #3b82f6; }
-        /* Toast */
         .toast-notification {
             position: fixed;
             bottom: 24px;
@@ -262,10 +195,10 @@
             <h2>B.Y PRO Admin</h2>
         </div>
         <nav class="sidebar-nav">
-            <div class="nav-item active" data-section="homeImages"><i class="fas fa-images"></i> Home Images</div>
+            <div class="nav-item active" data-section="support"><i class="fas fa-headset"></i> Support Messages</div>
+            <div class="nav-item" data-section="images"><i class="fas fa-images"></i> Home Images</div>
             <div class="nav-item" data-section="news"><i class="fas fa-newspaper"></i> News</div>
             <div class="nav-item" data-section="notifications"><i class="fas fa-bell"></i> Notifications</div>
-            <div class="nav-item" data-section="support"><i class="fas fa-headset"></i> Support</div>
             <div class="nav-item" data-section="digital"><i class="fas fa-code"></i> Digital Services</div>
             <div class="nav-item" data-section="local"><i class="fas fa-print"></i> Local Services</div>
             <div class="nav-item" data-section="phone"><i class="fas fa-mobile-alt"></i> Phone Services</div>
@@ -275,169 +208,39 @@
     </aside>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
     <main class="main-content">
-        <!-- Home Images Section -->
-        <div id="homeImagesSection" class="section-page active-page">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-images"></i> Home Page Images (Carousel)</h2>
-                    <button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="imagesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- News Section -->
-        <div id="newsSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-newspaper"></i> News Management</h2>
-                    <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshNews()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveNews()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="newsContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Notifications Section -->
-        <div id="notificationsSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h2 class="card-title"><i class="fas fa-globe"></i> Broadcast Notification</h2></div>
-                <div class="form-group"><label>Title</label><input type="text" id="broadcastTitle" placeholder="Title"></div>
-                <div class="form-group"><label>Message</label><textarea id="broadcastDesc" rows="3" placeholder="Message"></textarea></div>
-                <div class="icon-color-row">
-                    <button type="button" class="btn-outline" onclick="openIconLibraryForBroadcast()"><i class="fas fa-icons"></i> Icon</button>
-                    <span id="broadcastIconPreview" class="icon-preview"><i class="fas fa-bell"></i></span>
-                    <input type="color" id="broadcastColor" value="#3b82f6">
-                </div>
-                <button onclick="sendBroadcast()" style="margin-top:16px;"><i class="fas fa-paper-plane"></i> Send</button>
-            </div>
-            <div class="card">
-                <div class="card-header"><h2 class="card-title"><i class="fas fa-user"></i> Individual Notification</h2></div>
-                <div class="form-group"><label>Recipient</label><input type="text" id="individualRecipient" placeholder="Name/ID"></div>
-                <div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Title"></div>
-                <div class="form-group"><label>Message</label><textarea id="individualDesc" rows="3" placeholder="Message"></textarea></div>
-                <div class="icon-color-row">
-                    <button type="button" class="btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button>
-                    <span id="individualIconPreview" class="icon-preview"><i class="fas fa-envelope"></i></span>
-                    <input type="color" id="individualColor" value="#3b82f6">
-                </div>
-                <button onclick="sendIndividual()" style="margin-top:16px;"><i class="fas fa-envelope"></i> Send</button>
-            </div>
-        </div>
-
-        <!-- Support Messages Section -->
-        <div id="supportSection" class="section-page">
+        <!-- Support Messages Section (Primary) -->
+        <div id="supportSection" class="section-page active-page">
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2>
-                    <button onclick="clearAllSupportMessages()" class="btn-danger"><i class="fas fa-trash-alt"></i> Clear All</button>
-                </div>
-                <div class="action-buttons-row">
                     <button onclick="refreshSupport()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
                 </div>
-                <div id="supportMessagesContainer"></div>
+                <div id="supportMessagesContainer">
+                    <div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading messages...</p></div>
+                </div>
             </div>
         </div>
 
-        <!-- Digital Services Section -->
-        <div id="digitalSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshDigital()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveDigital()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="digitalServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Local Services Section -->
-        <div id="localSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshLocal()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveLocal()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="localServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Phone Services Section -->
-        <div id="phoneSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshPhone()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="savePhone()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="phoneServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Products Section -->
-        <div id="productsSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Products</h3><button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshProducts()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveProducts()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="productsContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Social Media Section -->
-        <div id="socialSection" class="section-page">
-            <div class="card">
-                <div class="card-header"><h3>Social Media</h3><div><button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icons</button><button onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button></div></div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshSocial()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveSocial()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
-                <div id="socialContainer" class="items-grid"></div>
-            </div>
-        </div>
+        <!-- Other sections (placeholder) -->
+        <div id="imagesSection" class="section-page"><div class="card"><h3>Home Images</h3><p>Coming soon</p></div></div>
+        <div id="newsSection" class="section-page"><div class="card"><h3>News Management</h3><p>Coming soon</p></div></div>
+        <div id="notificationsSection" class="section-page"><div class="card"><h3>Notifications</h3><p>Coming soon</p></div></div>
+        <div id="digitalSection" class="section-page"><div class="card"><h3>Digital Services</h3><p>Coming soon</p></div></div>
+        <div id="localSection" class="section-page"><div class="card"><h3>Local Services</h3><p>Coming soon</p></div></div>
+        <div id="phoneSection" class="section-page"><div class="card"><h3>Phone Services</h3><p>Coming soon</p></div></div>
+        <div id="productsSection" class="section-page"><div class="card"><h3>Products</h3><p>Coming soon</p></div></div>
+        <div id="socialSection" class="section-page"><div class="card"><h3>Social Media</h3><p>Coming soon</p></div></div>
     </main>
 </div>
 <div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
-<div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3>Select Icon</h3><button class="btn-outline" onclick="closeIconModal()">Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
 
 <script>
-    // ==================== CONFIG ====================
-    const API_BASE = '';
-    
-    // Extended icon list with money, warnings, errors, etc.
-    const iconList = [
-        // Social & common
-        'fab fa-facebook-f', 'fab fa-instagram', 'fab fa-twitter', 'fab fa-youtube', 'fab fa-tiktok',
-        'fab fa-whatsapp', 'fab fa-telegram', 'fab fa-discord', 'fab fa-github', 'fab fa-linkedin-in',
-        'fab fa-snapchat', 'fab fa-pinterest', 'fab fa-reddit-alien', 'fab fa-tumblr', 'fab fa-vimeo-v',
-        'fab fa-skype', 'fab fa-android', 'fab fa-apple',
-        // Money & Finance
-        'fas fa-money-bill-wave', 'fas fa-coins', 'fas fa-dollar-sign', 'fas fa-credit-card', 'fas fa-wallet',
-        'fas fa-chart-line', 'fas fa-chart-bar', 'fas fa-percent',
-        // Warnings & Errors
-        'fas fa-exclamation-triangle', 'fas fa-exclamation-circle', 'fas fa-ban', 'fas fa-times-circle',
-        'fas fa-check-circle', 'fas fa-info-circle', 'fas fa-question-circle', 'fas fa-shield-alt',
-        // General notifications
-        'fas fa-bell', 'fas fa-envelope', 'fas fa-newspaper', 'fas fa-code', 'fas fa-cogs', 'fas fa-rocket',
-        'fas fa-graduation-cap', 'fas fa-headset', 'fas fa-store', 'fas fa-cube', 'fas fa-smile-wink',
-        'fas fa-heart', 'fas fa-star', 'fas fa-fire', 'fas fa-gift', 'fas fa-trophy'
-    ];
-
-    // Data stores
-    let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
-    let nextId = { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
-    let broadcastIcon = 'fas fa-bell', broadcastColor = '#3b82f6', individualIcon = 'fas fa-envelope', individualColor = '#3b82f6';
-    let currentIconCallback = null;
+    // ==================== JSONBin CONFIGURATION ====================
+    const JSONBIN_CONFIG = {
+        API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
+        ACCESS_KEY: 'B.Y PRO App',
+        BIN_ID: '69c12accaa77b81da90ed823'
+    };
 
     // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
@@ -460,419 +263,130 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    async function uploadToServer(file) {
-        const formData = new FormData();
-        formData.append('image', file);
-        try {
-            const response = await fetch(`${API_BASE}/api/upload`, { method: 'POST', body: formData });
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            if (data.url) return data.url;
-            throw new Error('No URL in response');
-        } catch (err) {
-            console.error('Upload error:', err);
-            showToast('Image upload failed: ' + err.message, true);
-            return null;
-        }
-    }
-
-    // ==================== DATA LOAD/SAVE (manual only) ====================
-    async function loadAllData() {
-        try {
-            const response = await fetch(`${API_BASE}/api/data`);
-            if (!response.ok) throw new Error('Network error');
-            const record = await response.json();
-            if (record) {
-                homeImages = record.images || [];
-                newsItems = record.news || [];
-                digitalServices = record.digital || [];
-                localServices = record.local || [];
-                phoneServices = record.phone || [];
-                products = record.products || [];
-                socialLinks = record.social || [];
-                supportMessages = record.support || [];
-                nextId = record.nextId || { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
-            }
-            renderAll();
-            showToast('Data loaded');
-        } catch (err) {
-            console.error('Load failed:', err);
-            showToast('Failed to load data', true);
-        }
-    }
-
-    async function saveAllData() {
-        const payload = {
-            images: homeImages, news: newsItems,
-            digital: digitalServices, local: localServices, phone: phoneServices,
-            products, social: socialLinks, support: supportMessages, nextId
-        };
-        try {
-            const response = await fetch(`${API_BASE}/api/data`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-            if (!response.ok) throw new Error('Save failed');
-            showToast('All changes saved');
-        } catch (err) {
-            console.error('Save failed:', err);
-            showToast('Save failed', true);
-        }
-    }
-
-    // Section-specific save/refresh functions
-    async function saveImages() { await saveAllData(); }
-    async function saveNews() { await saveAllData(); }
-    async function saveDigital() { await saveAllData(); }
-    async function saveLocal() { await saveAllData(); }
-    async function savePhone() { await saveAllData(); }
-    async function saveProducts() { await saveAllData(); }
-    async function saveSocial() { await saveAllData(); }
-    
-    async function refreshImages() { await loadAllData(); }
-    async function refreshNews() { await loadAllData(); }
-    async function refreshDigital() { await loadAllData(); }
-    async function refreshLocal() { await loadAllData(); }
-    async function refreshPhone() { await loadAllData(); }
-    async function refreshProducts() { await loadAllData(); }
-    async function refreshSocial() { await loadAllData(); }
-    async function refreshSupport() { await loadAllData(); }
-
-    // ==================== ICON LIBRARY ====================
-    function openIconLibrary(callback) {
-        currentIconCallback = callback;
-        const grid = document.getElementById('iconsGrid');
-        grid.innerHTML = iconList.map(icon => `<div class="icon-item" onclick="selectIcon('${icon}')"><i class="${icon}"></i><span>${icon.split(' ')[1] || icon}</span></div>`).join('');
-        document.getElementById('iconModal').classList.add('active');
-    }
-    function selectIcon(icon) { if (currentIconCallback) currentIconCallback(icon); closeIconModal(); }
-    function closeIconModal() { document.getElementById('iconModal').classList.remove('active'); currentIconCallback = null; }
-    function openIconLibraryForBroadcast() { openIconLibrary((icon) => { broadcastIcon = icon; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${icon}" style="color: ${broadcastColor}"></i>`; }); }
-    function openIconLibraryForIndividual() { openIconLibrary((icon) => { individualIcon = icon; document.getElementById('individualIconPreview').innerHTML = `<i class="${icon}" style="color: ${individualColor}"></i>`; }); }
-    function openIconLibraryForSocial(socialId) {
-        openIconLibrary((icon) => {
-            const item = socialLinks.find(s => s.id === socialId);
-            if (item) {
-                item.icon = icon;
-                renderSocial();
-            }
-        });
-    }
-
-    // ==================== NOTIFICATIONS ====================
-    async function sendNotification(type) {
-        let title, message, icon, color;
-        if (type === 'broadcast') {
-            title = document.getElementById('broadcastTitle').value;
-            message = document.getElementById('broadcastDesc').value;
-            color = document.getElementById('broadcastColor').value;
-            icon = broadcastIcon;
-            if (!title) return showToast('Enter title', true);
-        } else {
-            const recipient = document.getElementById('individualRecipient').value;
-            title = document.getElementById('individualTitle').value;
-            message = document.getElementById('individualDesc').value;
-            color = document.getElementById('individualColor').value;
-            icon = individualIcon;
-            if (!recipient || !title) return showToast('Enter recipient and title', true);
-        }
-        const res = await fetch('/api/notifications', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, message, icon, color }) });
-        if (res.ok) showToast('Notification sent');
-        else showToast('Send failed', true);
-        if (type === 'broadcast') { document.getElementById('broadcastTitle').value = ''; document.getElementById('broadcastDesc').value = ''; }
-        else { document.getElementById('individualRecipient').value = ''; document.getElementById('individualTitle').value = ''; document.getElementById('individualDesc').value = ''; }
-    }
-    function sendBroadcast() { sendNotification('broadcast'); }
-    function sendIndividual() { sendNotification('individual'); }
-
-    // ==================== SUPPORT MESSAGES ====================
-    function renderSupportMessages() {
-        const container = document.getElementById('supportMessagesContainer');
-        if (!container) return;
-        if (!supportMessages.length) {
-            container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No support messages</p></div>';
-            return;
-        }
-        container.innerHTML = supportMessages.map((msg, idx) => `
-            <div class="support-card">
-                <div class="support-header">
-                    <strong><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</strong>
-                    <span class="support-field">${escapeHtml(msg.field)}</span>
-                </div>
-                <div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div>
-                <div class="support-details">${escapeHtml(msg.details)}</div>
-                <div class="support-date"><i class="far fa-calendar-alt"></i> ${new Date(msg.date).toLocaleString()}</div>
-                <div class="item-actions mt-2">
-                    <button onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}')"><i class="fas fa-reply"></i> Reply</button>
-                    <button class="btn-danger" onclick="deleteSupportMessage(${idx})"><i class="fas fa-trash"></i> Delete</button>
-                </div>
-            </div>
-        `).join('');
-    }
-    function deleteSupportMessage(idx) { if (confirm('Delete this message?')) { supportMessages.splice(idx, 1); renderSupportMessages(); } }
-    function clearAllSupportMessages() { if (confirm('Delete ALL messages?')) { supportMessages = []; renderSupportMessages(); } }
-    function replyToMessage(recipient, subject) {
-        showSection('notifications');
-        document.getElementById('individualRecipient').value = recipient;
-        document.getElementById('individualTitle').value = `Re: ${subject}`;
-        document.getElementById('individualDesc').focus();
-    }
-
-    // ==================== HOME IMAGES ====================
-    async function addImage() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showToast('Uploading...');
-                const url = await uploadToServer(file);
-                if (url) {
-                    homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
-                    renderImages();
-                }
-            }
-        };
-        input.click();
-    }
-    function renderImages() {
-        const container = document.getElementById('imagesContainer');
-        if (!container) return;
-        container.innerHTML = homeImages.map(img => `
-            <div class="item-card">
-                <div class="item-info">
-                    <img src="${img.imageUrl}" class="image-preview" alt="preview">
-                    <input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImageLocally(${img.id}, 'alt', this.value)">
-                    <button class="btn-outline" onclick="replaceImage(${img.id})">Replace</button>
-                </div>
-                <div class="item-actions"><button class="btn-danger" onclick="removeImageLocal(${img.id})">Delete</button></div>
-            </div>
-        `).join('');
-        if (!homeImages.length) container.innerHTML = '<div class="item-card"><div class="item-info">No images. Click "Add Image"</div></div>';
-    }
-    async function replaceImage(id) {
-        const img = homeImages.find(i => i.id === id);
-        if (!img) return;
-        const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showToast('Uploading...');
-                const url = await uploadToServer(file);
-                if (url) { img.imageUrl = url; renderImages(); }
-            }
-        };
-        input.click();
-    }
-    function updateImageLocally(id, field, val) { const img = homeImages.find(i => i.id === id); if (img) img[field] = val; renderImages(); }
-    function removeImageLocal(id) { homeImages = homeImages.filter(i => i.id !== id); renderImages(); }
-
-    // ==================== NEWS ====================
-    function renderNews() {
-        const container = document.getElementById('newsContainer');
-        if (!container) return;
-        container.innerHTML = newsItems.map(item => `
-            <div class="item-card">
-                <div class="item-info">
-                    <div class="icon-color-row">
-                        <i class="${item.icon || 'fas fa-newspaper'}" style="font-size: 1.5rem; color: ${item.color || '#3b82f6'}"></i>
-                        <button class="btn-outline" onclick="selectNewsIcon(${item.id})">Icon</button>
-                        <input type="color" value="${item.color || '#3b82f6'}" onchange="updateNewsLocally(${item.id}, 'color', this.value)">
-                    </div>
-                    <input type="text" value="${escapeHtml(item.title)}" placeholder="Title" onchange="updateNewsLocally(${item.id}, 'title', this.value)">
-                    <textarea rows="2" placeholder="Description" onchange="updateNewsLocally(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
-                </div>
-                <div class="item-actions">
-                    <label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleNewsLocally(${item.id}, this.checked)"><span class="toggle-slider"></span></label>
-                    <button class="btn-danger" onclick="deleteNewsLocal(${item.id})">Delete</button>
-                </div>
-            </div>
-        `).join('');
-        if (!newsItems.length) container.innerHTML = '<div class="item-card"><div class="item-info">No news. Click "Add News"</div></div>';
-    }
-    function addNews() { newsItems.push({ id: nextId.news++, title: "New News", description: "", enabled: true, icon: "fas fa-newspaper", color: "#3b82f6" }); renderNews(); }
-    function updateNewsLocally(id, f, v) { const i = newsItems.find(i => i.id === id); if (i) i[f] = v; renderNews(); }
-    function selectNewsIcon(id) { openIconLibrary((icon) => { const i = newsItems.find(i => i.id === id); if (i) i.icon = icon; renderNews(); }); }
-    function toggleNewsLocally(id, val) { const i = newsItems.find(i => i.id === id); if (i) i.enabled = val; renderNews(); }
-    function deleteNewsLocal(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); }
-
-    // ==================== GENERIC SERVICES ====================
-    function renderImageBased(containerId, items, updateFn, deleteFn, typeName) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = items.map(item => `
-            <div class="item-card">
-                <div class="item-info">
-                    <img src="${item.imageUrl}" class="image-preview">
-                    <button class="btn-outline" onclick="replaceServiceImage(${item.id}, '${containerId}', '${updateFn}')">Replace</button>
-                    <input type="text" value="${escapeHtml(item.name)}" placeholder="Name" onchange="window.${updateFn}(${item.id}, 'name', this.value)">
-                    <textarea rows="2" placeholder="Description" onchange="window.${updateFn}(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea>
-                </div>
-                <div class="item-actions">
-                    <label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="window.toggleItemStatusLocal('${containerId}', ${item.id}, this.checked)"><span class="toggle-slider"></span></label>
-                    <button class="btn-danger" onclick="window.${deleteFn}(${item.id})">Delete</button>
-                </div>
-            </div>
-        `).join('');
-        if (!items.length) container.innerHTML = `<div class="item-card"><div class="item-info">No ${typeName}</div></div>`;
-    }
-    window.replaceServiceImage = async (id, containerId, updateFn) => {
-        let arr; if (containerId === 'digitalServicesContainer') arr = digitalServices; else if (containerId === 'localServicesContainer') arr = localServices; else if (containerId === 'phoneServicesContainer') arr = phoneServices; else if (containerId === 'productsContainer') arr = products; else return;
-        const item = arr.find(i => i.id === id); if (!item) return;
-        const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
-        input.onchange = async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                showToast('Uploading...');
-                const url = await uploadToServer(file);
-                if (url) { item.imageUrl = url; renderAll(); }
-            }
-        };
-        input.click();
-    };
-    window.toggleItemStatusLocal = (containerId, id, val) => {
-        if (containerId === 'digitalServicesContainer') { const i = digitalServices.find(i => i.id === id); if (i) i.enabled = val; renderDigital(); }
-        else if (containerId === 'localServicesContainer') { const i = localServices.find(i => i.id === id); if (i) i.enabled = val; renderLocal(); }
-        else if (containerId === 'phoneServicesContainer') { const i = phoneServices.find(i => i.id === id); if (i) i.enabled = val; renderPhone(); }
-        else if (containerId === 'productsContainer') { const i = products.find(i => i.id === id); if (i) i.enabled = val; renderProducts(); }
-    };
-
-    function addDigital() { digitalServices.push({ id: nextId.digital++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderDigital(); }
-    function renderDigital() { renderImageBased('digitalServicesContainer', digitalServices, 'updateDigitalLocal', 'deleteDigitalLocal', 'digital services'); }
-    function updateDigitalLocal(id, f, v) { const i = digitalServices.find(i => i.id === id); if (i) i[f] = v; renderDigital(); }
-    function deleteDigitalLocal(id) { digitalServices = digitalServices.filter(i => i.id !== id); renderDigital(); }
-    
-    function addLocal() { localServices.push({ id: nextId.local++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderLocal(); }
-    function renderLocal() { renderImageBased('localServicesContainer', localServices, 'updateLocalLocal', 'deleteLocalLocal', 'local services'); }
-    function updateLocalLocal(id, f, v) { const i = localServices.find(i => i.id === id); if (i) i[f] = v; renderLocal(); }
-    function deleteLocalLocal(id) { localServices = localServices.filter(i => i.id !== id); renderLocal(); }
-    
-    function addPhone() { phoneServices.push({ id: nextId.phone++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200?text=Service", enabled: true }); renderPhone(); }
-    function renderPhone() { renderImageBased('phoneServicesContainer', phoneServices, 'updatePhoneLocal', 'deletePhoneLocal', 'phone services'); }
-    function updatePhoneLocal(id, f, v) { const i = phoneServices.find(i => i.id === id); if (i) i[f] = v; renderPhone(); }
-    function deletePhoneLocal(id) { phoneServices = phoneServices.filter(i => i.id !== id); renderPhone(); }
-    
-    function addProduct() { products.push({ id: nextId.product++, name: "New Product", description: "", imageUrl: "https://placehold.co/400x200?text=Product", enabled: true, order: products.length }); renderProducts(); }
-    function renderProducts() { renderImageBased('productsContainer', products, 'updateProductLocal', 'deleteProductLocal', 'products'); }
-    function updateProductLocal(id, f, v) { const i = products.find(i => i.id === id); if (i) i[f] = v; renderProducts(); }
-    function deleteProductLocal(id) { products = products.filter(i => i.id !== id); products.forEach((p, idx) => p.order = idx); renderProducts(); }
-
-    // ==================== SOCIAL MEDIA ====================
-    function renderSocial() {
-        const container = document.getElementById('socialContainer');
-        if (!container) return;
-        socialLinks.sort((a,b) => a.order - b.order);
-        container.innerHTML = socialLinks.map(s => `
-            <div class="item-card" draggable="true" data-id="${s.id}" ondragstart="dragSocialStart(event)" ondragend="dragSocialEnd(event)">
-                <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
-                <div class="item-info">
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                        <i class="${s.icon}" style="font-size: 2rem; color: ${s.color}"></i>
-                        <button class="btn-outline" onclick="openIconLibraryForSocial(${s.id})">Change</button>
-                    </div>
-                    <input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocialLocal(${s.id}, 'name', this.value)">
-                    <div><input type="color" value="${s.color}" onchange="updateSocialLocal(${s.id}, 'color', this.value)"></div>
-                    <input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocialLocal(${s.id}, 'url', this.value)">
-                </div>
-                <div class="item-actions"><button class="btn-danger" onclick="deleteSocialLocal(${s.id})">Delete</button></div>
-            </div>
-        `).join('');
-        if (!socialLinks.length) container.innerHTML = '<div class="item-card"><div class="item-info">No social links</div></div>';
-    }
-    function addSocial() { 
-        socialLinks.push({ 
-            id: nextId.social++, 
-            name: "New Platform", 
-            icon: "fab fa-facebook-f", 
-            color: "#3b82f6", 
-            url: "#", 
-            order: socialLinks.length 
-        }); 
-        renderSocial(); 
-    }
-    function updateSocialLocal(id, f, v) { const i = socialLinks.find(i => i.id === id); if (i) i[f] = v; renderSocial(); }
-    function deleteSocialLocal(id) { socialLinks = socialLinks.filter(i => i.id !== id); socialLinks.forEach((s, idx) => s.order = idx); renderSocial(); }
-    
-    let dragSocialId = null;
-    function dragSocialStart(e) { dragSocialId = parseInt(e.target.closest('.item-card').dataset.id); }
-    function dragSocialEnd() { dragSocialId = null; }
-    function dropSocial(e) {
-        e.preventDefault();
-        const target = e.target.closest('.item-card');
-        if (!target || dragSocialId === null) return;
-        const tid = parseInt(target.dataset.id);
-        if (dragSocialId === tid) return;
-        const dragIdx = socialLinks.findIndex(s => s.id === dragSocialId);
-        const targetIdx = socialLinks.findIndex(s => s.id === tid);
-        if (dragIdx === -1 || targetIdx === -1) return;
-        const [dragged] = socialLinks.splice(dragIdx, 1);
-        socialLinks.splice(targetIdx, 0, dragged);
-        socialLinks.forEach((s, idx) => s.order = idx);
-        renderSocial();
-    }
-
-    function renderAll() {
-        renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages();
-    }
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
+    // ==================== FETCH DATA FROM JSONBin ====================
+    async function fetchAllData() {
+        try {
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
+                headers: {
+                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
+                    'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY
+                }
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            return data.record || { users: {}, supportMessages: [] };
+        } catch (error) {
+            console.error('Fetch error:', error);
+            return { users: {}, supportMessages: [] };
+        }
+    }
+
+    // ==================== SUPPORT MESSAGES ====================
+    async function loadSupportMessages() {
+        const container = document.getElementById('supportMessagesContainer');
+        if (!container) return;
+        
+        try {
+            const allData = await fetchAllData();
+            const supportMessages = allData.supportMessages || [];
+            
+            if (supportMessages.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No support messages yet</p></div>';
+                return;
+            }
+            
+            container.innerHTML = supportMessages.map((msg, idx) => `
+                <div class="support-card">
+                    <div class="support-header">
+                        <strong><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</strong>
+                        <span class="support-field">${escapeHtml(msg.field)}</span>
+                    </div>
+                    <div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div>
+                    <div class="support-details">${escapeHtml(msg.details)}</div>
+                    <div class="support-date"><i class="far fa-calendar-alt"></i> ${new Date(msg.date).toLocaleString()}</div>
+                    <div class="item-actions" style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end;">
+                        <button class="btn-danger" onclick="deleteSupportMessage(${idx})" style="background: #ef4444; padding: 6px 12px; font-size: 0.8rem;"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (err) {
+            console.error('Load support messages error:', err);
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Error loading messages</p></div>';
+        }
+    }
+    
+    async function deleteSupportMessage(index) {
+        if (!confirm('Delete this message?')) return;
+        try {
+            const allData = await fetchAllData();
+            const supportMessages = allData.supportMessages || [];
+            supportMessages.splice(index, 1);
+            allData.supportMessages = supportMessages;
+            
+            const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': JSONBIN_CONFIG.API_KEY,
+                    'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY
+                },
+                body: JSON.stringify(allData)
+            });
+            
+            if (response.ok) {
+                showToast('Message deleted');
+                loadSupportMessages();
+            } else {
+                throw new Error('Save failed');
+            }
+        } catch (err) {
+            console.error('Delete error:', err);
+            showToast('Failed to delete', true);
+        }
+    }
+    
+    async function refreshSupport() {
+        showToast('Refreshing...');
+        await loadSupportMessages();
+        showToast('Messages loaded');
+    }
+
     // ==================== NAVIGATION ====================
-    const sections = ['homeImages', 'news', 'notifications', 'support', 'digital', 'local', 'phone', 'products', 'social'];
+    const sections = ['support', 'images', 'news', 'notifications', 'digital', 'local', 'phone', 'products', 'social'];
     function showSection(s) {
         sections.forEach(sec => document.getElementById(sec + 'Section').classList.remove('active-page'));
         document.getElementById(s + 'Section').classList.add('active-page');
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
         document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+        
+        if (s === 'support') loadSupportMessages();
     }
-    document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
-    document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
-
-    // Color preview updates
-    document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}"></i>`; });
-    document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}"></i>`; });
-
-    // Expose globals
-    window.openIconLibrary = openIconLibrary; window.selectIcon = selectIcon; window.closeIconModal = closeIconModal;
-    window.openIconLibraryForBroadcast = openIconLibraryForBroadcast; window.openIconLibraryForIndividual = openIconLibraryForIndividual;
-    window.openIconLibraryForSocial = openIconLibraryForSocial;
-    window.sendBroadcast = sendBroadcast; window.sendIndividual = sendIndividual;
-    window.replyToMessage = replyToMessage; window.deleteSupportMessage = deleteSupportMessage; window.clearAllSupportMessages = clearAllSupportMessages;
-    window.addImage = addImage; window.replaceImage = replaceImage; window.updateImageLocally = updateImageLocally; window.removeImageLocal = removeImageLocal;
-    window.addNews = addNews; window.updateNewsLocally = updateNewsLocally; window.selectNewsIcon = selectNewsIcon; window.toggleNewsLocally = toggleNewsLocally; window.deleteNewsLocal = deleteNewsLocal;
-    window.addDigital = addDigital; window.updateDigitalLocal = updateDigitalLocal; window.deleteDigitalLocal = deleteDigitalLocal;
-    window.addLocal = addLocal; window.updateLocalLocal = updateLocalLocal; window.deleteLocalLocal = deleteLocalLocal;
-    window.addPhone = addPhone; window.updatePhoneLocal = updatePhoneLocal; window.deletePhoneLocal = deletePhoneLocal;
-    window.addProduct = addProduct; window.updateProductLocal = updateProductLocal; window.deleteProductLocal = deleteProductLocal;
-    window.addSocial = addSocial; window.updateSocialLocal = updateSocialLocal; window.deleteSocialLocal = deleteSocialLocal;
-    window.dragSocialStart = dragSocialStart; window.dragSocialEnd = dragSocialEnd; window.dropSocial = dropSocial;
-    window.refreshImages = refreshImages; window.refreshNews = refreshNews; window.refreshDigital = refreshDigital;
-    window.refreshLocal = refreshLocal; window.refreshPhone = refreshPhone; window.refreshProducts = refreshProducts;
-    window.refreshSocial = refreshSocial; window.refreshSupport = refreshSupport;
-    window.saveImages = saveImages; window.saveNews = saveNews; window.saveDigital = saveDigital;
-    window.saveLocal = saveLocal; window.savePhone = savePhone; window.saveProducts = saveProducts;
-    window.saveSocial = saveSocial;
+    
+    document.querySelectorAll('.nav-item').forEach(nav => {
+        nav.addEventListener('click', () => showSection(nav.dataset.section));
+    });
+    
+    document.getElementById('menuToggle').addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('open');
+    });
+    
+    // Expose functions globally
+    window.refreshSupport = refreshSupport;
+    window.deleteSupportMessage = deleteSupportMessage;
     window.showSection = showSection;
-
-    loadAllData();
-
-    // Real-time SSE for support messages only (no auto-refresh of edits)
-    let eventSource = null;
-    function connectToStream() {
-        if (eventSource) eventSource.close();
-        eventSource = new EventSource('/api/events');
-        eventSource.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            if (data.type === 'support_new') {
-                loadAllData();
-                showToast(`New support message from ${data.data?.sender || 'user'}`);
-            }
-        };
-        eventSource.onerror = () => setTimeout(connectToStream, 5000);
-    }
-    connectToStream();
+    
+    // Initial load
+    loadSupportMessages();
+    
+    // Auto-refresh every 10 seconds for support messages
+    setInterval(() => {
+        if (document.hasFocus() && document.getElementById('supportSection').classList.contains('active-page')) {
+            loadSupportMessages();
+        }
+    }, 10000);
 </script>
 </body>
 </html>
