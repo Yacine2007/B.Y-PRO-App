@@ -291,9 +291,10 @@
         BIN_ID: '69c12accaa77b81da90ed823'
     };
     
-    // Cloudinary direct upload - مع upload_preset الصحيح
+    // Cloudinary configuration - استخدم upload_preset فقط بدون API key
     const CLOUDINARY_CLOUD_NAME = 'dfxde2mbi';
-    const CLOUDINARY_UPLOAD_PRESET = 'B.Y_PRO_App'; // جرب هذا الاسم الجديد
+    // IMPORTANT: يجب أن يكون هذا الupload_preset مضبوطاً على "Unsigned" في لوحة Cloudinary
+    const CLOUDINARY_UPLOAD_PRESET = 'by_pro_unsigned'; // جرب هذا الاسم
     const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
     // Data stores
@@ -330,7 +331,7 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    // Direct upload to Cloudinary with better error handling
+    // Direct upload to Cloudinary without API key (using unsigned preset)
     async function uploadToCloudinary(file) {
         const formData = new FormData();
         formData.append('file', file);
@@ -357,7 +358,7 @@
             throw new Error('No secure_url in response');
         } catch (err) {
             console.error('Cloudinary upload error:', err);
-            showToast('Cloudinary upload failed: ' + err.message, true);
+            showToast('Upload failed: ' + err.message, true);
             return null;
         }
     }
