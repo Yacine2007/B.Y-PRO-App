@@ -15,14 +15,17 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Cloudinary
+// Configure Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// JSON Bin
+// Configure multer for memory storage
+const upload = multer({ storage: multer.memoryStorage() });
+
+// JSON Bin configuration
 const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
 const JSON_BIN_HEADERS = {
     'Content-Type': 'application/json',
@@ -32,7 +35,7 @@ const JSON_BIN_HEADERS = {
 // Cache
 let cachedData = null;
 let lastFetch = 0;
-const CACHE_TTL = 1000; // 1 second cache for real-time
+const CACHE_TTL = 30000; // 30 seconds
 
 async function fetchData() {
     const now = Date.now();
@@ -62,7 +65,7 @@ async function saveData(data) {
     }
 }
 
-// SSE Clients for real-time updates
+// SSE Clients
 let clients = [];
 
 app.get('/api/events', (req, res) => {
@@ -125,7 +128,6 @@ app.post('/api/support', async (req, res) => {
         
         await saveData(currentData);
         
-        // Broadcast to all clients
         broadcastUpdate('support_new', newMessage);
         broadcastUpdate('data_update', currentData);
         
@@ -159,17 +161,22 @@ app.post('/api/notifications', async (req, res) => {
     }
 });
 
-// Image upload
-const upload = multer({ storage: multer.memoryStorage() });
+// Image upload to Cloudinary
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
-        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        
+        // Convert buffer to base64 for Cloudinary upload
         const base64 = req.file.buffer.toString('base64');
         const dataURI = `data:${req.file.mimetype};base64,${base64}`;
+        
         const result = await cloudinary.uploader.upload(dataURI, {
             folder: process.env.CLOUDINARY_FOLDER || 'B.Y PRO App',
             resource_type: 'auto'
         });
+        
         res.json({ url: result.secure_url });
     } catch (error) {
         console.error('Upload error:', error);
@@ -177,10 +184,12 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 });
 
+// Health check
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Serve static files - fallback to index.html for SPA
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
