@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
+        /* جميع الأنماط كما هي من التصميم السابق (نفس الكود) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -46,7 +47,6 @@
             overflow-y: auto;
             height: auto;
         }
-        /* Menu Trigger */
         .menu-trigger {
             position: fixed;
             left: 4%;
@@ -82,7 +82,6 @@
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.7;transform:scale(1.2);} }
-        /* Sidebar */
         .sidebar {
             width: 280px;
             background: var(--surface);
@@ -118,7 +117,6 @@
         .nav-item img.nav-icon { width: 20px; height: 20px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
         .theme-switch-sidebar { margin: 16px 12px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.85rem; }
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 0;
@@ -128,7 +126,6 @@
         }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
-        /* Home Header */
         .home-header {
             display: flex;
             justify-content: space-between;
@@ -181,7 +178,6 @@
             gap: 6px;
         }
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 2px 6px; font-size: 0.65rem; font-weight: 600; }
-        /* Carousel */
         .carousel-container {
             position: relative;
             width: 100%;
@@ -221,7 +217,6 @@
             cursor: pointer;
         }
         .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
-        /* Section Headers */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -232,7 +227,6 @@
         }
         .section-title { font-size: 1.2rem; font-weight: 700; }
         .section-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
-        /* Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -252,7 +246,6 @@
         .card-content { padding: 14px; }
         .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
         .card-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.4; }
-        /* Notifications */
         .notification-card-wrapper { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 10px; }
         .notification-card {
             background: var(--surface);
@@ -270,7 +263,6 @@
         .notification-time { font-size: 0.6rem; color: var(--text-muted); margin-top: 6px; }
         .notification-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
         .notification-actions button { background: transparent; padding: 3px 6px; border: none; cursor: pointer; font-size: 0.7rem; color: var(--text-muted); }
-        /* Support Form */
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 12px; }
         .form-group input, .form-group select, .form-group textarea {
@@ -308,7 +300,6 @@
             font-size: 0.7rem;
             margin-bottom: 12px;
         }
-        /* Wallet Page */
         .card-info-row {
             display: flex;
             align-items: center;
@@ -319,30 +310,13 @@
             margin-bottom: 16px;
             border: 1px solid var(--border);
         }
-        .card-info-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .card-info-left { display: flex; align-items: center; gap: 10px; }
         .card-icon-small { width: 28px; height: 28px; object-fit: contain; }
-        .card-code {
-            font-family: monospace;
-            font-size: 0.7rem;
-            background: var(--bg);
-            padding: 4px 8px;
-            border-radius: 40px;
-        }
+        .card-code { font-family: monospace; font-size: 0.7rem; background: var(--bg); padding: 4px 8px; border-radius: 40px; }
         .copy-card-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--text-muted);
+            background: transparent; border: 1px solid var(--border); border-radius: 30px;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; color: var(--text-muted);
         }
         .balance-card {
             background: var(--surface);
@@ -357,16 +331,8 @@
         .balance-amount span { font-size: 1.2rem; }
         .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-deposit, .btn-refresh {
-            flex: 1;
-            padding: 8px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.8rem;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
         }
         .btn-deposit { background: var(--success); color: white; border: none; }
         .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
@@ -376,60 +342,33 @@
         .transactions-count { font-size: 0.65rem; color: var(--text-muted); }
         .transactions-list { display: flex; flex-direction: column; gap: 8px; }
         .transaction-item {
-            background: var(--surface);
-            padding: 10px;
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--border);
+            background: var(--surface); padding: 10px; border-radius: 14px;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);
         }
         .transaction-info { display: flex; align-items: center; gap: 8px; }
         .transaction-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            background: #e8f5e9;
-            color: var(--success);
+            width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 0.8rem; background: #e8f5e9; color: var(--success);
         }
         .transaction-details { display: flex; flex-direction: column; gap: 2px; }
         .transaction-name { font-weight: 600; font-size: 0.75rem; }
         .transaction-date { font-size: 0.55rem; color: var(--text-muted); }
         .transaction-amount { font-weight: 700; font-size: 0.75rem; color: var(--success); }
         .empty-transactions {
-            background: var(--surface);
-            padding: 24px;
-            text-align: center;
-            border-radius: 16px;
-            border: 1px solid var(--border);
+            background: var(--surface); padding: 24px; text-align: center;
+            border-radius: 16px; border: 1px solid var(--border);
         }
         .empty-icon { font-size: 1.8rem; margin-bottom: 6px; opacity: 0.4; }
         .empty-text { font-size: 0.7rem; color: var(--text-muted); }
-        /* Toast */
         .toast-notification {
-            position: fixed;
-            bottom: 5%;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--surface);
-            border-radius: 40px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 2000;
-            transition: transform 0.3s ease;
-            border-left: 3px solid var(--success);
+            position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: var(--surface); border-radius: 40px; padding: 8px 16px;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success);
         }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
         .toast-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
         .toast-message { font-size: 0.75rem; font-weight: 500; }
-        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
@@ -438,12 +377,8 @@
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card {
-            background: var(--surface);
-            border-radius: 24px;
-            padding: 20px;
-            width: 85%;
-            max-width: 320px;
-            text-align: center;
+            background: var(--surface); border-radius: 24px; padding: 20px;
+            width: 85%; max-width: 320px; text-align: center;
         }
         .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
         .close-modal { margin-top: 16px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.85rem; }
@@ -518,18 +453,10 @@
             </div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
-        <!-- Notifications Section -->
-        <div id="notificationsPage" class="section-page">
-            <div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div>
-            <div id="notificationsContainer" class="cards-grid"></div>
-        </div>
-        <!-- Digital Services -->
+        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
         <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
-        <!-- Local Services -->
         <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
-        <!-- Phone Services -->
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
-        <!-- Products -->
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <!-- Wallet Section -->
         <div id="walletPage" class="section-page">
@@ -557,9 +484,7 @@
                 <div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>
             </div>
         </div>
-        <!-- Social Media -->
         <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
-        <!-- Support -->
         <div id="supportPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
             <div class="slim-card">
@@ -578,7 +503,6 @@
     </main>
 </div>
 
-<!-- Account Modal -->
 <div class="modal-overlay" id="accountModal">
     <div class="modal-card">
         <h3><i class="fas fa-user-circle"></i> Account Details</h3>
@@ -592,7 +516,6 @@
 
 <div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
-<!-- Authentication SDK -->
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 
 <script>
@@ -603,7 +526,6 @@
         BIN_ID: '69c12accaa77b81da90ed823'
     };
 
-    // ==================== GLOBAL STATE ====================
     let currentUser = null;
     let auth = null;
     let userWalletData = null;
@@ -611,7 +533,6 @@
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
 
-    // ==================== UTILITIES ====================
     function showToast(message, isError = false) {
         const toast = document.getElementById('toast');
         const toastMsg = document.getElementById('toastMessage');
@@ -634,7 +555,7 @@
 
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
-    // ==================== WALLET API ====================
+    // ==================== JSONBin API ====================
     async function fetchAllData() {
         try {
             const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
@@ -667,11 +588,13 @@
         }
     }
 
+    // ==================== WALLET ====================
     async function loadUserWallet(userId) {
         const allData = await fetchAllData();
         if (!allData.users[userId]) {
             allData.users[userId] = {
                 id: userId,
+                name: currentUser?.name || 'User',
                 balance: 0,
                 transactions: [],
                 cardCode: null,
@@ -725,7 +648,7 @@
         `).join('')}</div>`;
     }
 
-    // ==================== SUPPORT FORM ====================
+    // ==================== SUPPORT FORM (direct to JSONBin) ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -900,7 +823,6 @@
                 </div>
             </div>
         `).join('');
-        // Swipe to delete
         document.querySelectorAll('.notification-card-wrapper').forEach(wrapper => {
             let startX = 0;
             wrapper.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; });
@@ -969,7 +891,6 @@
         }
     });
 
-    // Account modal
     const greetingAvatar = document.getElementById('greetingAvatar');
     const modal = document.getElementById('accountModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -979,15 +900,21 @@
     logoutBtn.addEventListener('click', () => { if (auth) auth.logout(); modal.classList.remove('active'); });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-    // ==================== CONTENT DATA ====================
+    // ==================== CONTENT DATA (from JSONBin) ====================
     async function loadContentData() {
         try {
-            const res = await fetch('/api/data');
-            if (res.ok) {
-                contentData = await res.json();
-                renderCarousel(contentData.images || []);
-                renderAllContent();
-            }
+            const allData = await fetchAllData();
+            contentData = {
+                images: allData.images || [],
+                news: allData.news || [],
+                digital: allData.digital || [],
+                local: allData.local || [],
+                phone: allData.phone || [],
+                products: allData.products || [],
+                social: allData.social || []
+            };
+            renderCarousel(contentData.images || []);
+            renderAllContent();
         } catch(e) { console.error('Failed to load content:', e); }
     }
 
