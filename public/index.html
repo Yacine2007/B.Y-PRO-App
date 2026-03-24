@@ -23,9 +23,7 @@
             --primary: #0066cc;
             --primary-dark: #0052a3;
             --danger: #ef4444;
-            --danger-dark: #dc2626;
             --success: #10b981;
-            --success-dark: #059669;
             --card-radius: 20px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
@@ -78,6 +76,7 @@
             transition: all 0.2s;
         }
         .nav-item i { width: 24px; font-size: 1rem; }
+        .nav-item img { width: 24px; height: 24px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
         .theme-switch-sidebar { margin: 16px 12px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.85rem; cursor: pointer; }
         /* Toggle Switch */
@@ -92,7 +91,7 @@
         .section-page { display: none; }
         .section-page.active-page { display: block; }
         /* Buttons */
-        button, .btn, .btn-deposit, .btn-refresh, .btn-submit {
+        button, .btn-submit {
             background: var(--primary);
             color: white;
             border: none;
@@ -107,14 +106,7 @@
             justify-content: center;
             gap: 8px;
         }
-        button:hover, .btn:hover, .btn-deposit:hover, .btn-refresh:hover, .btn-submit:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        .btn-deposit { background: var(--success); }
-        .btn-deposit:hover { background: var(--success-dark); }
-        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-        .btn-refresh:hover { background: var(--border); transform: none; }
+        button:hover, .btn-submit:hover { background: var(--primary-dark); transform: translateY(-1px); }
         /* Home Header */
         .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .greeting-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -141,7 +133,7 @@
         .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
         /* Cards Grid */
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .slim-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .slim-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
         .slim-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
         .card-media { height: 140px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
@@ -164,7 +156,7 @@
         .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.85rem; font-family: inherit; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
         .hours-badge { background: var(--success); color: white; padding: 6px 12px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; margin-bottom: 12px; }
-        /* Wallet */
+        /* Wallet Page */
         .wallet-header-img { width: 100%; border-radius: 20px; margin-bottom: 16px; background: var(--surface); padding: 16px; text-align: center; border: 1px solid var(--border); }
         .wallet-header-img img { max-width: 80px; height: auto; }
         .card-info-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 60px; padding: 8px 12px; margin-bottom: 16px; border: 1px solid var(--border); }
@@ -177,6 +169,11 @@
         .balance-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
         .balance-amount { font-size: 2rem; font-weight: 700; color: var(--success); }
         .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .btn-deposit, .btn-refresh { flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-deposit { background: var(--success); color: white; border: none; }
+        .btn-deposit:hover { background: var(--success-dark); transform: translateY(-1px); }
+        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        .btn-refresh:hover { background: var(--border); transform: none; }
         .transactions-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
         .transactions-title { font-size: 0.85rem; font-weight: 600; }
         .transactions-count { font-size: 0.65rem; color: var(--text-muted); }
@@ -208,9 +205,15 @@
 </head>
 <body>
 <div class="app-wrapper">
-    <div class="menu-trigger" id="menuTrigger"><span>&gt;</span><div class="menu-dot" id="menuDot"></div></div>
+    <div class="menu-trigger" id="menuTrigger">
+        <span>&gt;</span>
+        <div class="menu-dot" id="menuDot"></div>
+    </div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div>
+            <span class="sidebar-title">B.Y PRO App</span>
+        </div>
         <nav class="sidebar-nav">
             <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
             <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
@@ -218,59 +221,142 @@
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
-            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png" style="width: 20px; height: 20px;"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.7rem;"></i></a>
-            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
+            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png" style="width: 20px; height: 20px;"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto;"></i></a>
+            <div class="nav-item" data-page="wallet">
+                <img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 24px; height: 24px; object-fit: contain;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'">
+                <span>Wallet</span>
+            </div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
-        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> Dark Mode</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
+        <div class="theme-switch-sidebar">
+            <span><i class="fas fa-moon"></i> Dark Mode</span>
+            <label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label>
+        </div>
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
             <div class="home-header">
-                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div></div>
-                <div style="display: flex; gap: 8px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
+                <div class="greeting-section" id="greetingAvatar">
+                    <div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div>
+                    <div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <div class="wallet-badge" id="homeWalletBadge">
+                        <i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span>
+                    </div>
+                    <div class="bell-icon" id="homeBellIcon">
+                        <i class="fas fa-bell"></i>
+                        <span id="homeBellCount" class="bell-count" style="display: none;">0</span>
+                    </div>
+                </div>
             </div>
-            <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
-            <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
-            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading news...</div></div></div></div>
+            <div class="carousel-container" id="carouselContainer">
+                <div class="carousel-slides" id="carouselSlides"></div>
+                <div class="carousel-indicators" id="carouselIndicators"></div>
+            </div>
+            <div class="section-header">
+                <h2 class="section-title">Latest News</h2>
+                <span class="section-badge">Updates</span>
+            </div>
+            <div id="newsContainer" class="cards-grid">
+                <div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading news...</div></div></div>
+            </div>
         </div>
-        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
+
+        <div id="notificationsPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div>
+            <div id="notificationsContainer" class="cards-grid"></div>
+        </div>
+
         <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
         <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
+
         <div id="walletPage" class="section-page">
             <div class="wallet-header-img"><img src="https://b-y-pro-app.onrender.com/wallet.png" alt="Wallet" onerror="this.style.display='none'"></div>
-            <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
-            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
-            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
-            <hr class="divider"><div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0 transactions</div></div>
-            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
+            <div class="card-info-row">
+                <div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'"><span class="card-code" id="userCardCode">—</span></div>
+                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
+            </div>
+            <div class="balance-card">
+                <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
+                <div class="balance-amount">$<span id="walletBalance">0.00</span></div>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button>
+                <button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+            </div>
+            <hr class="divider">
+            <div class="transactions-header">
+                <div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div>
+                <div class="transactions-count" id="walletTransactionsCount">0 transactions</div>
+            </div>
+            <div id="walletTransactionsContainer">
+                <div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>
+            </div>
         </div>
+
         <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
+
         <div id="supportPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
-            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
-            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Message</button></form><div id="formMessage" style="margin-top: 12px;"></div></div></div>
+            <div class="slim-card">
+                <div class="card-content">
+                    <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
+                    <form id="supportRequestForm" class="support-form">
+                        <div class="form-group">
+                            <select id="serviceSelect" required>
+                                <option value="">Select service</option>
+                                <option>Digital Services</option>
+                                <option>Local Services</option>
+                                <option>Phone Services</option>
+                                <option>Products</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="topicInput" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="detailsInput" rows="3" placeholder="Details"></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+                    </form>
+                    <div id="formMessage" style="margin-top: 12px;"></div>
+                </div>
+            </div>
         </div>
     </main>
 </div>
 
-<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn" style="margin-top: 10px; background: #ef4444;">Logout</button></div></div>
-<div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
+<div class="modal-overlay" id="accountModal">
+    <div class="modal-card">
+        <h3><i class="fas fa-user-circle"></i> Account Details</h3>
+        <div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div>
+        <div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div>
+        <div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div>
+        <button class="close-modal" id="closeModalBtn">Close</button>
+        <button class="close-modal" id="logoutBtn" style="margin-top: 10px; background: #ef4444;">Logout</button>
+    </div>
+</div>
+
+<div class="toast-notification" id="toast">
+    <div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div>
+    <div class="toast-message" id="toastMessage"></div>
+</div>
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 
 <script>
     // ==================== CONFIGURATION ====================
-    const JSONBIN_CONFIG = {
-        API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
-        ACCESS_KEY: 'B.Y PRO App',
-        BIN_ID: '69c12accaa77b81da90ed823'
-    };
-    let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    let currentUser = null;
+    let auth = null;
+    let userWalletData = null;
+    let userNotifications = [];
+    let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
 
     function generateCardCode() {
@@ -281,68 +367,136 @@
     function showToast(message, isError = false) {
         const toast = document.getElementById('toast'), toastMsg = document.getElementById('toastMessage'), toastIcon = document.getElementById('toastIcon');
         toastMsg.textContent = message;
-        if (isError) { toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>'; toastIcon.style.background = '#fee2e2'; toastIcon.style.color = '#ef4444'; toast.style.borderLeftColor = '#ef4444'; }
-        else { toastIcon.innerHTML = '<i class="fas fa-check"></i>'; toastIcon.style.background = '#d1fae5'; toastIcon.style.color = '#10b981'; toast.style.borderLeftColor = '#10b981'; }
-        toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2500);
+        if (isError) {
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            toastIcon.style.background = '#fee2e2';
+            toastIcon.style.color = '#ef4444';
+            toast.style.borderLeftColor = '#ef4444';
+        } else {
+            toastIcon.innerHTML = '<i class="fas fa-check"></i>';
+            toastIcon.style.background = '#d1fae5';
+            toastIcon.style.color = '#10b981';
+            toast.style.borderLeftColor = '#10b981';
+        }
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
+    // ==================== API ====================
     async function fetchAllData() {
         try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}/latest`, { headers: { 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY } });
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            return data.record || { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
-        } catch (e) { console.error('Fetch error:', e); return { users: {}, supportMessages: [] }; }
-    }
-    async function saveAllData(data) {
-        try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_CONFIG.BIN_ID}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_CONFIG.API_KEY, 'X-Access-Key': JSONBIN_CONFIG.ACCESS_KEY }, body: JSON.stringify(data) });
-            return res.ok;
-        } catch (e) { console.error('Save error:', e); return false; }
+            const response = await fetch('/api/data');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            return data;
+        } catch (e) {
+            console.error('Fetch error:', e);
+            return { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+        }
     }
 
-    async function loadUserWallet(userId) {
-        const allData = await fetchAllData();
-        if (!allData.users[userId]) {
-            const newCardCode = generateCardCode();
-            allData.users[userId] = { id: userId, name: currentUser?.name || 'User', balance: 0, transactions: [], cardCode: newCardCode, createdAt: new Date().toISOString() };
-            await saveAllData(allData);
-            showToast(`New wallet created! Card: ${newCardCode}`);
+    async function saveAllData(data) {
+        try {
+            const response = await fetch('/api/data', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return response.ok;
+        } catch (e) {
+            console.error('Save error:', e);
+            return false;
         }
-        userWalletData = allData.users[userId];
-        updateWalletUI();
-        return userWalletData;
     }
-    async function saveUserWallet() { const allData = await fetchAllData(); allData.users[currentUser.id] = userWalletData; await saveAllData(allData); }
-    async function refreshWallet() { if (!currentUser) return; showToast('Refreshing...'); await loadUserWallet(currentUser.id); showToast('Balance updated!'); }
+
+    // ==================== WALLET ====================
+    async function loadUserWallet(userId) {
+        try {
+            const allData = await fetchAllData();
+            if (!allData.users || !allData.users[userId]) {
+                if (!allData.users) allData.users = {};
+                const newCardCode = generateCardCode();
+                allData.users[userId] = {
+                    id: userId,
+                    name: currentUser?.name || 'User',
+                    balance: 0,
+                    transactions: [],
+                    cardCode: newCardCode,
+                    createdAt: new Date().toISOString()
+                };
+                await saveAllData(allData);
+                showToast(`New wallet created! Card: ${newCardCode}`);
+            }
+            userWalletData = allData.users[userId];
+            updateWalletUI();
+            return userWalletData;
+        } catch (err) {
+            console.error('Load wallet error:', err);
+            return null;
+        }
+    }
+
+    async function saveUserWallet() {
+        const allData = await fetchAllData();
+        allData.users[currentUser.id] = userWalletData;
+        await saveAllData(allData);
+    }
+
+    async function refreshWallet() {
+        if (!currentUser) return;
+        showToast('Refreshing...');
+        await loadUserWallet(currentUser.id);
+        showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
+    }
+
     function updateWalletUI() {
         if (!userWalletData) return;
-        document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
-        document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
+        const balance = userWalletData.balance.toFixed(2);
+        document.getElementById('walletBalance').textContent = balance;
+        document.getElementById('homeWalletAmount').textContent = `$${balance}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
+        
         const transactions = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = `${transactions.length} transaction${transactions.length !== 1 ? 's' : ''}`;
         const container = document.getElementById('walletTransactionsContainer');
-        if (transactions.length === 0) { container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`; return; }
-        container.innerHTML = `<div class="transactions-list">${transactions.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
+        if (transactions.length === 0) {
+            container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
+            return;
+        }
+        container.innerHTML = `<div class="transactions-list">${transactions.slice().reverse().map(t => `
+            <div class="transaction-item">
+                <div class="transaction-info">
+                    <div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div>
+                    <div class="transaction-details">
+                        <div class="transaction-name">${escapeHtml(t.description)}</div>
+                        <div class="transaction-date">${new Date(t.date).toLocaleString()}</div>
+                    </div>
+                </div>
+                <div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div>
+            </div>
+        `).join('')}</div>`;
     }
 
-    // ==================== SUPPORT FORM (FIXED) ====================
+    // ==================== SUPPORT FORM ====================
     const supportForm = document.getElementById('supportRequestForm'), formMsg = document.getElementById('formMessage');
     if (supportForm) {
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) { formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>'; return; }
-            const btn = supportForm.querySelector('button'); btn.disabled = true;
+            if (!topic) {
+                formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>';
+                return;
+            }
+            const btn = supportForm.querySelector('button');
+            btn.disabled = true;
             formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
             const senderName = currentUser ? (currentUser.name || currentUser.username || 'App User') : 'App User';
             const senderId = currentUser ? (currentUser.id || currentUser.userId || 'Unknown') : 'Unknown';
             try {
                 const allData = await fetchAllData();
                 if (!allData.supportMessages) allData.supportMessages = [];
-                const newMessage = {
+                allData.supportMessages.unshift({
                     id: Date.now(),
                     sender: `${senderName} (ID: ${senderId})`,
                     field: document.getElementById('serviceSelect').value,
@@ -350,15 +504,13 @@
                     details: document.getElementById('detailsInput').value,
                     date: new Date().toISOString(),
                     read: false
-                };
-                allData.supportMessages.unshift(newMessage);
+                });
                 const saved = await saveAllData(allData);
                 if (saved) {
                     formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 3000);
                     addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
-                    console.log('Support message saved:', newMessage);
                 } else {
                     throw new Error('Save failed');
                 }
@@ -378,40 +530,159 @@
         document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
         document.getElementById('modalUserEmail').textContent = user.email || 'No email';
         const avatarDiv = document.getElementById('avatarIcon');
-        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" alt="avatar">`; else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" alt="avatar">`;
+        else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         if (user.id) loadUserWallet(user.id);
-        if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 500); }
+        if (!welcomeShown) {
+            welcomeShown = true;
+            setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 500);
+        }
     }
+
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
-        onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadContentData(); },
-        onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').textContent = '$0.00'; welcomeShown = false; auth.show(); }
+        onLogin: (user) => {
+            updateUIForUser(user);
+            loadNotificationsFromStorage();
+            loadContentData();
+        },
+        onLogout: () => {
+            currentUser = null;
+            userWalletData = null;
+            document.getElementById('userName').textContent = 'User';
+            document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
+            document.getElementById('homeWalletAmount').textContent = '$0.00';
+            welcomeShown = false;
+            auth.show();
+        }
     });
-    setTimeout(() => { if (auth && auth.isAuthenticated && auth.isAuthenticated()) { const u = auth.getCurrentUser(); if (u) updateUIForUser(u); else auth.show(); } else auth.show(); }, 500);
+
+    setTimeout(() => {
+        if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
+            const u = auth.getCurrentUser();
+            if (u) updateUIForUser(u);
+            else auth.show();
+        } else {
+            auth.show();
+        }
+    }, 500);
 
     // ==================== NOTIFICATIONS ====================
-    function loadNotificationsFromStorage() { const saved = localStorage.getItem('bypro_notifications'); if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} } if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'Welcome!', message: 'You will receive updates here.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }]; saveNotificationsToStorage(); }
-    function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
-    function formatDate(d) { const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000); if (diff < 1) return 'Just now'; if (diff < 60) return `${diff}m ago`; if (diff < 1440) return `${Math.floor(diff / 60)}h ago`; return date.toLocaleDateString(); }
-    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') { userNotifications.unshift({ id: Date.now(), title, message, icon, color, date: new Date().toISOString(), read: false }); saveNotificationsToStorage(); showToast(title); if (Notification.permission === 'granted') new Notification(title, { body: message, icon: 'https://by-pro.kesug.com/App.png?v=3' }); }
+    function loadNotificationsFromStorage() {
+        const saved = localStorage.getItem('bypro_notifications');
+        if (saved) {
+            try { userNotifications = JSON.parse(saved); } catch(e) {}
+        }
+        if (!userNotifications.length) {
+            userNotifications = [{
+                id: Date.now(),
+                title: 'Welcome!',
+                message: 'You will receive updates here.',
+                date: new Date().toISOString(),
+                read: false,
+                icon: 'fas fa-smile-wink',
+                color: '#3b82f6'
+            }];
+            saveNotificationsToStorage();
+        }
+        updateNotificationUI();
+    }
+
+    function saveNotificationsToStorage() {
+        localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications));
+        updateNotificationUI();
+    }
+
+    function formatDate(d) {
+        const date = new Date(d);
+        const diff = Math.floor((Date.now() - date) / 60000);
+        if (diff < 1) return 'Just now';
+        if (diff < 60) return `${diff}m ago`;
+        if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+        return date.toLocaleDateString();
+    }
+
+    function addNotification(title, message, icon = 'fas fa-bell', color = '#3b82f6') {
+        userNotifications.unshift({
+            id: Date.now(), title, message, icon, color,
+            date: new Date().toISOString(),
+            read: false
+        });
+        saveNotificationsToStorage();
+        showToast(title);
+        if (Notification.permission === 'granted') new Notification(title, { body: message, icon: 'https://by-pro.kesug.com/App.png?v=3' });
+    }
+
     function updateNotificationUI() {
-        const container = document.getElementById('notificationsContainer'), countSpan = document.getElementById('notificationsCount'), pageBadge = document.getElementById('notificationsPageBadge'), homeBellCount = document.getElementById('homeBellCount'), menuDot = document.getElementById('menuDot');
+        const container = document.getElementById('notificationsContainer');
+        const countSpan = document.getElementById('notificationsCount');
+        const pageBadge = document.getElementById('notificationsPageBadge');
+        const homeBellCount = document.getElementById('homeBellCount');
+        const menuDot = document.getElementById('menuDot');
         const unread = userNotifications.filter(n => !n.read).length;
-        if (countSpan) { countSpan.style.display = unread ? 'inline-block' : 'none'; if (unread) countSpan.textContent = unread; }
+
+        if (countSpan) {
+            countSpan.style.display = unread ? 'inline-block' : 'none';
+            if (unread) countSpan.textContent = unread;
+        }
         if (pageBadge) pageBadge.textContent = `${unread} new`;
-        if (homeBellCount) { homeBellCount.style.display = unread ? 'inline-block' : 'none'; if (unread) homeBellCount.textContent = unread; }
+        if (homeBellCount) {
+            homeBellCount.style.display = unread ? 'inline-block' : 'none';
+            if (unread) homeBellCount.textContent = unread;
+        }
         if (menuDot) menuDot.style.display = unread ? 'block' : 'none';
         if (!container) return;
-        if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>'; return; }
-        container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `<div class="notification-card-wrapper" data-id="${n.id}"><div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div><div class="notification-card ${!n.read ? 'unread' : ''}"><div class="card-title"><i class="${n.icon}" style="color: ${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background: var(--primary); margin-left: 8px;">New</span>' : ''}</div><div class="card-desc">${escapeHtml(n.message)}</div><div class="notification-time"><i class="far fa-clock"></i> ${formatDate(n.date)}</div><div class="notification-actions">${!n.read ? `<button onclick="markRead(${n.id})"><i class="fas fa-check"></i> Read</button>` : ''}<button onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i> Delete</button></div></div></div>`).join('');
-        document.querySelectorAll('.notification-card-wrapper').forEach(w => { let sx = 0; w.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }); w.addEventListener('touchend', e => { const delta = e.changedTouches[0].clientX - sx; if (Math.abs(delta) > 80) deleteNotification(parseInt(w.dataset.id)); }); });
+        if (!userNotifications.length) {
+            container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
+            return;
+        }
+        container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `
+            <div class="notification-card-wrapper" data-id="${n.id}">
+                <div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
+                <div class="notification-card ${!n.read ? 'unread' : ''}">
+                    <div class="card-title"><i class="${n.icon}" style="color: ${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background: var(--primary); margin-left: 8px;">New</span>' : ''}</div>
+                    <div class="card-desc">${escapeHtml(n.message)}</div>
+                    <div class="notification-time"><i class="far fa-clock"></i> ${formatDate(n.date)}</div>
+                    <div class="notification-actions">
+                        ${!n.read ? `<button onclick="markRead(${n.id})"><i class="fas fa-check"></i> Read</button>` : ''}
+                        <button onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i> Delete</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+        
+        document.querySelectorAll('.notification-card-wrapper').forEach(w => {
+            let sx = 0;
+            w.addEventListener('touchstart', e => { sx = e.touches[0].clientX; });
+            w.addEventListener('touchend', e => {
+                const delta = e.changedTouches[0].clientX - sx;
+                if (Math.abs(delta) > 80) deleteNotification(parseInt(w.dataset.id));
+            });
+        });
     }
-    function markRead(id) { const n = userNotifications.find(n => n.id === id); if (n) { n.read = true; saveNotificationsToStorage(); } }
-    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('Notification deleted'); }
-    window.markRead = markRead; window.deleteNotification = deleteNotification;
+
+    function markRead(id) {
+        const n = userNotifications.find(n => n.id === id);
+        if (n) { n.read = true; saveNotificationsToStorage(); }
+    }
+
+    function deleteNotification(id) {
+        userNotifications = userNotifications.filter(n => n.id !== id);
+        saveNotificationsToStorage();
+        showToast('Notification deleted');
+    }
+
+    window.markRead = markRead;
+    window.deleteNotification = deleteNotification;
+
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
-    document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
+    document.getElementById('copyCardBtn')?.addEventListener('click', () => {
+        if (userWalletData?.cardCode) {
+            navigator.clipboard.writeText(userWalletData.cardCode);
+            showToast('Card code copied!');
+        } else showToast('No card code', true);
+    });
 
     // ==================== NAVIGATION & SIDEBAR ====================
     const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
@@ -419,10 +690,36 @@
     function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
     menuTrigger.addEventListener('click', e => { e.stopPropagation(); sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar(); });
     overlay.addEventListener('click', closeSidebar);
-    document.addEventListener('click', e => { if (sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuTrigger.contains(e.target)) closeSidebar(); });
-    const navItems = document.querySelectorAll('.nav-item'), pages = { home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'), digital: document.getElementById('digitalPage'), local: document.getElementById('localPage'), phone: document.getElementById('phonePage'), products: document.getElementById('productsPage'), wallet: document.getElementById('walletPage'), social: document.getElementById('socialPage'), support: document.getElementById('supportPage') };
-    function navigateTo(p) { Object.values(pages).forEach(v => v.classList.remove('active-page')); pages[p].classList.add('active-page'); navItems.forEach(n => n.classList.remove('active')); const a = document.querySelector(`.nav-item[data-page="${p}"]`); if (a) a.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); closeSidebar(); }
-    navItems.forEach(i => { if (!i.hasAttribute('href')) i.addEventListener('click', () => { const p = i.getAttribute('data-page'); if (p && pages[p]) navigateTo(p); }); });
+    document.addEventListener('click', e => {
+        if (sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuTrigger.contains(e.target)) closeSidebar();
+    });
+
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = {
+        home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'),
+        digital: document.getElementById('digitalPage'), local: document.getElementById('localPage'),
+        phone: document.getElementById('phonePage'), products: document.getElementById('productsPage'),
+        wallet: document.getElementById('walletPage'), social: document.getElementById('socialPage'),
+        support: document.getElementById('supportPage')
+    };
+    function navigateTo(p) {
+        Object.values(pages).forEach(v => v.classList.remove('active-page'));
+        pages[p].classList.add('active-page');
+        navItems.forEach(n => n.classList.remove('active'));
+        const a = document.querySelector(`.nav-item[data-page="${p}"]`);
+        if (a) a.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closeSidebar();
+    }
+    navItems.forEach(i => {
+        if (!i.hasAttribute('href')) {
+            i.addEventListener('click', () => {
+                const p = i.getAttribute('data-page');
+                if (p && pages[p]) navigateTo(p);
+            });
+        }
+    });
+
     const gAvatar = document.getElementById('greetingAvatar'), accModal = document.getElementById('accountModal'), closeModal = document.getElementById('closeModalBtn'), logout = document.getElementById('logoutBtn');
     if (gAvatar) gAvatar.addEventListener('click', () => accModal.classList.add('active'));
     closeModal.addEventListener('click', () => accModal.classList.remove('active'));
@@ -444,9 +741,9 @@
             };
             renderCarousel(contentData.images || []);
             renderAllContent();
-            console.log('Content loaded:', contentData.news.length, 'news items');
         } catch(e) { console.error('Failed to load content:', e); }
     }
+
     function renderAllContent() {
         renderNews(contentData.news || []);
         renderServices('digitalContainer', contentData.digital || [], 'fas fa-code');
@@ -455,37 +752,94 @@
         renderProducts(contentData.products || []);
         renderSocial(contentData.social || []);
     }
+
     function renderNews(news) {
         const c = document.getElementById('newsContainer');
         if (!c) return;
         const active = news.filter(n => n.enabled !== false);
-        if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news available</div></div></div>'; return; }
+        if (!active.length) {
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news available</div></div></div>';
+            return;
+        }
         c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color: ${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join('');
     }
-    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services available</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products available</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
-    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration: none;"><div class="card-content" style="text-align: center;"><i class="${escapeHtml(i.icon)}" style="font-size: 1.8rem; color: ${i.color}; margin-bottom: 6px; display: inline-block;"></i><div class="card-title" style="justify-content: center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
+
+    function renderServices(cid, services, icon) {
+        const c = document.getElementById(cid);
+        if (!c) return;
+        const active = services.filter(s => s.enabled !== false);
+        if (!active.length) {
+            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services available</div></div></div>`;
+            return;
+        }
+        c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join('');
+    }
+
+    function renderProducts(products) {
+        const c = document.getElementById('productsContainer');
+        if (!c) return;
+        const active = products.filter(p => p.enabled !== false);
+        if (!active.length) {
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products available</div></div></div>';
+            return;
+        }
+        c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join('');
+    }
+
+    function renderSocial(social) {
+        const c = document.getElementById('socialContainer');
+        if (!c) return;
+        if (!social.length) {
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>';
+            return;
+        }
+        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration: none;"><div class="card-content" style="text-align: center;"><i class="${escapeHtml(i.icon)}" style="font-size: 1.8rem; color: ${i.color}; margin-bottom: 6px; display: inline-block;"></i><div class="card-title" style="justify-content: center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join('');
+    }
 
     // ==================== CAROUSEL ====================
     let carouselImages = [], currentSlide = 0, slideInterval = null;
     function renderCarousel(images) {
         const slides = document.getElementById('carouselSlides'), indicators = document.getElementById('carouselIndicators');
         if (!slides || !indicators) return;
-        if (!images || !images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images"></div>'; indicators.innerHTML = ''; return; }
+        if (!images || !images.length) {
+            slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images"></div>';
+            indicators.innerHTML = '';
+            return;
+        }
         carouselImages = images;
         slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'Slide'}"></div>`).join('');
         indicators.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
-        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if (!isNaN(idx)) goToSlide(idx); }));
+        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => {
+            const idx = parseInt(ind.dataset.index);
+            if (!isNaN(idx)) goToSlide(idx);
+        }));
         startAutoSlide();
     }
-    function goToSlide(i) { const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator'); if (!slides.length) return; slides[currentSlide].classList.remove('active'); if (inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide = (i + slides.length) % slides.length; slides[currentSlide].classList.add('active'); if (inds[currentSlide]) inds[currentSlide].classList.add('active'); }
+
+    function goToSlide(i) {
+        const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator');
+        if (!slides.length) return;
+        slides[currentSlide].classList.remove('active');
+        if (inds[currentSlide]) inds[currentSlide].classList.remove('active');
+        currentSlide = (i + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        if (inds[currentSlide]) inds[currentSlide].classList.add('active');
+    }
+
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
     // ==================== DARK MODE ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
-    if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
-    themeToggle.addEventListener('change', e => { if (e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
+    if (localStorage.getItem('darkTheme') === 'true') {
+        document.documentElement.classList.add('dark-theme');
+        themeToggle.checked = true;
+    }
+    themeToggle.addEventListener('change', e => {
+        if (e.target.checked) document.documentElement.classList.add('dark-theme');
+        else document.documentElement.classList.remove('dark-theme');
+        localStorage.setItem('darkTheme', e.target.checked);
+    });
 
     const depositBtn = document.getElementById('depositBtn'), refreshBtn = document.getElementById('refreshWalletBtn');
     depositBtn.onclick = () => { showToast('Deposit feature coming soon!', true); };
