@@ -24,7 +24,7 @@
             --primary-dark: #0052a3;
             --danger: #ef4444;
             --success: #10b981;
-            --card-radius: 24px;
+            --card-radius: 20px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
         }
@@ -49,7 +49,7 @@
         /* Menu Trigger */
         .menu-trigger {
             position: fixed;
-            left: 16px;
+            left: 4%;
             top: 50%;
             transform: translateY(-50%);
             width: 48px;
@@ -62,24 +62,22 @@
             cursor: pointer;
             z-index: 1000;
             border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 24px;
-            font-size: 1.5rem;
+            border-radius: 50%;
+            font-size: 1.4rem;
             color: var(--primary);
-            margin: 0 !important;
-            padding: 0 !important;
             transition: all 0.2s;
         }
         .dark-theme .menu-trigger { background: rgba(30,30,40,0.8); border-color: rgba(255,255,255,0.2); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
         .menu-dot {
             position: absolute;
-            top: -4px;
-            right: -4px;
+            top: -3px;
+            right: -3px;
             width: 10px;
             height: 10px;
             background: var(--danger);
             border-radius: 50%;
-            border: 2px solid white;
+            border: 2px solid var(--surface);
             display: none;
             animation: pulse 1.5s infinite;
         }
@@ -99,139 +97,101 @@
             overflow-y: auto;
         }
         .sidebar.mobile-open { transform: translateX(0); }
-        .sidebar-header {
-            padding: 24px 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .sidebar-logo img { width: 48px; height: 48px; object-fit: contain; }
-        .sidebar-title {
-            font-weight: 700;
-            font-size: 1.2rem;
-            background: linear-gradient(135deg, var(--primary), #6c5ce7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .sidebar-nav { padding: 20px 16px; }
+        .sidebar-header { padding: 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .sidebar-logo img { width: 40px; height: 40px; object-fit: contain; }
+        .sidebar-title { font-weight: 700; font-size: 1.1rem; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .sidebar-nav { padding: 16px 12px; }
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            border-radius: 14px;
+            gap: 12px;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 12px;
             color: var(--text-muted);
             cursor: pointer;
             font-weight: 500;
+            font-size: 0.9rem;
             text-decoration: none;
         }
-        .nav-item i { width: 24px; }
-        .nav-item img.nav-icon { width: 24px; height: 24px; object-fit: contain; }
+        .nav-item i { width: 24px; font-size: 1rem; }
+        .nav-item img.nav-icon { width: 20px; height: 20px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
-        .theme-switch-sidebar {
-            margin: 20px 16px;
-            padding: 16px;
-            background: var(--bg);
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            border: 1px solid var(--border);
-        }
+        .theme-switch-sidebar { margin: 16px 12px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.85rem; }
         /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 0;
-            padding: 20px 24px;
-            min-height: 100vh;
+            padding: 16px 20px;
+            width: 100%;
+            max-width: 100%;
         }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
-        /* Home header */
+        /* Home Header */
         .home-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
         .greeting-section {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
         }
         .avatar-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: linear-gradient(135deg, var(--primary), #6c5ce7);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: white;
             overflow: hidden;
         }
-        .avatar-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .greeting-text {
-            font-size: 1rem;
-            font-weight: 500;
-        }
+        .greeting-text { font-size: 0.95rem; font-weight: 500; }
         .greeting-text .user-name { font-weight: 700; color: var(--primary); }
         .wallet-badge {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 8px 14px;
+            padding: 6px 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 6px;
+            font-size: 0.8rem;
             font-weight: 600;
             color: var(--success);
             cursor: pointer;
-            transition: all 0.2s;
-        }
-        .wallet-badge:hover {
-            background: var(--border);
-            transform: translateY(-1px);
         }
         .bell-icon {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 40px;
-            padding: 8px 12px;
+            padding: 6px 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
-        .bell-count {
-            background: var(--danger);
-            color: white;
-            border-radius: 20px;
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
+        .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 2px 6px; font-size: 0.65rem; font-weight: 600; }
         /* Carousel */
         .carousel-container {
             position: relative;
             width: 100%;
-            border-radius: var(--card-radius);
+            border-radius: 16px;
             overflow: hidden;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             background: var(--surface);
-            min-height: 180px;
+            aspect-ratio: 16 / 9;
         }
-        .carousel-slides {
-            position: relative;
-            height: 180px;
-        }
+        .carousel-slides { position: relative; width: 100%; height: 100%; }
         .carousel-slide {
             position: absolute;
             top: 0;
@@ -245,142 +205,88 @@
         .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
         .carousel-indicators {
             position: absolute;
-            bottom: 12px;
+            bottom: 8px;
             left: 0;
             right: 0;
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             z-index: 2;
         }
         .indicator {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.6);
+            background: rgba(255,255,255,0.5);
             cursor: pointer;
         }
-        .indicator.active { background: var(--primary); width: 20px; border-radius: 4px; }
-        /* Section headers */
+        .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
+        /* Section Headers */
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        .section-badge {
-            background: var(--primary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        /* Cards grid */
+        .section-title { font-size: 1.2rem; font-weight: 700; }
+        .section-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
+        /* Cards Grid */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
         }
         .slim-card {
             background: var(--surface);
-            border-radius: var(--card-radius);
+            border-radius: 16px;
             border: 1px solid var(--border);
             overflow: hidden;
             transition: all 0.2s;
         }
-        .slim-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-        .card-media { height: 150px; overflow: hidden; }
+        .slim-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .card-media { height: 130px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
-        .card-content { padding: 16px; }
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card-desc { color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; }
+        .card-content { padding: 14px; }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .card-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.4; }
         /* Notifications */
-        .notification-card-wrapper {
-            position: relative;
-            overflow: hidden;
-            border-radius: var(--card-radius);
-            margin-bottom: 12px;
-        }
+        .notification-card-wrapper { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 10px; }
         .notification-card {
             background: var(--surface);
-            border-radius: var(--card-radius);
+            border-radius: 16px;
             border: 1px solid var(--border);
-            padding: 16px;
+            padding: 14px;
         }
-        .notification-card.unread {
-            border-left: 4px solid var(--primary);
-            background: rgba(59,130,246,0.05);
-        }
+        .notification-card.unread { border-left: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
         .notification-delete {
-            position: absolute;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            width: 60px;
-            background: var(--danger);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: var(--card-radius);
-            opacity: 0;
-            transition: opacity 0.2s;
+            position: absolute; right: 0; top: 0; bottom: 0; width: 50px;
+            background: var(--danger); color: white; display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer; border-radius: 16px; opacity: 0; transition: opacity 0.2s;
         }
         .notification-card-wrapper:hover .notification-delete { opacity: 1; }
-        .notification-time {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 8px;
-        }
-        .notification-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-            justify-content: flex-end;
-        }
-        .notification-actions button {
-            background: transparent;
-            padding: 4px 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-        /* Support form */
-        .support-form { margin-top: 16px; }
-        .form-group { margin-bottom: 16px; }
+        .notification-time { font-size: 0.6rem; color: var(--text-muted); margin-top: 6px; }
+        .notification-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+        .notification-actions button { background: transparent; padding: 3px 6px; border: none; cursor: pointer; font-size: 0.7rem; color: var(--text-muted); }
+        /* Support Form */
+        .support-form { margin-top: 12px; }
+        .form-group { margin-bottom: 12px; }
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 10px 14px;
+            padding: 8px 12px;
             background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 14px;
+            border-radius: 12px;
             color: var(--text);
-            font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
         .btn-submit {
             background: var(--primary);
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px;
             border-radius: 40px;
             font-weight: 600;
             width: 100%;
@@ -388,179 +294,166 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
+            font-size: 0.85rem;
         }
         .hours-badge {
             background: var(--success);
             color: white;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 40px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            margin-bottom: 16px;
+            gap: 6px;
+            font-size: 0.7rem;
+            margin-bottom: 12px;
         }
-        /* Wallet page */
+        /* Wallet Page */
+        .card-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border-radius: 60px;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+        }
+        .card-info-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-icon-small { width: 28px; height: 28px; object-fit: contain; }
+        .card-code {
+            font-family: monospace;
+            font-size: 0.7rem;
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 40px;
+        }
+        .copy-card-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
         .balance-card {
             background: var(--surface);
-            border-radius: var(--card-radius);
-            padding: 24px;
+            border-radius: 20px;
+            padding: 20px;
             text-align: center;
             border: 1px solid var(--border);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
-        .balance-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-        .balance-amount {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--success);
-        }
-        .balance-amount span { font-size: 1.5rem; }
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
+        .balance-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+        .balance-amount { font-size: 2rem; font-weight: 700; color: var(--success); }
+        .balance-amount span { font-size: 1.2rem; }
+        .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
         .btn-deposit, .btn-refresh {
             flex: 1;
-            padding: 10px;
+            padding: 8px;
             border-radius: 40px;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
         .btn-deposit { background: var(--success); color: white; border: none; }
         .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-        .divider { border: none; height: 1px; background: var(--border); margin: 20px 0; }
-        .transactions-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        .transactions-title { font-size: 0.9rem; font-weight: 600; }
-        .transactions-count { font-size: 0.7rem; color: var(--text-muted); }
+        .divider { border: none; height: 1px; background: var(--border); margin: 16px 0; }
+        .transactions-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .transactions-title { font-size: 0.85rem; font-weight: 600; }
+        .transactions-count { font-size: 0.65rem; color: var(--text-muted); }
         .transactions-list { display: flex; flex-direction: column; gap: 8px; }
         .transaction-item {
             background: var(--surface);
-            padding: 12px;
-            border-radius: 16px;
+            padding: 10px;
+            border-radius: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border: 1px solid var(--border);
         }
-        .transaction-info { display: flex; align-items: center; gap: 10px; }
+        .transaction-info { display: flex; align-items: center; gap: 8px; }
         .transaction-icon {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             background: #e8f5e9;
             color: var(--success);
         }
         .transaction-details { display: flex; flex-direction: column; gap: 2px; }
-        .transaction-name { font-weight: 600; font-size: 0.8rem; }
-        .transaction-date { font-size: 0.6rem; color: var(--text-muted); }
-        .transaction-amount { font-weight: 700; font-size: 0.8rem; color: var(--success); }
+        .transaction-name { font-weight: 600; font-size: 0.75rem; }
+        .transaction-date { font-size: 0.55rem; color: var(--text-muted); }
+        .transaction-amount { font-weight: 700; font-size: 0.75rem; color: var(--success); }
         .empty-transactions {
             background: var(--surface);
-            padding: 30px;
+            padding: 24px;
             text-align: center;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid var(--border);
         }
-        .empty-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
-        .empty-text { font-size: 0.8rem; color: var(--text-muted); }
+        .empty-icon { font-size: 1.8rem; margin-bottom: 6px; opacity: 0.4; }
+        .empty-text { font-size: 0.7rem; color: var(--text-muted); }
         /* Toast */
         .toast-notification {
             position: fixed;
-            bottom: 20px;
+            bottom: 5%;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--surface);
-            border-radius: 12px;
-            padding: 10px 18px;
+            border-radius: 40px;
+            padding: 8px 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 2000;
             transition: transform 0.3s ease;
-            border-left: 4px solid var(--success);
+            border-left: 3px solid var(--success);
         }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
-        .toast-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-        }
-        .toast-message { font-size: 0.8rem; font-weight: 500; }
+        .toast-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+        .toast-message { font-size: 0.75rem; font-weight: 500; }
         /* Modal */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.2s;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s;
         }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card {
             background: var(--surface);
-            border-radius: 28px;
-            padding: 24px;
-            width: 90%;
-            max-width: 340px;
+            border-radius: 24px;
+            padding: 20px;
+            width: 85%;
+            max-width: 320px;
             text-align: center;
         }
-        .info-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.85rem;
-        }
-        .close-modal {
-            margin-top: 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 40px;
-            width: 100%;
-            cursor: pointer;
-        }
+        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+        .close-modal { margin-top: 16px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.85rem; }
         @media (max-width: 768px) {
-            .main-content { padding: 16px; }
+            .main-content { padding: 12px; }
             .cards-grid { grid-template-columns: 1fr; }
-            .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; top: calc(50% - 22px); }
-            .carousel-slides { height: 150px; }
-            .balance-amount { font-size: 2rem; }
+            .menu-trigger { width: 40px; height: 40px; font-size: 1.2rem; left: 3%; }
+            .greeting-text { font-size: 0.85rem; }
+            .avatar-icon { width: 36px; height: 36px; font-size: 0.9rem; }
+            .balance-amount { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -583,9 +476,9 @@
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
             <a href="https://store-pro.great-site.net" target="_blank" class="nav-item" style="text-decoration: none;">
-                <img src="https://store-pro.great-site.net/favicon.png" style="width: 24px; height: 24px; object-fit: contain;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'">
+                <img src="https://store-pro.great-site.net/favicon.png" style="width: 20px; height: 20px;" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'">
                 <span>Store PRO</span>
-                <i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.7rem;"></i>
+                <i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i>
             </a>
             <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
@@ -615,12 +508,10 @@
                     </div>
                 </div>
             </div>
-            <!-- Carousel -->
             <div class="carousel-container" id="carouselContainer">
                 <div class="carousel-slides" id="carouselSlides"></div>
                 <div class="carousel-indicators" id="carouselIndicators"></div>
             </div>
-            <!-- News -->
             <div class="section-header">
                 <h2 class="section-title">Latest News</h2>
                 <span class="section-badge">Updates</span>
@@ -640,8 +531,15 @@
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
         <!-- Products -->
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
-        <!-- Wallet -->
+        <!-- Wallet Section -->
         <div id="walletPage" class="section-page">
+            <div class="card-info-row">
+                <div class="card-info-left">
+                    <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
+                    <span class="card-code" id="userCardCode">—</span>
+                </div>
+                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
+            </div>
             <div class="balance-card">
                 <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
                 <div class="balance-amount">$<span id="walletBalance">0.00</span></div>
@@ -668,25 +566,12 @@
                 <div class="card-content">
                     <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
                     <form id="supportRequestForm" class="support-form">
-                        <div class="form-group">
-                            <select id="serviceSelect" required>
-                                <option value="">Select service</option>
-                                <option>Digital Services</option>
-                                <option>Local Services</option>
-                                <option>Phone Services</option>
-                                <option>Products</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="topicInput" placeholder="Subject" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="detailsInput" rows="3" placeholder="Details"></textarea>
-                        </div>
+                        <div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div>
+                        <div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div>
+                        <div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details"></textarea></div>
                         <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button>
                     </form>
-                    <div id="formMessage" style="margin-top: 12px;"></div>
+                    <div id="formMessage" style="margin-top: 10px;"></div>
                 </div>
             </div>
         </div>
@@ -701,7 +586,7 @@
         <div class="info-row"><span>ID:</span><span id="modalUserId">BY-2024-001</span></div>
         <div class="info-row"><span>Email:</span><span id="modalUserEmail">alex@bypro.com</span></div>
         <button class="close-modal" id="closeModalBtn">Close</button>
-        <button class="close-modal" id="logoutBtn" style="margin-top: 12px; background: #ef4444;">Logout</button>
+        <button class="close-modal" id="logoutBtn" style="margin-top: 10px; background: #ef4444;">Logout</button>
     </div>
 </div>
 
@@ -724,7 +609,7 @@
     let userWalletData = null;
     let userNotifications = [];
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
-    let welcomeShown = false; // to show welcome only once after login
+    let welcomeShown = false;
 
     // ==================== UTILITIES ====================
     function showToast(message, isError = false) {
@@ -789,6 +674,7 @@
                 id: userId,
                 balance: 0,
                 transactions: [],
+                cardCode: null,
                 createdAt: new Date().toISOString()
             };
             await saveAllData(allData);
@@ -816,6 +702,8 @@
         const balance = userWalletData.balance.toFixed(2);
         document.getElementById('walletBalance').textContent = balance;
         document.getElementById('homeWalletAmount').textContent = `$${balance}`;
+        const cardCodeSpan = document.getElementById('userCardCode');
+        if (cardCodeSpan) cardCodeSpan.textContent = userWalletData.cardCode || 'No card assigned';
         const transactions = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = `${transactions.length} transaction${transactions.length !== 1 ? 's' : ''}`;
         const container = document.getElementById('walletTransactionsContainer');
@@ -895,7 +783,6 @@
         if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" alt="avatar">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         if (user.id) loadUserWallet(user.id);
-        // Show welcome toast only once after login
         if (!welcomeShown) {
             welcomeShown = true;
             setTimeout(() => showToast(`Welcome back, ${user.name || user.username || 'User'}!`), 500);
@@ -1040,6 +927,15 @@
 
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
+    const copyCardBtn = document.getElementById('copyCardBtn');
+    if (copyCardBtn) copyCardBtn.addEventListener('click', () => {
+        if (userWalletData?.cardCode) {
+            navigator.clipboard.writeText(userWalletData.cardCode);
+            showToast('Card code copied!');
+        } else {
+            showToast('No card code available', true);
+        }
+    });
 
     // ==================== NAVIGATION ====================
     const menuTrigger = document.getElementById('menuTrigger');
@@ -1153,7 +1049,7 @@
         container.innerHTML = social.map(item => `
             <a href="${escapeHtml(item.url)}" target="_blank" class="slim-card" style="text-decoration: none;">
                 <div class="card-content" style="text-align: center;">
-                    <i class="${escapeHtml(item.icon)}" style="font-size: 2rem; color: ${item.color}; margin-bottom: 8px; display: inline-block;"></i>
+                    <i class="${escapeHtml(item.icon)}" style="font-size: 1.8rem; color: ${item.color}; margin-bottom: 6px; display: inline-block;"></i>
                     <div class="card-title" style="justify-content: center;">${escapeHtml(item.name)}</div>
                     <div class="card-desc">${escapeHtml(item.url)}</div>
                 </div>
