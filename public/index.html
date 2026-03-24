@@ -21,8 +21,11 @@
             --text-muted: #4a4a4a;
             --border: #e5e5e5;
             --primary: #0066cc;
+            --primary-dark: #0052a3;
             --danger: #ef4444;
+            --danger-dark: #dc2626;
             --success: #10b981;
+            --success-dark: #059669;
             --card-radius: 20px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
@@ -34,6 +37,7 @@
             --text-muted: #b0b0b0;
             --border: #333333;
             --primary: #3b82f6;
+            --primary-dark: #2563eb;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -43,17 +47,20 @@
             overflow-x: hidden;
             overflow-y: auto;
         }
+        /* Menu Trigger */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
             width: 48px; height: 80px; background: rgba(255,255,255,0.95);
             backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.15);
             border-left: none; border-radius: 0 20px 20px 0; font-size: 1.4rem; color: var(--primary);
+            transition: all 0.2s;
         }
         .dark-theme .menu-trigger { background: rgba(30,30,40,0.8); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
         .menu-dot { position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.7;transform:scale(1.2);} }
+        /* Sidebar */
         .sidebar {
             width: 280px; background: var(--surface); border-right: 1px solid var(--border);
             position: fixed; left: 0; top: 0; bottom: 0; z-index: 100;
@@ -68,39 +75,80 @@
             display: flex; align-items: center; gap: 12px; padding: 10px 12px;
             margin-bottom: 4px; border-radius: 12px; color: var(--text-muted);
             cursor: pointer; font-weight: 500; font-size: 0.9rem; text-decoration: none;
+            transition: all 0.2s;
         }
         .nav-item i { width: 24px; font-size: 1rem; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
-        .theme-switch-sidebar { margin: 16px 12px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.85rem; }
+        .theme-switch-sidebar { margin: 16px 12px; padding: 12px; background: var(--bg); border-radius: 14px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.85rem; cursor: pointer; }
+        /* Toggle Switch */
+        .toggle-switch { position: relative; display: inline-block; width: 48px; height: 24px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.2s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: 0.2s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+        /* Main Content */
         .main-content { flex: 1; margin-left: 0; padding: 16px 20px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
+        /* Buttons */
+        button, .btn, .btn-deposit, .btn-refresh, .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button:hover, .btn:hover, .btn-deposit:hover, .btn-refresh:hover, .btn-submit:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        .btn-deposit { background: var(--success); }
+        .btn-deposit:hover { background: var(--success-dark); }
+        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        .btn-refresh:hover { background: var(--border); transform: none; }
+        /* Home Header */
         .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .greeting-section { display: flex; align-items: center; gap: 10px; cursor: pointer; }
         .avatar-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--primary), #6c5ce7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: white; overflow: hidden; }
         .greeting-text { font-size: 0.95rem; font-weight: 500; }
         .greeting-text .user-name { font-weight: 700; color: var(--primary); }
-        .wallet-badge { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: var(--success); cursor: pointer; }
-        .bell-icon { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .wallet-badge { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 6px 12px; display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: var(--success); cursor: pointer; transition: all 0.2s; }
+        .wallet-badge:hover { background: var(--border); }
+        .bell-icon { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 6px 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+        .bell-icon:hover { background: var(--border); }
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 2px 6px; font-size: 0.65rem; font-weight: 600; }
-        .carousel-container { position: relative; width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 24px; background: var(--surface); aspect-ratio: 16 / 9; }
+        /* Carousel */
+        .carousel-container { position: relative; width: 100%; border-radius: 16px; overflow: hidden; margin-bottom: 24px; background: var(--surface); aspect-ratio: 16 / 9; max-height: 280px; }
         .carousel-slides { position: relative; width: 100%; height: 100%; }
         .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease; }
         .carousel-slide.active { opacity: 1; }
         .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .carousel-indicators { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 2; }
-        .indicator { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.5); cursor: pointer; }
-        .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
+        .carousel-indicators { position: absolute; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; gap: 8px; z-index: 2; }
+        .indicator { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.2s; }
+        .indicator.active { background: var(--primary); width: 24px; border-radius: 4px; }
+        /* Section */
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
         .section-title { font-size: 1.2rem; font-weight: 700; }
-        .section-badge { background: var(--primary); color: white; padding: 4px 10px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
-        .slim-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
-        .card-media { height: 130px; overflow: hidden; }
+        .section-badge { background: var(--primary); color: white; padding: 4px 12px; border-radius: 40px; font-size: 0.7rem; font-weight: 600; }
+        /* Cards Grid */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .slim-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+        .slim-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .card-media { height: 140px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
         .card-content { padding: 14px; }
         .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
         .card-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.4; }
+        /* Notifications */
         .notification-card-wrapper { position: relative; overflow: hidden; border-radius: 16px; margin-bottom: 10px; }
         .notification-card { background: var(--surface); border-radius: 16px; border: 1px solid var(--border); padding: 14px; }
         .notification-card.unread { border-left: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
@@ -108,47 +156,54 @@
         .notification-card-wrapper:hover .notification-delete { opacity: 1; }
         .notification-time { font-size: 0.6rem; color: var(--text-muted); margin-top: 6px; }
         .notification-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+        .notification-actions button { background: transparent; padding: 4px 8px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; font-size: 0.7rem; color: var(--text-muted); transition: all 0.2s; }
+        .notification-actions button:hover { background: var(--border); }
+        /* Support Form */
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 12px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.85rem; }
-        .btn-submit { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; font-weight: 600; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.85rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 14px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.85rem; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
         .hours-badge { background: var(--success); color: white; padding: 6px 12px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.7rem; margin-bottom: 12px; }
-        /* Wallet Page */
+        /* Wallet */
         .wallet-header-img { width: 100%; border-radius: 20px; margin-bottom: 16px; background: var(--surface); padding: 16px; text-align: center; border: 1px solid var(--border); }
         .wallet-header-img img { max-width: 80px; height: auto; }
         .card-info-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 60px; padding: 8px 12px; margin-bottom: 16px; border: 1px solid var(--border); }
         .card-info-left { display: flex; align-items: center; gap: 10px; }
         .card-icon-small { width: 28px; height: 28px; object-fit: contain; }
         .card-code { font-family: monospace; font-size: 0.7rem; background: var(--bg); padding: 4px 8px; border-radius: 40px; }
-        .copy-card-btn { background: transparent; border: 1px solid var(--border); border-radius: 30px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
+        .copy-card-btn { background: transparent; border: 1px solid var(--border); border-radius: 30px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: all 0.2s; }
+        .copy-card-btn:hover { background: var(--border); color: var(--primary); }
         .balance-card { background: var(--surface); border-radius: 20px; padding: 20px; text-align: center; border: 1px solid var(--border); margin-bottom: 16px; }
         .balance-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
         .balance-amount { font-size: 2rem; font-weight: 700; color: var(--success); }
         .action-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .btn-deposit, .btn-refresh { flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
-        .btn-deposit { background: var(--success); color: white; border: none; }
-        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-        .divider { border: none; height: 1px; background: var(--border); margin: 16px 0; }
         .transactions-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
         .transactions-title { font-size: 0.85rem; font-weight: 600; }
         .transactions-count { font-size: 0.65rem; color: var(--text-muted); }
         .transactions-list { display: flex; flex-direction: column; gap: 8px; }
         .transaction-item { background: var(--surface); padding: 10px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
         .transaction-info { display: flex; align-items: center; gap: 8px; }
-        .transaction-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; background: #e8f5e9; color: var(--success); }
+        .transaction-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; background: rgba(16,185,129,0.1); color: var(--success); }
         .transaction-amount { font-weight: 700; font-size: 0.75rem; color: var(--success); }
         .empty-transactions { background: var(--surface); padding: 24px; text-align: center; border-radius: 16px; border: 1px solid var(--border); }
         .empty-icon { font-size: 1.8rem; margin-bottom: 6px; opacity: 0.4; }
-        .toast-notification { position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border-radius: 40px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success); }
+        /* Toast */
+        .toast-notification { position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border-radius: 40px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success); }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
-        .toast-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
-        .toast-message { font-size: 0.75rem; font-weight: 500; }
+        .toast-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; background: #d1fae5; color: var(--success); }
+        .toast-message { font-size: 0.8rem; font-weight: 500; }
+        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-card { background: var(--surface); border-radius: 24px; padding: 20px; width: 85%; max-width: 320px; text-align: center; }
-        .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
-        .close-modal { margin-top: 16px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.85rem; }
-        @media (max-width: 768px) { .main-content { padding: 12px; } .cards-grid { grid-template-columns: 1fr; } .menu-trigger { width: 40px; height: 70px; font-size: 1.2rem; } }
+        .modal-card { background: var(--surface); border-radius: 24px; padding: 24px; width: 85%; max-width: 340px; text-align: center; }
+        .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+        .close-modal { margin-top: 16px; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.85rem; }
+        @media (max-width: 768px) {
+            .main-content { padding: 12px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .menu-trigger { width: 40px; height: 70px; font-size: 1.2rem; }
+            .carousel-container { aspect-ratio: 4 / 3; }
+        }
     </style>
 </head>
 <body>
@@ -163,7 +218,7 @@
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
-            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png" style="width: 20px; height: 20px;"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto;"></i></a>
+            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png" style="width: 20px; height: 20px;"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.7rem;"></i></a>
             <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
@@ -179,7 +234,7 @@
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
             <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
-            <div id="newsContainer" class="cards-grid"></div>
+            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading news...</div></div></div></div>
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
         <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
@@ -188,10 +243,7 @@
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <div id="walletPage" class="section-page">
             <div class="wallet-header-img"><img src="https://b-y-pro-app.onrender.com/wallet.png" alt="Wallet" onerror="this.style.display='none'"></div>
-            <div class="card-info-row">
-                <div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'"><span class="card-code" id="userCardCode">—</span></div>
-                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
-            </div>
+            <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
             <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
             <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             <hr class="divider"><div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0 transactions</div></div>
@@ -201,7 +253,7 @@
         <div id="supportPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
             <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
-            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect"><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button></form><div id="formMessage" style="margin-top: 10px;"></div></div></div>
+            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Message</button></form><div id="formMessage" style="margin-top: 12px;"></div></div></div>
         </div>
     </main>
 </div>
@@ -276,31 +328,49 @@
         container.innerHTML = `<div class="transactions-list">${transactions.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
-    // Support Form
+    // ==================== SUPPORT FORM (FIXED) ====================
     const supportForm = document.getElementById('supportRequestForm'), formMsg = document.getElementById('formMessage');
     if (supportForm) {
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const topic = document.getElementById('topicInput').value.trim();
             if (!topic) { formMsg.innerHTML = '<span style="color: #ef4444;">Please enter a subject.</span>'; return; }
-            const btn = supportForm.querySelector('button'); btn.disabled = true; formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
+            const btn = supportForm.querySelector('button'); btn.disabled = true;
+            formMsg.innerHTML = '<span style="color: #3b82f6;">Sending...</span>';
             const senderName = currentUser ? (currentUser.name || currentUser.username || 'App User') : 'App User';
             const senderId = currentUser ? (currentUser.id || currentUser.userId || 'Unknown') : 'Unknown';
             try {
                 const allData = await fetchAllData();
                 if (!allData.supportMessages) allData.supportMessages = [];
-                allData.supportMessages.unshift({ id: Date.now(), sender: `${senderName} (ID: ${senderId})`, field: document.getElementById('serviceSelect').value, subject: topic, details: document.getElementById('detailsInput').value, date: new Date().toISOString(), read: false });
-                if (await saveAllData(allData)) {
+                const newMessage = {
+                    id: Date.now(),
+                    sender: `${senderName} (ID: ${senderId})`,
+                    field: document.getElementById('serviceSelect').value,
+                    subject: topic,
+                    details: document.getElementById('detailsInput').value,
+                    date: new Date().toISOString(),
+                    read: false
+                };
+                allData.supportMessages.unshift(newMessage);
+                const saved = await saveAllData(allData);
+                if (saved) {
                     formMsg.innerHTML = '<span style="color: #10b981;">✓ Request sent! We\'ll reply within 24h.</span>';
-                    supportForm.reset(); setTimeout(() => formMsg.innerHTML = '', 3000);
+                    supportForm.reset();
+                    setTimeout(() => formMsg.innerHTML = '', 3000);
                     addNotification('Support Request Sent', `Your request "${topic}" has been submitted.`, 'fas fa-headset', '#10b981');
-                } else throw new Error();
-            } catch (err) { formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Try again later.</span>'; setTimeout(() => formMsg.innerHTML = '', 3000); }
-            finally { btn.disabled = false; }
+                    console.log('Support message saved:', newMessage);
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (err) {
+                console.error('Support submit error:', err);
+                formMsg.innerHTML = '<span style="color: #ef4444;">Failed to send. Please try again later.</span>';
+                setTimeout(() => formMsg.innerHTML = '', 3000);
+            } finally { btn.disabled = false; }
         });
     }
 
-    // Authentication
+    // ==================== AUTHENTICATION ====================
     function updateUIForUser(user) {
         currentUser = user;
         document.getElementById('userName').textContent = user.name || user.username || 'User';
@@ -319,7 +389,7 @@
     });
     setTimeout(() => { if (auth && auth.isAuthenticated && auth.isAuthenticated()) { const u = auth.getCurrentUser(); if (u) updateUIForUser(u); else auth.show(); } else auth.show(); }, 500);
 
-    // Notifications
+    // ==================== NOTIFICATIONS ====================
     function loadNotificationsFromStorage() { const saved = localStorage.getItem('bypro_notifications'); if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} } if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'Welcome!', message: 'You will receive updates here.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }]; saveNotificationsToStorage(); }
     function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
     function formatDate(d) { const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000); if (diff < 1) return 'Just now'; if (diff < 60) return `${diff}m ago`; if (diff < 1440) return `${Math.floor(diff / 60)}h ago`; return date.toLocaleDateString(); }
@@ -343,7 +413,7 @@
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
     document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
 
-    // Navigation & Sidebar
+    // ==================== NAVIGATION & SIDEBAR ====================
     const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
     function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
     function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
@@ -359,23 +429,44 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // Content Data
+    // ==================== CONTENT DATA ====================
     async function loadContentData() {
         try {
             const allData = await fetchAllData();
-            contentData = { images: allData.images || [], news: allData.news || [], digital: allData.digital || [], local: allData.local || [], phone: allData.phone || [], products: allData.products || [], social: allData.social || [] };
+            contentData = {
+                images: allData.images || [],
+                news: allData.news || [],
+                digital: allData.digital || [],
+                local: allData.local || [],
+                phone: allData.phone || [],
+                products: allData.products || [],
+                social: allData.social || []
+            };
             renderCarousel(contentData.images || []);
             renderAllContent();
+            console.log('Content loaded:', contentData.news.length, 'news items');
         } catch(e) { console.error('Failed to load content:', e); }
     }
     function renderAllContent() {
-        renderNews(contentData.news || []); renderServices('digitalContainer', contentData.digital || [], 'fas fa-code'); renderServices('localContainer', contentData.local || [], 'fas fa-print'); renderServices('phoneContainer', contentData.phone || [], 'fas fa-mobile-alt'); renderProducts(contentData.products || []); renderSocial(contentData.social || []);
+        renderNews(contentData.news || []);
+        renderServices('digitalContainer', contentData.digital || [], 'fas fa-code');
+        renderServices('localContainer', contentData.local || [], 'fas fa-print');
+        renderServices('phoneContainer', contentData.phone || [], 'fas fa-mobile-alt');
+        renderProducts(contentData.products || []);
+        renderSocial(contentData.social || []);
     }
-    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color: ${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
-    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
-    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration: none;"><div class="card-content" style="text-align: center;"><i class="${escapeHtml(i.icon)}" style="font-size: 1.8rem; color: ${i.color}; margin-bottom: 6px;"></i><div class="card-title" style="justify-content: center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
+    function renderNews(news) {
+        const c = document.getElementById('newsContainer');
+        if (!c) return;
+        const active = news.filter(n => n.enabled !== false);
+        if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news available</div></div></div>'; return; }
+        c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color: ${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join('');
+    }
+    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services available</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
+    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-box-open"></i> No products available</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
+    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration: none;"><div class="card-content" style="text-align: center;"><i class="${escapeHtml(i.icon)}" style="font-size: 1.8rem; color: ${i.color}; margin-bottom: 6px; display: inline-block;"></i><div class="card-title" style="justify-content: center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
 
+    // ==================== CAROUSEL ====================
     let carouselImages = [], currentSlide = 0, slideInterval = null;
     function renderCarousel(images) {
         const slides = document.getElementById('carouselSlides'), indicators = document.getElementById('carouselIndicators');
@@ -391,6 +482,7 @@
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
+    // ==================== DARK MODE ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
     if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
     themeToggle.addEventListener('change', e => { if (e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
