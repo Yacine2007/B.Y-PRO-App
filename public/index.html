@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
     <title>B.Y PRO App | Digital Services & Wallet</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -23,6 +23,9 @@
             --primary-dark: #0052a3;
             --danger: #ef4444;
             --success: #10b981;
+            --card-radius: 18px;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.05);
         }
         .dark-theme {
             --bg: #000000;
@@ -31,12 +34,14 @@
             --text-muted: #b0b0b0;
             --border: #333333;
             --primary: #3b82f6;
+            --primary-dark: #2563eb;
         }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.2s; font-size: 14px; }
-        .menu-trigger { position: fixed; left: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 70px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12); border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem; color: var(--primary); }
+        .menu-trigger { position: fixed; left: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 70px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12); border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem; color: var(--primary); transition: all 0.2s; }
+        .dark-theme .menu-trigger { background: rgba(30,30,40,0.85); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
         .menu-dot { position: absolute; top: 6px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
         .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform 0.25s ease; overflow-y: auto; }
         .sidebar.mobile-open { transform: translateX(0); }
         .sidebar-header { padding: 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
@@ -44,7 +49,8 @@
         .sidebar-title { font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .sidebar-nav { padding: 12px 10px; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 4px; border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s; }
-        .nav-item i { width: 24px; }
+        .nav-item i { width: 24px; font-size: 1rem; }
+        .nav-item img { width: 22px; height: 22px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
         .theme-switch-sidebar { margin: 12px 10px; padding: 10px; background: var(--bg); border-radius: 12px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.8rem; cursor: pointer; }
         .toggle-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
@@ -78,7 +84,7 @@
         .section-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 30px; font-size: 0.6rem; font-weight: 600; }
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .slim-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
-        .slim-card:hover { transform: translateY(-2px); }
+        .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .card-media { height: 110px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
         .card-content { padding: 10px; }
@@ -96,7 +102,7 @@
         .notification-actions button:last-child:hover { background: var(--danger); color: white; border-color: var(--danger); }
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 10px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.8rem; font-family: inherit; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.8rem; font-family: inherit; transition: 0.2s; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
         .btn-submit { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .btn-submit:hover { background: var(--primary-dark); transform: scale(0.98); }
@@ -137,7 +143,7 @@
             <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
-            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto;"></i></a>
+            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
             <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
@@ -182,35 +188,19 @@
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
     (function() {
-        // ========== SERVER API CONFIGURATION ==========
-        // Replace with your server URL (localhost or production)
-        const SERVER_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-            ? 'http://localhost:3000' 
-            : window.location.origin;
-        
-        const API_BASE = `${SERVER_URL}/api`;
-        
-        let currentUser = null;
-        let auth = null;
-        let userWalletData = null;
-        let serverNotifications = [];
-        let contentData = {
-            images: [],
-            news: [],
-            digital: [],
-            local: [],
-            phone: [],
-            products: [],
-            social: []
-        };
+        // ========== JSONBin CONFIGURATION (Direct - No Server Needed) ==========
+        const BIN_ID = "69c12accaa77b81da90ed823";
+        const MASTER_KEY = "$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK";
+        const ACCESS_KEY = "B.Y PRO App";
+        const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+        let currentUser = null, auth = null, userWalletData = null;
+        let userNotifications = [];
+        let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
         let welcomeShown = false;
-        let eventSource = null;
-        
-        // Helper functions
+
         function showToast(msg, isErr = false) {
-            const toast = document.getElementById('toast');
-            const tMsg = document.getElementById('toastMessage');
-            const tIcon = document.getElementById('toastIcon');
+            const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
             tMsg.textContent = msg;
             if (isErr) {
                 tIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
@@ -223,113 +213,63 @@
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
         
-        function escapeHtml(s) {
-            if (!s) return '';
-            return String(s).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
-        }
-        
-        // ========== SERVER API CALLS ==========
-        async function fetchServerData() {
+        function escapeHtml(s) { return s ? String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])) : ''; }
+
+        // ========== JSONBin API Functions ==========
+        async function fetchAllData() {
             try {
-                const response = await fetch(`${API_BASE}/data`);
+                const response = await fetch(`${JSONBIN_URL}/latest`, {
+                    headers: { 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY }
+                });
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
-                console.log('Server data loaded:', data);
-                return data;
+                const record = data.record || {};
+                return {
+                    users: record.users || {},
+                    supportMessages: record.supportMessages || [],
+                    notifications: record.notifications || [],
+                    images: record.images || [],
+                    news: record.news || [],
+                    digital: record.digital || [],
+                    local: record.local || [],
+                    phone: record.phone || [],
+                    products: record.products || [],
+                    social: record.social || []
+                };
             } catch (error) {
-                console.error('Failed to fetch from server:', error);
-                showToast('Cannot connect to server. Check if server is running.', true);
-                return null;
+                console.error('Fetch error:', error);
+                return { users: {}, supportMessages: [], notifications: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
             }
         }
-        
-        async function saveServerData(data) {
+
+        async function saveAllData(data) {
             try {
-                const response = await fetch(`${API_BASE}/data`, {
+                const response = await fetch(JSONBIN_URL, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY },
                     body: JSON.stringify(data)
                 });
                 return response.ok;
             } catch (error) {
-                console.error('Failed to save to server:', error);
+                console.error('Save error:', error);
                 return false;
             }
         }
-        
-        async function sendSupportMessage(messageData) {
-            try {
-                const response = await fetch(`${API_BASE}/support`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(messageData)
-                });
-                if (!response.ok) throw new Error('Failed to send');
-                return await response.json();
-            } catch (error) {
-                console.error('Support send error:', error);
-                throw error;
-            }
-        }
-        
-        async function sendNotification(notificationData) {
-            try {
-                const response = await fetch(`${API_BASE}/notifications`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(notificationData)
-                });
-                return response.ok;
-            } catch (error) {
-                console.error('Notification send error:', error);
-                return false;
-            }
-        }
-        
-        // Setup SSE for real-time updates
-        function setupSSE() {
-            if (eventSource) eventSource.close();
-            eventSource = new EventSource(`${API_BASE}/events`);
-            
-            eventSource.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    console.log('SSE Update:', data);
-                    if (data.type === 'data_update') {
-                        // Refresh all content
-                        if (data.data) {
-                            updateContentFromData(data.data);
-                        }
-                    } else if (data.type === 'support_new') {
-                        showToast('New support reply received!');
-                    } else if (data.type === 'notification_new') {
-                        loadNotificationsFromServer();
-                    }
-                } catch (e) {
-                    console.error('SSE parse error:', e);
-                }
-            };
-            
-            eventSource.onerror = () => {
-                console.log('SSE connection error, reconnecting...');
-                setTimeout(setupSSE, 5000);
-            };
-        }
-        
+
         // ========== WALLET MANAGEMENT ==========
         function generateCardCode() {
             return `byppcn-${Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0')}`;
         }
-        
+
         async function loadUserWallet(userId) {
-            const serverData = await fetchServerData();
-            if (serverData && serverData.users && serverData.users[userId]) {
-                userWalletData = serverData.users[userId];
+            const allData = await fetchAllData();
+            if (allData.users && allData.users[userId]) {
+                userWalletData = allData.users[userId];
             } else {
                 userWalletData = {
                     id: userId,
                     name: currentUser?.name || 'User',
-                    balance: 1250.50, // Default demo balance
+                    balance: 1250.50,
                     transactions: [
                         { id: 1, description: 'Welcome Bonus', amount: 50.00, type: 'deposit', date: new Date().toISOString() },
                         { id: 2, description: 'Service Purchase', amount: 25.00, type: 'withdraw', date: new Date(Date.now() - 86400000).toISOString() }
@@ -337,22 +277,25 @@
                     cardCode: generateCardCode(),
                     createdAt: new Date().toISOString()
                 };
-                if (serverData) {
-                    if (!serverData.users) serverData.users = {};
-                    serverData.users[userId] = userWalletData;
-                    await saveServerData(serverData);
-                }
+                allData.users[userId] = userWalletData;
+                await saveAllData(allData);
             }
             updateWalletUI();
         }
-        
+
+        async function saveUserWallet() {
+            const allData = await fetchAllData();
+            allData.users[currentUser.id] = userWalletData;
+            await saveAllData(allData);
+        }
+
         async function refreshWallet() {
             if (!currentUser) return;
             showToast('Refreshing wallet...');
             await loadUserWallet(currentUser.id);
             showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
         }
-        
+
         function updateWalletUI() {
             if (!userWalletData) return;
             document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
@@ -371,25 +314,49 @@
                     <div style="color:var(--success);font-weight:bold;">${t.type === 'deposit' ? '+' : '-'}$${Math.abs(t.amount).toFixed(2)}</div>
                 </div>`).join('')}</div>`;
         }
-        
+
         // ========== NOTIFICATIONS ==========
-        async function loadNotificationsFromServer() {
-            const serverData = await fetchServerData();
-            if (serverData && serverData.notifications) {
-                serverNotifications = serverData.notifications;
+        async function loadNotificationsFromStorage() {
+            const allData = await fetchAllData();
+            if (allData.notifications && allData.notifications.length) {
+                userNotifications = allData.notifications;
             } else {
-                serverNotifications = [];
+                userNotifications = [{
+                    id: Date.now(),
+                    title: 'Welcome to B.Y PRO App!',
+                    message: 'Your digital services platform is ready. Explore our services and manage your wallet.',
+                    date: new Date().toISOString(),
+                    read: false,
+                    icon: 'fas fa-smile-wink',
+                    color: '#3b82f6'
+                }];
+                const allDataSave = await fetchAllData();
+                allDataSave.notifications = userNotifications;
+                await saveAllData(allDataSave);
             }
             updateNotificationUI();
         }
-        
+
+        async function saveNotificationsToStorage() {
+            const allData = await fetchAllData();
+            allData.notifications = userNotifications;
+            await saveAllData(allData);
+            updateNotificationUI();
+        }
+
+        function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') {
+            userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false });
+            saveNotificationsToStorage();
+            showToast(title);
+        }
+
         function updateNotificationUI() {
             const container = document.getElementById('notificationsContainer');
             const countSpan = document.getElementById('notificationsCount');
             const pageBadge = document.getElementById('notificationsPageBadge');
             const homeBellCount = document.getElementById('homeBellCount');
             const menuDot = document.getElementById('menuDot');
-            const unread = serverNotifications.filter(n => !n.read).length;
+            const unread = userNotifications.filter(n => !n.read).length;
             
             if (countSpan) { countSpan.style.display = unread ? 'inline-block' : 'none'; if (unread) countSpan.textContent = unread; }
             if (pageBadge) pageBadge.textContent = unread ? `${unread} new` : '';
@@ -397,16 +364,16 @@
             if (menuDot) menuDot.style.display = unread ? 'block' : 'none';
             if (!container) return;
             
-            if (!serverNotifications.length) {
+            if (!userNotifications.length) {
                 container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>';
                 return;
             }
             
-            container.innerHTML = serverNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `
+            container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `
                 <div class="notification-card-wrapper" data-id="${n.id}">
                     <div class="notification-delete" onclick="window.deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
                     <div class="notification-card ${!n.read ? 'unread' : ''}">
-                        <div class="card-title"><i class="${n.icon || 'fas fa-bell'}" style="color:${n.color || '#3b82f6'}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div>
+                        <div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div>
                         <div class="card-desc">${escapeHtml(n.message)}</div>
                         <div class="notification-time"><i class="far fa-clock"></i> ${new Date(n.date).toLocaleString()}</div>
                         <div class="notification-actions">
@@ -416,55 +383,98 @@
                     </div>
                 </div>`).join('');
         }
-        
+
         window.markRead = async function(id) {
-            const n = serverNotifications.find(n => n.id === id);
-            if (n) {
-                n.read = true;
-                const serverData = await fetchServerData();
-                if (serverData) {
-                    serverData.notifications = serverNotifications;
-                    await saveServerData(serverData);
-                }
-                updateNotificationUI();
-            }
+            const n = userNotifications.find(n => n.id === id);
+            if (n) { n.read = true; await saveNotificationsToStorage(); }
         };
         
         window.deleteNotification = async function(id) {
-            serverNotifications = serverNotifications.filter(n => n.id !== id);
-            const serverData = await fetchServerData();
-            if (serverData) {
-                serverData.notifications = serverNotifications;
-                await saveServerData(serverData);
-            }
-            updateNotificationUI();
+            userNotifications = userNotifications.filter(n => n.id !== id);
+            await saveNotificationsToStorage();
             showToast('Notification deleted');
         };
-        
+
+        // ========== SUPPORT FORM ==========
+        document.getElementById('supportRequestForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) { showToast('Please log in first', true); return; }
+            
+            const topic = document.getElementById('topicInput').value.trim();
+            if (!topic) {
+                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Subject is required</span>';
+                return;
+            }
+            
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;"><i class="fas fa-spinner fa-pulse"></i> Sending...</span>';
+            
+            try {
+                const allData = await fetchAllData();
+                if (!allData.supportMessages) allData.supportMessages = [];
+                allData.supportMessages.unshift({
+                    id: Date.now(),
+                    sender: `${currentUser.name || currentUser.username} (ID: ${currentUser.id})`,
+                    field: document.getElementById('serviceSelect').value,
+                    subject: topic,
+                    details: document.getElementById('detailsInput').value,
+                    userId: currentUser.id,
+                    userName: currentUser.name || currentUser.username,
+                    date: new Date().toISOString(),
+                    read: false
+                });
+                
+                if (await saveAllData(allData)) {
+                    document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Sent! We\'ll reply within 24h.</span>';
+                    e.target.reset();
+                    setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
+                    addNotification('Support Request Sent', `Your request "${topic}" submitted.`, 'fas fa-headset', '#10b981');
+                } else throw new Error('Save failed');
+            } catch (err) {
+                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> Failed. Try again.</span>';
+                setTimeout(() => document.getElementById('formMessage').innerHTML = '', 2500);
+                showToast('Failed to send support request', true);
+            } finally { btn.disabled = false; }
+        });
+
         // ========== CONTENT MANAGEMENT ==========
-        function updateContentFromData(data) {
-            if (!data) return;
+        async function loadContentData() {
+            const all = await fetchAllData();
             contentData = {
-                images: data.images || [],
-                news: data.news || [],
-                digital: data.digital || [],
-                local: data.local || [],
-                phone: data.phone || [],
-                products: data.products || [],
-                social: data.social || []
+                images: all.images || [],
+                news: all.news || [],
+                digital: all.digital || [],
+                local: all.local || [],
+                phone: all.phone || [],
+                products: all.products || [],
+                social: all.social || []
             };
+            
+            // If no news exists, add default news
+            if (!contentData.news.length) {
+                contentData.news = [
+                    { id: 1, title: 'Welcome to B.Y PRO App', description: 'Your all-in-one platform for digital services and wallet management.', icon: 'fas fa-star', color: '#0066cc', enabled: true, date: '2024-01-01' },
+                    { id: 2, title: 'New Services Available', description: 'Check out our latest digital products and services.', icon: 'fas fa-rocket', color: '#10b981', enabled: true, date: '2024-01-15' }
+                ];
+                const allData = await fetchAllData();
+                allData.news = contentData.news;
+                await saveAllData(allData);
+            }
+            
+            // If no digital services exist, add defaults
+            if (!contentData.digital.length) {
+                contentData.digital = [
+                    { id: 1, name: 'Web Development', description: 'Professional website development services', icon: 'fas fa-code', enabled: true },
+                    { id: 2, name: 'Mobile Apps', description: 'iOS and Android app development', icon: 'fas fa-mobile-alt', enabled: true }
+                ];
+                const allData = await fetchAllData();
+                allData.digital = contentData.digital;
+                await saveAllData(allData);
+            }
+            
             renderCarousel(contentData.images);
             renderAllContent();
-        }
-        
-        async function loadContentData() {
-            const serverData = await fetchServerData();
-            if (serverData) {
-                updateContentFromData(serverData);
-            } else {
-                // Show error state
-                document.getElementById('newsContainer').innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-exclamation-triangle"></i> Cannot load news. Server connection failed.</div></div></div>';
-            }
         }
         
         function renderAllContent() {
@@ -545,10 +555,9 @@
                     </div>
                 </a>`).join('');
         }
-        
+
         // ========== CAROUSEL ==========
-        let currentSlide = 0;
-        let slideInterval = null;
+        let currentSlide = 0, slideInterval = null;
         
         function renderCarousel(images) {
             const slidesDiv = document.getElementById('carouselSlides');
@@ -585,51 +594,7 @@
                 if (inds[currentSlide]) inds[currentSlide].classList.add('active');
             }
         }
-        
-        // ========== SUPPORT FORM ==========
-        document.getElementById('supportRequestForm')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) {
-                showToast('Please log in first', true);
-                return;
-            }
-            
-            const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) {
-                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Subject is required</span>';
-                return;
-            }
-            
-            const btn = e.target.querySelector('button');
-            btn.disabled = true;
-            document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;"><i class="fas fa-spinner fa-pulse"></i> Sending...</span>';
-            
-            try {
-                const messageData = {
-                    sender: `${currentUser.name || currentUser.username} (ID: ${currentUser.id})`,
-                    field: document.getElementById('serviceSelect').value,
-                    subject: topic,
-                    details: document.getElementById('detailsInput').value,
-                    userId: currentUser.id,
-                    userName: currentUser.name || currentUser.username
-                };
-                
-                await sendSupportMessage(messageData);
-                
-                document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Sent! We\'ll reply within 24h.</span>';
-                e.target.reset();
-                setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
-                showToast('Support request sent successfully');
-                
-            } catch (err) {
-                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> Failed. Try again.</span>';
-                setTimeout(() => document.getElementById('formMessage').innerHTML = '', 2500);
-                showToast('Failed to send support request', true);
-            } finally {
-                btn.disabled = false;
-            }
-        });
-        
+
         // ========== AUTHENTICATION ==========
         function updateUIForUser(user) {
             currentUser = user;
@@ -644,7 +609,7 @@
             
             if (user.id) {
                 loadUserWallet(user.id);
-                loadNotificationsFromServer();
+                loadNotificationsFromStorage();
                 loadContentData();
             }
             
@@ -653,13 +618,10 @@
                 setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 300);
             }
         }
-        
+
         auth = new BYPROAuth({
             loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
-            onLogin: (user) => {
-                updateUIForUser(user);
-                setupSSE();
-            },
+            onLogin: (user) => updateUIForUser(user),
             onLogout: () => {
                 currentUser = null;
                 userWalletData = null;
@@ -667,7 +629,6 @@
                 document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>';
                 document.getElementById('homeWalletAmount').textContent = '$0.00';
                 welcomeShown = false;
-                if (eventSource) eventSource.close();
                 auth.show();
             }
         });
@@ -677,27 +638,16 @@
                 const u = auth.getCurrentUser();
                 if (u) updateUIForUser(u);
                 else auth.show();
-            } else {
-                auth.show();
-            }
+            } else auth.show();
         }, 500);
-        
+
         // ========== NAVIGATION ==========
         const menuTrigger = document.getElementById('menuTrigger');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         
-        function openSidebar() {
-            sidebar.classList.add('mobile-open');
-            overlay.classList.add('active');
-            menuTrigger.classList.add('hidden');
-        }
-        
-        function closeSidebar() {
-            sidebar.classList.remove('mobile-open');
-            overlay.classList.remove('active');
-            menuTrigger.classList.remove('hidden');
-        }
+        function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
+        function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
         
         menuTrigger.addEventListener('click', openSidebar);
         overlay.addEventListener('click', closeSidebar);
@@ -741,9 +691,7 @@
             if (userWalletData?.cardCode) {
                 navigator.clipboard.writeText(userWalletData.cardCode);
                 showToast('Card code copied!');
-            } else {
-                showToast('No card code', true);
-            }
+            } else showToast('No card code', true);
         });
         
         document.getElementById('greetingAvatar')?.addEventListener('click', () => document.getElementById('accountModal').classList.add('active'));
@@ -770,11 +718,13 @@
         
         // ========== PWA ==========
         if ('serviceWorker' in navigator) {
-            const swCode = `self.addEventListener('install', e => self.skipWaiting());
+            try {
+                const swCode = `self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl).catch(e => console.log('SW error', e));
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(e => console.log('SW registration skipped:', e.message));
+            } catch(e) { console.log('SW error:', e.message); }
         }
         
         const manifest = {
@@ -791,9 +741,10 @@ self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
         const manifestLink = document.querySelector('link[rel="manifest"]');
         if (manifestLink) manifestLink.href = manifestURL;
         
+        // Auto-refresh content every 30 seconds
         setInterval(() => {
             if (document.hasFocus() && currentUser) loadContentData();
-        }, 45000);
+        }, 30000);
     })();
 </script>
 </body>
