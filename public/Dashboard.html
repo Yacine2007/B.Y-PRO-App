@@ -263,7 +263,7 @@
     <main class="main-content">
         <div id="homeImagesSection" class="section-page active-page">
             <div class="card">
-                <div class="card-header"><h2 class="card-title"><i class="fas fa-images"></i> Home Page Images</h2><button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button></div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-images"></i> Home Images</h2><button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button></div>
                 <div class="action-buttons-row"><button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button><button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button></div>
                 <div id="imagesContainer" class="items-grid"></div>
             </div>
@@ -291,9 +291,9 @@
         BIN_ID: '69c12accaa77b81da90ed823'
     };
     
-    // Cloudinary direct upload
+    // Cloudinary direct upload - مع upload_preset الصحيح
     const CLOUDINARY_CLOUD_NAME = 'dfxde2mbi';
-    const CLOUDINARY_UPLOAD_PRESET = 'B.Y PRO App';
+    const CLOUDINARY_UPLOAD_PRESET = 'B.Y_PRO_App'; // جرب هذا الاسم الجديد
     const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
     // Data stores
@@ -330,19 +330,34 @@
         setTimeout(() => toast.classList.remove('show'), 2000);
     }
 
-    // Direct upload to Cloudinary
+    // Direct upload to Cloudinary with better error handling
     async function uploadToCloudinary(file) {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        
         try {
-            const response = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+            console.log('Uploading to Cloudinary with preset:', CLOUDINARY_UPLOAD_PRESET);
+            const response = await fetch(CLOUDINARY_URL, { 
+                method: 'POST', 
+                body: formData,
+                mode: 'cors'
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Cloudinary error response:', errorText);
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+            
             const data = await response.json();
-            if (data.secure_url) return data.secure_url;
-            throw new Error('Upload failed');
+            if (data.secure_url) {
+                return data.secure_url;
+            }
+            throw new Error('No secure_url in response');
         } catch (err) {
             console.error('Cloudinary upload error:', err);
-            showToast('Image upload failed', true);
+            showToast('Cloudinary upload failed: ' + err.message, true);
             return null;
         }
     }
@@ -499,12 +514,12 @@
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                showToast('Uploading...');
+                showToast('Uploading to Cloudinary...');
                 const url = await uploadToCloudinary(file);
                 if (url) {
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
-                    showToast('Image uploaded!');
+                    showToast('Image uploaded successfully!');
                 }
             }
         };
