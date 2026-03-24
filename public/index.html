@@ -26,7 +26,6 @@
             --card-radius: 24px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --skeleton-gradient: linear-gradient(90deg, #e5e5e5 0%, #f0f0f0 50%, #e5e5e5 100%);
         }
         .dark-theme {
             --bg: #000000;
@@ -35,7 +34,6 @@
             --text-muted: #b0b0b0;
             --border: #333333;
             --primary: #3b82f6;
-            --skeleton-gradient: linear-gradient(90deg, #2a2a2a 0%, #3a3a3a 50%, #2a2a2a 100%);
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -43,31 +41,10 @@
             color: var(--text);
             transition: all 0.2s;
             overflow-x: hidden;
-            overscroll-behavior-y: contain;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
             overflow-y: auto;
+            height: auto;
+            position: relative;
         }
-        /* Skeleton Loader Animation */
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .skeleton {
-            background: var(--surface);
-            background-image: var(--skeleton-gradient);
-            background-size: 200% 100%;
-            animation: shimmer 1.2s infinite;
-            border-radius: 12px;
-        }
-        .skeleton-text { height: 16px; width: 100%; margin-bottom: 12px; }
-        .skeleton-title { height: 24px; width: 60%; margin-bottom: 16px; }
-        .skeleton-card { background: var(--surface); border-radius: var(--card-radius); overflow: hidden; }
-        .skeleton-card .skeleton-img { height: 160px; width: 100%; background: var(--surface); background-image: var(--skeleton-gradient); background-size: 200% 100%; animation: shimmer 1.2s infinite; }
-        .skeleton-card .skeleton-content { padding: 20px; }
         /* Menu Trigger */
         .menu-trigger {
             position: fixed;
@@ -140,7 +117,12 @@
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
         .theme-switch-sidebar { margin: 20px 16px; padding: 16px; background: var(--bg); border-radius: 16px; display: flex; justify-content: space-between; border: 1px solid var(--border); }
         /* Main Content */
-        .main-content { flex: 1; margin-left: 0; padding: 24px 32px; }
+        .main-content {
+            flex: 1;
+            margin-left: 0;
+            padding: 24px 32px;
+            min-height: 100vh;
+        }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
         .section-header {
@@ -176,11 +158,7 @@
         .avatar-icon img { width: 100%; height: 100%; object-fit: cover; }
         .greeting-text { font-size: 1.1rem; font-weight: 500; }
         .greeting-text .user-name { font-weight: 700; color: var(--primary); }
-        .bell-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .bell-section { display: flex; align-items: center; gap: 12px; }
         .wallet-badge {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -193,7 +171,6 @@
             font-weight: 600;
             color: var(--success);
         }
-        .wallet-badge i { font-size: 0.8rem; }
         .bell-icon {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -379,16 +356,7 @@
             border-left: 4px solid var(--success);
         }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
-        .toast-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #d1fae5;
-            color: var(--success);
-        }
+        .toast-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .toast-message { font-size: 0.85rem; font-weight: 500; }
         /* Modal */
         .modal-overlay {
@@ -418,210 +386,11 @@
         }
         .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
         .close-modal { margin-top: 24px; background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; cursor: pointer; }
-        /* Wallet specific styles */
-        .balance-card {
-            background: var(--surface);
-            border-radius: 24px;
-            padding: 28px 20px;
-            text-align: center;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-        }
-        .balance-label { font-size: 13px; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 10px; }
-        .balance-amount { font-size: 48px; font-weight: 700; color: var(--success); line-height: 1.2; }
-        .balance-amount span { font-size: 28px; font-weight: 500; }
-        .action-buttons { display: flex; gap: 12px; margin-bottom: 28px; }
-        .btn {
-            flex: 1;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-deposit { background: var(--success); color: white; }
-        .btn-deposit:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
-        .divider { border: none; height: 1px; background: var(--border); margin: 20px 0; }
-        .transactions-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
-        .transactions-title { font-size: 16px; font-weight: 600; }
-        .transactions-count { font-size: 12px; color: var(--text-muted); }
-        .transactions-list { display: flex; flex-direction: column; gap: 8px; }
-        .transaction-item {
-            background: var(--surface);
-            padding: 12px 14px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid var(--border);
-        }
-        .transaction-info { display: flex; align-items: center; gap: 12px; }
-        .transaction-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-        .transaction-icon.deposit { background: #e8f5e9; color: var(--success); }
-        .transaction-details { display: flex; flex-direction: column; gap: 2px; }
-        .transaction-name { font-weight: 600; font-size: 14px; }
-        .transaction-date { font-size: 10px; color: var(--text-muted); }
-        .transaction-amount { font-weight: 700; font-size: 14px; color: var(--success); }
-        .empty-transactions {
-            background: var(--surface);
-            padding: 40px 20px;
-            text-align: center;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-        .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.4; }
-        /* Card Info Row */
-        .card-info-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: var(--surface);
-            border-radius: 60px;
-            padding: 8px 16px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
-        .card-info-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .card-icon-small {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-        }
-        .card-code {
-            font-family: monospace;
-            font-size: 0.8rem;
-            letter-spacing: 0.5px;
-            background: var(--bg);
-            padding: 4px 10px;
-            border-radius: 40px;
-        }
-        .copy-card-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 30px;
-            padding: 6px 10px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-muted);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .copy-card-btn i {
-            font-size: 1rem;
-        }
-        .copy-card-btn:hover {
-            background: var(--border);
-            color: var(--primary);
-        }
-        /* Wallet Modal */
-        .modal {
-            background: var(--surface);
-            border-radius: 28px;
-            width: 90%;
-            max-width: 400px;
-            padding: 24px;
-            transform: scale(0.95);
-            transition: transform 0.2s;
-        }
-        .modal-overlay.active .modal { transform: scale(1); }
-        .modal h3 { font-size: 20px; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .modal p { color: var(--text-muted); font-size: 13px; margin-bottom: 20px; }
-        .payment-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
-        }
-        .payment-tab {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 40px;
-            transition: all 0.2s;
-            color: var(--text-muted);
-        }
-        .payment-tab.active {
-            background: var(--success);
-            color: white;
-        }
-        .payment-content { display: none; }
-        .payment-content.active { display: block; }
-        .quick-amounts { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-        .quick-amount-btn {
-            flex: 1;
-            min-width: 60px;
-            padding: 10px 12px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            color: var(--text);
-            text-align: center;
-        }
-        .quick-amount-btn.active { background: var(--success); color: white; border-color: var(--success); }
-        .amount-input, .code-input {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid var(--border);
-            border-radius: 60px;
-            font-size: 16px;
-            font-weight: 600;
-            outline: none;
-            text-align: center;
-            margin-bottom: 20px;
-            background: var(--bg);
-            color: var(--text);
-        }
-        .amount-input:focus, .code-input:focus { border-color: var(--success); }
-        .modal-buttons { display: flex; gap: 10px; }
-        .modal-buttons button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 60px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        .modal-confirm { background: var(--success); color: white; border: none; }
-        .modal-cancel { background: transparent; color: var(--text); border: 1px solid var(--border); }
         @media (max-width: 768px) {
             .main-content { padding: 20px; }
             .cards-grid { grid-template-columns: 1fr; }
             .menu-trigger { width: 44px; height: 44px; font-size: 1.3rem; top: calc(50% - 22px); }
             .carousel-slides { height: 160px; }
-            .balance-amount { font-size: 40px; }
-            .card-info-row { flex-wrap: wrap; gap: 10px; }
         }
     </style>
 </head>
@@ -648,11 +417,7 @@
                 <span>Store PRO</span>
                 <i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.7rem;"></i>
             </a>
-            <div class="nav-item" data-page="wallet">
-                <img src="https://b-y-pro-app.onrender.com/wallet.png" class="nav-icon" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23666%22%3E%3Cpath d=%22M4 6h16v2H4V6zm2-4h12v2H6V2zm16 8v10H2V10h20zm-2 2H4v6h16v-6z%22/%3E%3C/svg%3E'; this.onerror=null; this.style.display='none'; this.nextSibling.style.display='inline-block';">
-                <i class="fas fa-wallet" style="display: none;"></i>
-                <span>Wallet</span>
-            </div>
+            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
@@ -702,21 +467,13 @@
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <!-- Wallet Section -->
         <div id="walletPage" class="section-page">
-            <!-- Card Info Row (Top Bar) -->
-            <div class="card-info-row" id="cardInfoRow">
-                <div class="card-info-left">
-                    <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
-                    <span class="card-code" id="userCardCode">—</span>
-                </div>
-                <button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button>
-            </div>
             <div class="balance-card">
                 <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
                 <div class="balance-amount">$<span id="walletBalance">0.00</span></div>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button>
-                <button class="btn btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button>
+                <button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
             </div>
             <hr class="divider">
             <div class="transactions-header">
@@ -736,9 +493,22 @@
                 <div class="card-content">
                     <div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
                     <form id="supportRequestForm" class="support-form">
-                        <div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div>
-                        <div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div>
-                        <div class="form-group"><textarea id="detailsInput" rows="3" placeholder="Details"></textarea></div>
+                        <div class="form-group">
+                            <select id="serviceSelect" required>
+                                <option value="">Select service</option>
+                                <option>Digital Services</option>
+                                <option>Local Services</option>
+                                <option>Phone Services</option>
+                                <option>Products</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="topicInput" placeholder="Subject" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="detailsInput" rows="3" placeholder="Details"></textarea>
+                        </div>
                         <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button>
                     </form>
                     <div id="formMessage" style="margin-top: 12px;"></div>
@@ -760,62 +530,18 @@
     </div>
 </div>
 
-<!-- Deposit Modal with Binance and Card options -->
-<div class="modal-overlay" id="depositModal">
-    <div class="modal">
-        <h3><i class="fas fa-money-bill-wave" style="color: #10b981;"></i> Deposit Funds</h3>
-        <p>Select payment method</p>
-        <div class="payment-tabs">
-            <div class="payment-tab active" data-method="binance"><i class="fab fa-binance"></i> Binance</div>
-            <div class="payment-tab" data-method="card"><i class="fas fa-credit-card"></i> Card</div>
-        </div>
-        <!-- Binance Content -->
-        <div id="binanceContent" class="payment-content active">
-            <div class="quick-amounts">
-                <button class="quick-amount-btn" data-amount="1">$1</button>
-                <button class="quick-amount-btn" data-amount="5">$5</button>
-                <button class="quick-amount-btn" data-amount="10">$10</button>
-                <button class="quick-amount-btn" data-amount="15">$15</button>
-                <button class="quick-amount-btn" data-amount="20">$20</button>
-            </div>
-            <input type="number" id="depositAmount" class="amount-input" placeholder="Or enter custom amount" step="0.01" min="1">
-            <div class="card-input-row">
-                <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
-                <input type="text" id="binanceIdInput" class="code-input" placeholder="Binance ID" autocomplete="off">
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-confirm" id="confirmAmountBtn"><i class="fab fa-binance"></i> Continue</button>
-                <button class="modal-cancel" id="cancelDepositBtn">Cancel</button>
-            </div>
-        </div>
-        <!-- Card Content -->
-        <div id="cardContent" class="payment-content">
-            <div class="quick-amounts">
-                <button class="quick-amount-btn card-quick" data-amount="1">$1</button>
-                <button class="quick-amount-btn card-quick" data-amount="5">$5</button>
-                <button class="quick-amount-btn card-quick" data-amount="10">$10</button>
-                <button class="quick-amount-btn card-quick" data-amount="15">$15</button>
-                <button class="quick-amount-btn card-quick" data-amount="20">$20</button>
-            </div>
-            <input type="number" id="cardDepositAmount" class="amount-input" placeholder="Or enter custom amount" step="0.01" min="1">
-            <div class="card-input-row">
-                <img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small" onerror="this.style.display='none'">
-                <input type="text" id="cardCodeInput" class="code-input" placeholder="Your card code" autocomplete="off">
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-confirm" id="confirmCardBtn"><i class="fas fa-credit-card"></i> Pay with Card</button>
-                <button class="modal-cancel" id="cancelDepositBtn2">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <!-- Authentication SDK -->
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 
 <script>
+    // ==================== FIX SCROLLING ====================
+    // Remove any previous restrictions on body scrolling
+    document.body.style.position = 'relative';
+    document.body.style.height = 'auto';
+    document.body.style.overflow = 'auto';
+    
     // ==================== CONFIGURATION ====================
     const JSONBIN_CONFIG = {
         API_KEY: '$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK',
@@ -827,8 +553,6 @@
     let currentUser = null;
     let auth = null;
     let userWalletData = null;
-    let selectedAmount = null;
-    let selectedPaymentMethod = 'binance';
     let userNotifications = [];
     let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
 
@@ -898,7 +622,6 @@
                 id: userId,
                 balance: 0,
                 transactions: [],
-                cardCode: null,
                 createdAt: new Date().toISOString()
             };
             await saveWalletData(allData);
@@ -914,44 +637,12 @@
         await saveWalletData(allData);
     }
 
-    async function processDeposit(amount, paymentData) {
-        if (!currentUser || !userWalletData) return false;
-        showToast(`Processing ${paymentData.method} payment...`);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        userWalletData.balance += amount;
-        if (!userWalletData.transactions) userWalletData.transactions = [];
-        userWalletData.transactions.push({
-            type: 'deposit',
-            amount: amount,
-            description: paymentData.method === 'binance' ? `Binance Deposit (ID: ${paymentData.id})` : `Card Deposit (${paymentData.code})`,
-            paymentMethod: paymentData.method,
-            paymentId: paymentData.id || paymentData.code,
-            date: new Date().toISOString()
-        });
-        await saveUserWallet();
-        updateWalletUI();
-        addNotification('Deposit Successful', `$${amount.toFixed(2)} added to wallet via ${paymentData.method === 'binance' ? 'Binance' : 'Card'}.`, 'fas fa-money-bill-wave', '#10b981');
-        showToast(`$${amount.toFixed(2)} deposited successfully!`);
-        return true;
-    }
-
-    async function refreshWallet() {
-        if (!currentUser) return;
-        showToast('Refreshing balance...');
-        await loadUserWallet(currentUser.id);
-        showToast('Balance updated!');
-    }
-
     function updateWalletUI() {
         if (!userWalletData) return;
         const balanceFormatted = userWalletData.balance.toFixed(2);
         document.getElementById('walletBalance').textContent = balanceFormatted;
         const homeWalletSpan = document.getElementById('homeWalletAmount');
         if (homeWalletSpan) homeWalletSpan.textContent = `$${balanceFormatted}`;
-        const cardCodeSpan = document.getElementById('userCardCode');
-        if (cardCodeSpan) {
-            cardCodeSpan.textContent = userWalletData.cardCode || 'No card assigned';
-        }
         const transactions = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = `${transactions.length} transaction${transactions.length !== 1 ? 's' : ''}`;
         const container = document.getElementById('walletTransactionsContainer');
@@ -973,7 +664,7 @@
         `).join('')}</div>`;
     }
 
-    // ==================== SUPPORT FORM ====================
+    // ==================== SUPPORT FORM (FIXED) ====================
     const supportForm = document.getElementById('supportRequestForm');
     const formMsg = document.getElementById('formMessage');
     if (supportForm) {
@@ -1050,8 +741,6 @@
         }
     });
 
-    // Show skeleton while loading
-    showSkeleton();
     setTimeout(() => {
         if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
             const user = auth.getCurrentUser();
@@ -1170,6 +859,8 @@
     window.markRead = markRead;
     window.deleteNotification = deleteNotification;
 
+    document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
+
     // ==================== SIDEBAR & NAVIGATION ====================
     const menuTrigger = document.getElementById('menuTrigger');
     const sidebar = document.getElementById('sidebar');
@@ -1211,125 +902,6 @@
     closeModalBtn.addEventListener('click', () => modal.classList.remove('active'));
     logoutBtn.addEventListener('click', () => { if (auth) auth.logout(); modal.classList.remove('active'); });
     modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-
-    document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
-
-    // ==================== WALLET MODALS ====================
-    const depositModal = document.getElementById('depositModal');
-    const depositBtn = document.getElementById('depositBtn');
-    const refreshWalletBtn = document.getElementById('refreshWalletBtn');
-    const cancelDepositBtn = document.getElementById('cancelDepositBtn');
-    const cancelDepositBtn2 = document.getElementById('cancelDepositBtn2');
-    const confirmAmountBtn = document.getElementById('confirmAmountBtn');
-    const confirmCardBtn = document.getElementById('confirmCardBtn');
-    const depositAmountInput = document.getElementById('depositAmount');
-    const binanceIdInput = document.getElementById('binanceIdInput');
-    const cardDepositAmount = document.getElementById('cardDepositAmount');
-    const cardCodeInput = document.getElementById('cardCodeInput');
-    const paymentTabs = document.querySelectorAll('.payment-tab');
-    const binanceContent = document.getElementById('binanceContent');
-    const cardContent = document.getElementById('cardContent');
-
-    // Copy card code
-    const copyCardBtn = document.getElementById('copyCardBtn');
-    copyCardBtn.addEventListener('click', () => {
-        const cardCode = userWalletData?.cardCode;
-        if (cardCode) {
-            navigator.clipboard.writeText(cardCode);
-            showToast('Card code copied!');
-        } else {
-            showToast('No card code available', true);
-        }
-    });
-
-    // Payment method switching
-    paymentTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            paymentTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            selectedPaymentMethod = tab.dataset.method;
-            if (selectedPaymentMethod === 'binance') {
-                binanceContent.classList.add('active');
-                cardContent.classList.remove('active');
-            } else {
-                binanceContent.classList.remove('active');
-                cardContent.classList.add('active');
-            }
-        });
-    });
-
-    depositBtn.onclick = () => {
-        depositAmountInput.value = '';
-        binanceIdInput.value = '';
-        cardDepositAmount.value = '';
-        cardCodeInput.value = '';
-        selectedAmount = null;
-        document.querySelectorAll('.quick-amount-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.card-quick').forEach(btn => btn.classList.remove('active'));
-        depositModal.classList.add('active');
-    };
-    cancelDepositBtn.onclick = () => depositModal.classList.remove('active');
-    cancelDepositBtn2.onclick = () => depositModal.classList.remove('active');
-
-    // Binance confirm
-    confirmAmountBtn.onclick = async () => {
-        let amount = parseFloat(depositAmountInput.value);
-        if (isNaN(amount) || amount <= 0) {
-            const activeQuick = document.querySelector('.quick-amount-btn.active');
-            if (activeQuick && activeQuick.dataset.amount) amount = parseFloat(activeQuick.dataset.amount);
-            else { showToast('Please enter a valid amount', true); return; }
-        }
-        if (amount < 1) { showToast('Minimum deposit is $1', true); return; }
-        const binanceId = binanceIdInput.value.trim();
-        if (!binanceId) { showToast('Please enter Binance ID', true); return; }
-        depositModal.classList.remove('active');
-        await processDeposit(amount, { method: 'binance', id: binanceId });
-    };
-
-    // Card confirm (with validation)
-    confirmCardBtn.onclick = async () => {
-        let amount = parseFloat(cardDepositAmount.value);
-        if (isNaN(amount) || amount <= 0) {
-            const activeQuick = document.querySelector('.card-quick.active');
-            if (activeQuick && activeQuick.dataset.amount) amount = parseFloat(activeQuick.dataset.amount);
-            else { showToast('Please enter a valid amount', true); return; }
-        }
-        if (amount < 1) { showToast('Minimum deposit is $1', true); return; }
-        const cardCode = cardCodeInput.value.trim();
-        // Validate that the entered card code matches the user's own card code
-        if (!userWalletData.cardCode) {
-            showToast('No card code assigned to your account', true);
-            return;
-        }
-        if (cardCode !== userWalletData.cardCode) {
-            showToast('Invalid card code. The code you entered does not match your account card.', true);
-            return;
-        }
-        depositModal.classList.remove('active');
-        await processDeposit(amount, { method: 'card', code: cardCode });
-    };
-
-    // Quick amount buttons for Binance
-    document.querySelectorAll('.quick-amount-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.quick-amount-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            depositAmountInput.value = btn.dataset.amount;
-            selectedAmount = parseFloat(btn.dataset.amount);
-        });
-    });
-    // Quick amount buttons for Card
-    document.querySelectorAll('.card-quick').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.card-quick').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            cardDepositAmount.value = btn.dataset.amount;
-            selectedAmount = parseFloat(btn.dataset.amount);
-        });
-    });
-
-    refreshWalletBtn.onclick = refreshWallet;
-    depositModal.onclick = (e) => { if (e.target === depositModal) depositModal.classList.remove('active'); };
 
     // ==================== CONTENT DATA ====================
     async function loadContentData() {
@@ -1408,29 +980,11 @@
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
-    // ==================== SKELETON ====================
-    function showSkeleton() {
-        const containers = ['newsContainer', 'digitalContainer', 'localContainer', 'phoneContainer', 'productsContainer', 'socialContainer'];
-        containers.forEach(id => {
-            const el = document.getElementById(id);
-            if (el && el.children.length === 0) {
-                el.innerHTML = `<div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-content"><div class="skeleton-title"></div><div class="skeleton-text"></div></div></div>
-                                <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-content"><div class="skeleton-title"></div><div class="skeleton-text"></div></div></div>`;
-            }
-        });
-    }
-
-    // ==================== DARK MODE ====================
-    const themeToggleSwitch = document.getElementById('themeToggleSidebar');
-    if (localStorage.getItem('darkTheme') === 'true') {
-        document.documentElement.classList.add('dark-theme');
-        themeToggleSwitch.checked = true;
-    }
-    themeToggleSwitch.addEventListener('change', (e) => {
-        if (e.target.checked) document.documentElement.classList.add('dark-theme');
-        else document.documentElement.classList.remove('dark-theme');
-        localStorage.setItem('darkTheme', e.target.checked);
-    });
+    // ==================== WALLET MODALS (simple) ====================
+    const depositBtn = document.getElementById('depositBtn');
+    const refreshWalletBtn = document.getElementById('refreshWalletBtn');
+    depositBtn.onclick = () => { showToast('Deposit feature coming soon!', true); };
+    refreshWalletBtn.onclick = async () => { if (currentUser) await loadUserWallet(currentUser.id); showToast('Balance refreshed!'); };
 
     // ==================== INIT ====================
     if ('serviceWorker' in navigator) navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
