@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#0066cc">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="B.Y PRO">
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
     <link rel="manifest" href="/manifest.json">
@@ -14,8 +14,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        /* Same robust CSS as before – dark mode, responsive, etc. */
+        /* Reset & base – background white during loading */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff; /* white background initially */
+            color: #111111;
+            transition: all 0.2s;
+            overflow-x: hidden;
+            font-size: 14px;
+            line-height: 1.4;
+        }
         :root {
             --bg: #ffffff;
             --surface: #f8f9fa;
@@ -41,14 +50,10 @@
             --primary-dark: #2563eb;
         }
         body {
-            font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
-            transition: all 0.2s;
-            overflow-x: hidden;
-            font-size: 14px;
-            line-height: 1.4;
         }
+        /* rest of the CSS (same as before, no emojis) */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
             width: 44px; height: 70px; background: rgba(255,255,255,0.96);
@@ -279,7 +284,7 @@
 </head>
 <body>
 <div class="app-wrapper">
-    <div class="menu-trigger" id="menuTrigger"><span>☰</span><div class="menu-dot" id="menuDot"></div></div>
+    <div class="menu-trigger" id="menuTrigger"><span><i class="fas fa-bars"></i></span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
         <nav class="sidebar-nav">
@@ -290,7 +295,7 @@
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
             <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
-            <div class="nav-item" data-page="wallet"><img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 22px; height: 22px;"><span>Wallet</span></div>
+            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
@@ -304,31 +309,31 @@
                 <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
-            <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
+            <div class="section-header"><h2 class="section-title"><i class="fas fa-newspaper"></i> Latest News</h2><span class="section-badge">Updates</span></div>
             <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> Loading...</div></div></div></div>
         </div>
-        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
-        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
-        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
-        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
-        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
+        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title"><i class="fas fa-bell"></i> Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
+        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title"><i class="fas fa-code"></i> Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
+        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title"><i class="fas fa-print"></i> Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
+        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title"><i class="fas fa-mobile-alt"></i> Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
+        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title"><i class="fas fa-cubes"></i> Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <div id="walletPage" class="section-page">
-            <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
+            <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card" style="font-size: 1rem;"></i><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
             <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
             <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
             <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
             <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
         </div>
-        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
+        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title"><i class="fas fa-share-alt"></i> Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
         <div id="supportPage" class="section-page">
-            <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
+            <div class="section-header"><h1 class="section-title"><i class="fas fa-headset"></i> Support</h1><span class="section-badge">24/7</span></div>
             <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
             <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect" required><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject *" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details..."></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send Request</button></form><div id="formMessage" style="margin-top: 10px; font-size: 0.7rem; text-align: center;"></div></div></div>
         </div>
     </main>
 </div>
-<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn">Logout</button></div></div>
+<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="info-row"><span><i class="fas fa-user"></i> Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span><i class="fas fa-id-card"></i> ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span><i class="fas fa-envelope"></i> Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn">Logout</button></div></div>
 <div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
@@ -497,10 +502,10 @@
                     <div class="notification-card ${!n.read ? 'unread' : ''}">
                         <div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div>
                         <div class="card-desc">${escapeHtml(n.message)}</div>
-                        <div class="notification-time">${new Date(n.date).toLocaleString()}</div>
+                        <div class="notification-time"><i class="far fa-clock"></i> ${new Date(n.date).toLocaleString()}</div>
                         <div class="notification-actions">
-                            ${!n.read ? `<button onclick="window.markRead(${n.id})">Mark Read</button>` : ''}
-                            <button onclick="window.deleteNotification(${n.id})">Delete</button>
+                            ${!n.read ? `<button onclick="window.markRead(${n.id})"><i class="fas fa-check"></i> Mark Read</button>` : ''}
+                            <button onclick="window.deleteNotification(${n.id})"><i class="fas fa-trash"></i> Delete</button>
                         </div>
                     </div>
                 </div>`).join('');
@@ -521,12 +526,12 @@
             if (!currentUser) { showToast('Please log in first', true); return; }
             const topic = document.getElementById('topicInput').value.trim();
             if (!topic) {
-                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;">Subject is required</span>';
+                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-circle"></i> Subject is required</span>';
                 return;
             }
             const btn = e.target.querySelector('button');
             btn.disabled = true;
-            document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
+            document.getElementById('formMessage').innerHTML = '<span style="color:#3b82f6;"><i class="fas fa-spinner fa-pulse"></i> Sending...</span>';
             try {
                 const allData = await fetchAllData();
                 if (!allData.supportMessages) allData.supportMessages = [];
@@ -540,13 +545,13 @@
                     read: false
                 });
                 if (await saveAllData(allData)) {
-                    document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;">✓ Sent! We\'ll reply within 24h.</span>';
+                    document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Sent! We\'ll reply within 24h.</span>';
                     e.target.reset();
                     setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
                     addNotification('Support Request Sent', `Your request "${topic}" submitted.`, 'fas fa-headset', '#10b981');
                 } else throw new Error('Save failed');
             } catch (err) {
-                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;">Failed. Try again.</span>';
+                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> Failed. Try again.</span>';
                 setTimeout(() => document.getElementById('formMessage').innerHTML = '', 2500);
             } finally { btn.disabled = false; }
         });
@@ -577,9 +582,10 @@
         function renderNews(news) {
             const container = document.getElementById('newsContainer');
             if (!container) return;
+            // treat missing "enabled" as true
             const activeNews = news.filter(n => n.enabled !== false);
             if (!activeNews.length) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">📢 No news at the moment</div></div></div>';
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news at the moment</div></div></div>';
                 return;
             }
             container.innerHTML = activeNews.map(item => `
@@ -612,7 +618,7 @@
             if (!container) return;
             const active = products.filter(p => p.enabled !== false);
             if (!active.length) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products available</div></div></div>';
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cubes"></i> No products available</div></div></div>';
                 return;
             }
             container.innerHTML = active.map(p => `
@@ -628,7 +634,7 @@
             const container = document.getElementById('socialContainer');
             if (!container) return;
             if (!social.length) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>';
+                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>';
                 return;
             }
             container.innerHTML = social.map(link => `
@@ -780,7 +786,6 @@
 
         // PWA: manifest and service worker
         if ('serviceWorker' in navigator) {
-            // Simple caching service worker
             const swCode = `self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
             const blob = new Blob([swCode], { type: 'application/javascript' });
@@ -789,10 +794,10 @@ self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
         }
         const manifest = {
             name: "B.Y PRO App",
-            short_name: "BYPRO",
+            short_name: "B.Y PRO",
             start_url: ".",
             display: "standalone",
-            background_color: "#0066cc",
+            background_color: "#ffffff",
             theme_color: "#0066cc",
             icons: [{ src: "https://by-pro.kesug.com/App.png?v=3", sizes: "192x192", type: "image/png" }]
         };
