@@ -9,8 +9,10 @@
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
     <title>B.Y PRO App | Digital Services & Wallet</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -23,9 +25,6 @@
             --primary-dark: #0052a3;
             --danger: #ef4444;
             --success: #10b981;
-            --card-radius: 18px;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-            --shadow-md: 0 4px 8px rgba(0,0,0,0.05);
         }
         .dark-theme {
             --bg: #000000;
@@ -34,14 +33,17 @@
             --text-muted: #b0b0b0;
             --border: #333333;
             --primary: #3b82f6;
-            --primary-dark: #2563eb;
         }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.2s; font-size: 14px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.2s; font-size: 14px; line-height: 1.4; }
+        
+        /* Menu Trigger */
         .menu-trigger { position: fixed; left: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 70px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12); border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem; color: var(--primary); transition: all 0.2s; }
         .dark-theme .menu-trigger { background: rgba(30,30,40,0.85); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
         .menu-dot { position: absolute; top: 6px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
+        
+        /* Sidebar */
         .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform 0.25s ease; overflow-y: auto; }
         .sidebar.mobile-open { transform: translateX(0); }
         .sidebar-header { padding: 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
@@ -50,7 +52,6 @@
         .sidebar-nav { padding: 12px 10px; }
         .nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 4px; border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s; }
         .nav-item i { width: 24px; font-size: 1rem; }
-        .nav-item img { width: 22px; height: 22px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
         .theme-switch-sidebar { margin: 12px 10px; padding: 10px; background: var(--bg); border-radius: 12px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.8rem; cursor: pointer; }
         .toggle-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
@@ -59,6 +60,8 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
+        
+        /* Main Content */
         .main-content { flex: 1; margin-left: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
@@ -71,6 +74,8 @@
         .wallet-badge { color: var(--success); }
         .bell-icon { color: var(--text-muted); }
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
+        
+        /* Carousel */
         .carousel-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9; max-height: 200px; }
         .carousel-slides { position: relative; width: 100%; height: 100%; }
         .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease; }
@@ -79,17 +84,23 @@
         .carousel-indicators { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 2; }
         .indicator { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; }
         .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
+        
+        /* Cards */
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .section-title { font-size: 1rem; font-weight: 700; }
         .section-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 30px; font-size: 0.6rem; font-weight: 600; }
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .slim-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
-        .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .card-media { height: 110px; overflow: hidden; }
         .card-media img { width: 100%; height: 100%; object-fit: cover; }
         .card-content { padding: 10px; }
         .card-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
         .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
+        .error-message { color: var(--danger); text-align: center; padding: 20px; }
+        .error-box { background: rgba(239,68,68,0.1); border: 1px solid var(--danger); border-radius: 12px; padding: 16px; text-align: center; margin: 10px 0; }
+        .error-box i { font-size: 2rem; margin-bottom: 8px; color: var(--danger); }
+        
+        /* Notifications */
         .notification-card-wrapper { position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px; }
         .notification-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 12px; }
         .notification-card.unread { border-left: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
@@ -98,19 +109,22 @@
         .notification-time { font-size: 0.55rem; color: var(--text-muted); margin-top: 6px; }
         .notification-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
         .notification-actions button { background: transparent; padding: 4px 12px; border: 1px solid var(--border); border-radius: 40px; cursor: pointer; font-size: 0.7rem; font-weight: 500; transition: 0.2s; color: var(--text); }
-        .notification-actions button:first-child:hover { background: var(--primary); color: white; border-color: var(--primary); }
-        .notification-actions button:last-child:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        
+        /* Support Form */
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 10px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.8rem; font-family: inherit; transition: 0.2s; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.8rem; font-family: inherit; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
         .btn-submit { background: var(--primary); color: white; border: none; width: 100%; padding: 10px; border-radius: 40px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-submit:hover { background: var(--primary-dark); transform: scale(0.98); }
+        .btn-submit:hover { background: var(--primary-dark); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .hours-badge { background: var(--success); color: white; padding: 5px 10px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.65rem; margin-bottom: 12px; }
+        
+        /* Wallet */
         .card-info-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 50px; padding: 6px 12px; margin-bottom: 14px; border: 1px solid var(--border); }
         .card-info-left { display: flex; align-items: center; gap: 8px; }
         .card-code { font-family: monospace; font-size: 0.65rem; background: var(--bg); padding: 2px 6px; border-radius: 20px; }
-        .copy-card-btn { background: transparent; border: 1px solid var(--border); border-radius: 30px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
+        .copy-card-btn { background: transparent; border: 1px solid var(--border); border-radius: 30px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .balance-card { background: var(--surface); border-radius: 18px; padding: 16px; text-align: center; border: 1px solid var(--border); margin-bottom: 14px; }
         .balance-label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
         .balance-amount { font-size: 1.8rem; font-weight: 700; color: var(--success); }
@@ -118,16 +132,22 @@
         .btn-deposit, .btn-refresh { flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
         .btn-deposit { background: var(--success); color: white; border: none; }
         .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        
+        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card { background: var(--surface); border-radius: 24px; padding: 20px; width: 85%; max-width: 300px; text-align: center; }
         .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.75rem; }
-        .close-modal { margin-top: 12px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.8rem; }
+        .close-modal { margin-top: 12px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; }
         #logoutBtn { background: #ef4444; margin-top: 8px; }
+        
+        /* Toast */
         .toast-notification { position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border-radius: 40px; padding: 8px 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success); }
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
+        
         .empty-transactions { text-align: center; padding: 20px; opacity: 0.7; }
         .empty-icon { font-size: 2rem; margin-bottom: 5px; }
+        
         @media (max-width: 768px) { .main-content { padding: 10px; } .cards-grid { grid-template-columns: 1fr; } .menu-trigger { width: 38px; height: 60px; font-size: 1.1rem; } }
     </style>
 </head>
@@ -188,17 +208,22 @@
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
     (function() {
-        // ========== JSONBin CONFIGURATION (Direct - No Server Needed) ==========
+        // ========== JSONBin CONFIGURATION ==========
         const BIN_ID = "69c12accaa77b81da90ed823";
         const MASTER_KEY = "$2a$10$yDHSLnhevrj04WsUtdi5RuwB9snZKOu3JCacq9f4Hrn9BGD9ZNjhK";
         const ACCESS_KEY = "B.Y PRO App";
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-
+        
+        // CORS proxy for GitHub Pages
+        const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
+        const isGitHubPages = window.location.hostname.includes('github.io');
+        const API_URL = isGitHubPages ? `${CORS_PROXY}${JSONBIN_URL}` : JSONBIN_URL;
+        
         let currentUser = null, auth = null, userWalletData = null;
         let userNotifications = [];
         let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
         let welcomeShown = false;
-
+        
         function showToast(msg, isErr = false) {
             const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
             tMsg.textContent = msg;
@@ -214,14 +239,26 @@
         }
         
         function escapeHtml(s) { return s ? String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])) : ''; }
-
+        
+        function showError(containerId, message) {
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.innerHTML = `<div class="error-box"><i class="fas fa-exclamation-triangle"></i><p>${escapeHtml(message)}</p></div>`;
+            }
+        }
+        
         // ========== JSONBin API Functions ==========
         async function fetchAllData() {
             try {
-                const response = await fetch(`${JSONBIN_URL}/latest`, {
-                    headers: { 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY }
-                });
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const headers = {
+                    'X-Master-Key': MASTER_KEY,
+                    'X-Access-Key': ACCESS_KEY
+                };
+                
+                const response = await fetch(`${API_URL}/latest`, { headers });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
                 const data = await response.json();
                 const record = data.record || {};
                 return {
@@ -238,64 +275,58 @@
                 };
             } catch (error) {
                 console.error('Fetch error:', error);
-                return { users: {}, supportMessages: [], notifications: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+                throw new Error(`Failed to load data from server: ${error.message}`);
             }
         }
-
+        
         async function saveAllData(data) {
             try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': MASTER_KEY,
+                    'X-Access-Key': ACCESS_KEY
+                };
                 const response = await fetch(JSONBIN_URL, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY, 'X-Access-Key': ACCESS_KEY },
+                    headers,
                     body: JSON.stringify(data)
                 });
-                return response.ok;
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                return true;
             } catch (error) {
                 console.error('Save error:', error);
-                return false;
+                throw new Error(`Failed to save data: ${error.message}`);
             }
         }
-
+        
         // ========== WALLET MANAGEMENT ==========
-        function generateCardCode() {
-            return `byppcn-${Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0')}`;
-        }
-
         async function loadUserWallet(userId) {
-            const allData = await fetchAllData();
-            if (allData.users && allData.users[userId]) {
-                userWalletData = allData.users[userId];
-            } else {
-                userWalletData = {
-                    id: userId,
-                    name: currentUser?.name || 'User',
-                    balance: 1250.50,
-                    transactions: [
-                        { id: 1, description: 'Welcome Bonus', amount: 50.00, type: 'deposit', date: new Date().toISOString() },
-                        { id: 2, description: 'Service Purchase', amount: 25.00, type: 'withdraw', date: new Date(Date.now() - 86400000).toISOString() }
-                    ],
-                    cardCode: generateCardCode(),
-                    createdAt: new Date().toISOString()
-                };
-                allData.users[userId] = userWalletData;
-                await saveAllData(allData);
+            try {
+                const allData = await fetchAllData();
+                if (allData.users && allData.users[userId]) {
+                    userWalletData = allData.users[userId];
+                } else {
+                    throw new Error(`Wallet not found for user ${userId}`);
+                }
+                updateWalletUI();
+            } catch (error) {
+                console.error('Wallet error:', error);
+                showError('walletTransactionsContainer', `Error: ${error.message}`);
+                showToast(`Wallet error: ${error.message}`, true);
             }
-            updateWalletUI();
         }
-
-        async function saveUserWallet() {
-            const allData = await fetchAllData();
-            allData.users[currentUser.id] = userWalletData;
-            await saveAllData(allData);
-        }
-
+        
         async function refreshWallet() {
             if (!currentUser) return;
             showToast('Refreshing wallet...');
             await loadUserWallet(currentUser.id);
-            showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
+            if (userWalletData) {
+                showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
+            }
         }
-
+        
         function updateWalletUI() {
             if (!userWalletData) return;
             document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
@@ -314,42 +345,47 @@
                     <div style="color:var(--success);font-weight:bold;">${t.type === 'deposit' ? '+' : '-'}$${Math.abs(t.amount).toFixed(2)}</div>
                 </div>`).join('')}</div>`;
         }
-
+        
         // ========== NOTIFICATIONS ==========
-        async function loadNotificationsFromStorage() {
-            const allData = await fetchAllData();
-            if (allData.notifications && allData.notifications.length) {
-                userNotifications = allData.notifications;
-            } else {
-                userNotifications = [{
-                    id: Date.now(),
-                    title: 'Welcome to B.Y PRO App!',
-                    message: 'Your digital services platform is ready. Explore our services and manage your wallet.',
-                    date: new Date().toISOString(),
-                    read: false,
-                    icon: 'fas fa-smile-wink',
-                    color: '#3b82f6'
-                }];
-                const allDataSave = await fetchAllData();
-                allDataSave.notifications = userNotifications;
-                await saveAllData(allDataSave);
+        async function loadNotifications() {
+            try {
+                const allData = await fetchAllData();
+                userNotifications = allData.notifications || [];
+                updateNotificationUI();
+            } catch (error) {
+                console.error('Notifications error:', error);
+                showError('notificationsContainer', `Error: ${error.message}`);
             }
-            updateNotificationUI();
         }
-
-        async function saveNotificationsToStorage() {
-            const allData = await fetchAllData();
-            allData.notifications = userNotifications;
-            await saveAllData(allData);
-            updateNotificationUI();
+        
+        async function markRead(id) {
+            try {
+                const notification = userNotifications.find(n => n.id === id);
+                if (notification) {
+                    notification.read = true;
+                    const allData = await fetchAllData();
+                    allData.notifications = userNotifications;
+                    await saveAllData(allData);
+                    updateNotificationUI();
+                }
+            } catch (error) {
+                showToast(`Error: ${error.message}`, true);
+            }
         }
-
-        function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') {
-            userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false });
-            saveNotificationsToStorage();
-            showToast(title);
+        
+        async function deleteNotification(id) {
+            try {
+                userNotifications = userNotifications.filter(n => n.id !== id);
+                const allData = await fetchAllData();
+                allData.notifications = userNotifications;
+                await saveAllData(allData);
+                updateNotificationUI();
+                showToast('Notification deleted');
+            } catch (error) {
+                showToast(`Error: ${error.message}`, true);
+            }
         }
-
+        
         function updateNotificationUI() {
             const container = document.getElementById('notificationsContainer');
             const countSpan = document.getElementById('notificationsCount');
@@ -373,7 +409,7 @@
                 <div class="notification-card-wrapper" data-id="${n.id}">
                     <div class="notification-delete" onclick="window.deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div>
                     <div class="notification-card ${!n.read ? 'unread' : ''}">
-                        <div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div>
+                        <div class="card-title"><i class="${n.icon || 'fas fa-bell'}" style="color:${n.color || '#3b82f6'}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div>
                         <div class="card-desc">${escapeHtml(n.message)}</div>
                         <div class="notification-time"><i class="far fa-clock"></i> ${new Date(n.date).toLocaleString()}</div>
                         <div class="notification-actions">
@@ -383,18 +419,10 @@
                     </div>
                 </div>`).join('');
         }
-
-        window.markRead = async function(id) {
-            const n = userNotifications.find(n => n.id === id);
-            if (n) { n.read = true; await saveNotificationsToStorage(); }
-        };
         
-        window.deleteNotification = async function(id) {
-            userNotifications = userNotifications.filter(n => n.id !== id);
-            await saveNotificationsToStorage();
-            showToast('Notification deleted');
-        };
-
+        window.markRead = markRead;
+        window.deleteNotification = deleteNotification;
+        
         // ========== SUPPORT FORM ==========
         document.getElementById('supportRequestForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -420,80 +448,68 @@
                     subject: topic,
                     details: document.getElementById('detailsInput').value,
                     userId: currentUser.id,
-                    userName: currentUser.name || currentUser.username,
                     date: new Date().toISOString(),
                     read: false
                 });
                 
-                if (await saveAllData(allData)) {
-                    document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Sent! We\'ll reply within 24h.</span>';
-                    e.target.reset();
-                    setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
-                    addNotification('Support Request Sent', `Your request "${topic}" submitted.`, 'fas fa-headset', '#10b981');
-                } else throw new Error('Save failed');
-            } catch (err) {
-                document.getElementById('formMessage').innerHTML = '<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> Failed. Try again.</span>';
-                setTimeout(() => document.getElementById('formMessage').innerHTML = '', 2500);
-                showToast('Failed to send support request', true);
+                await saveAllData(allData);
+                document.getElementById('formMessage').innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Sent! We\'ll reply within 24h.</span>';
+                e.target.reset();
+                setTimeout(() => document.getElementById('formMessage').innerHTML = '', 3000);
+                showToast('Support request sent successfully');
+            } catch (error) {
+                document.getElementById('formMessage').innerHTML = `<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> Error: ${error.message}</span>`;
+                showToast(`Failed: ${error.message}`, true);
             } finally { btn.disabled = false; }
         });
-
+        
         // ========== CONTENT MANAGEMENT ==========
         async function loadContentData() {
-            const all = await fetchAllData();
-            contentData = {
-                images: all.images || [],
-                news: all.news || [],
-                digital: all.digital || [],
-                local: all.local || [],
-                phone: all.phone || [],
-                products: all.products || [],
-                social: all.social || []
-            };
-            
-            // If no news exists, add default news
-            if (!contentData.news.length) {
-                contentData.news = [
-                    { id: 1, title: 'Welcome to B.Y PRO App', description: 'Your all-in-one platform for digital services and wallet management.', icon: 'fas fa-star', color: '#0066cc', enabled: true, date: '2024-01-01' },
-                    { id: 2, title: 'New Services Available', description: 'Check out our latest digital products and services.', icon: 'fas fa-rocket', color: '#10b981', enabled: true, date: '2024-01-15' }
-                ];
+            try {
                 const allData = await fetchAllData();
-                allData.news = contentData.news;
-                await saveAllData(allData);
+                contentData = {
+                    images: allData.images || [],
+                    news: allData.news || [],
+                    digital: allData.digital || [],
+                    local: allData.local || [],
+                    phone: allData.phone || [],
+                    products: allData.products || [],
+                    social: allData.social || []
+                };
+                
+                renderCarousel(contentData.images);
+                renderNews(contentData.news);
+                renderServices('digitalContainer', contentData.digital, 'fas fa-code');
+                renderServices('localContainer', contentData.local, 'fas fa-print');
+                renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
+                renderProducts(contentData.products);
+                renderSocial(contentData.social);
+            } catch (error) {
+                console.error('Content error:', error);
+                showError('newsContainer', `Error loading news: ${error.message}`);
+                showError('digitalContainer', `Error: ${error.message}`);
+                showError('localContainer', `Error: ${error.message}`);
+                showError('phoneContainer', `Error: ${error.message}`);
+                showError('productsContainer', `Error: ${error.message}`);
+                showError('socialContainer', `Error: ${error.message}`);
             }
-            
-            // If no digital services exist, add defaults
-            if (!contentData.digital.length) {
-                contentData.digital = [
-                    { id: 1, name: 'Web Development', description: 'Professional website development services', icon: 'fas fa-code', enabled: true },
-                    { id: 2, name: 'Mobile Apps', description: 'iOS and Android app development', icon: 'fas fa-mobile-alt', enabled: true }
-                ];
-                const allData = await fetchAllData();
-                allData.digital = contentData.digital;
-                await saveAllData(allData);
-            }
-            
-            renderCarousel(contentData.images);
-            renderAllContent();
-        }
-        
-        function renderAllContent() {
-            renderNews(contentData.news);
-            renderServices('digitalContainer', contentData.digital, 'fas fa-code');
-            renderServices('localContainer', contentData.local, 'fas fa-print');
-            renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
-            renderProducts(contentData.products);
-            renderSocial(contentData.social);
         }
         
         function renderNews(news) {
             const container = document.getElementById('newsContainer');
             if (!container) return;
-            const activeNews = news.filter(n => n.enabled !== false);
-            if (!activeNews.length) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No news available</div></div></div>';
+            
+            if (!news || !news.length) {
+                container.innerHTML = '<div class="error-box"><i class="fas fa-newspaper"></i><p>No news available in JSONBin</p></div>';
                 return;
             }
+            
+            const activeNews = news.filter(n => n.enabled !== false);
+            if (!activeNews.length) {
+                container.innerHTML = '<div class="error-box"><i class="fas fa-newspaper"></i><p>No enabled news items found</p></div>';
+                return;
+            }
+            
             container.innerHTML = activeNews.map(item => `
                 <div class="slim-card">
                     <div class="card-content">
@@ -506,11 +522,18 @@
         function renderServices(containerId, services, defaultIcon) {
             const container = document.getElementById(containerId);
             if (!container) return;
-            const active = services.filter(s => s.enabled !== false);
-            if (!active.length) {
-                container.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${defaultIcon}"></i> No services available</div></div></div>`;
+            
+            if (!services || !services.length) {
+                container.innerHTML = `<div class="error-box"><i class="${defaultIcon}"></i><p>No services available in JSONBin</p></div>`;
                 return;
             }
+            
+            const active = services.filter(s => s.enabled !== false);
+            if (!active.length) {
+                container.innerHTML = `<div class="error-box"><i class="${defaultIcon}"></i><p>No enabled services found</p></div>`;
+                return;
+            }
+            
             container.innerHTML = active.map(s => `
                 <div class="slim-card">
                     ${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}
@@ -524,11 +547,18 @@
         function renderProducts(products) {
             const container = document.getElementById('productsContainer');
             if (!container) return;
-            const active = products.filter(p => p.enabled !== false);
-            if (!active.length) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cubes"></i> No products available</div></div></div>';
+            
+            if (!products || !products.length) {
+                container.innerHTML = '<div class="error-box"><i class="fas fa-cubes"></i><p>No products available in JSONBin</p></div>';
                 return;
             }
+            
+            const active = products.filter(p => p.enabled !== false);
+            if (!active.length) {
+                container.innerHTML = '<div class="error-box"><i class="fas fa-cubes"></i><p>No enabled products found</p></div>';
+                return;
+            }
+            
             container.innerHTML = active.map(p => `
                 <div class="slim-card">
                     ${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}
@@ -542,10 +572,12 @@
         function renderSocial(social) {
             const container = document.getElementById('socialContainer');
             if (!container) return;
-            if (!social.length) {
-                container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No social links</div></div></div>';
+            
+            if (!social || !social.length) {
+                container.innerHTML = '<div class="error-box"><i class="fas fa-share-alt"></i><p>No social links available in JSONBin</p></div>';
                 return;
             }
+            
             container.innerHTML = social.map(link => `
                 <a href="${escapeHtml(link.url)}" target="_blank" class="slim-card" style="text-decoration:none; display:block;">
                     <div class="card-content" style="text-align:center;">
@@ -555,7 +587,7 @@
                     </div>
                 </a>`).join('');
         }
-
+        
         // ========== CAROUSEL ==========
         let currentSlide = 0, slideInterval = null;
         
@@ -565,12 +597,12 @@
             if (!slidesDiv || !indicatorsDiv) return;
             
             if (!images || !images.length) {
-                slidesDiv.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/0066cc/ffffff?text=B.Y+PRO+App"></div>';
+                slidesDiv.innerHTML = '<div class="carousel-slide active"><div class="error-box" style="height:100%; display:flex; align-items:center; justify-content:center;"><i class="fas fa-image"></i> No images in JSONBin</div></div>';
                 indicatorsDiv.innerHTML = '';
                 return;
             }
             
-            slidesDiv.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'slide'}"></div>`).join('');
+            slidesDiv.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'slide'}" onerror="this.src='https://placehold.co/800x400/ef4444/ffffff?text=Image+Failed'"></div>`).join('');
             indicatorsDiv.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
             
             document.querySelectorAll('.indicator').forEach(ind => {
@@ -594,7 +626,7 @@
                 if (inds[currentSlide]) inds[currentSlide].classList.add('active');
             }
         }
-
+        
         // ========== AUTHENTICATION ==========
         function updateUIForUser(user) {
             currentUser = user;
@@ -609,7 +641,7 @@
             
             if (user.id) {
                 loadUserWallet(user.id);
-                loadNotificationsFromStorage();
+                loadNotifications();
                 loadContentData();
             }
             
@@ -618,7 +650,7 @@
                 setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 300);
             }
         }
-
+        
         auth = new BYPROAuth({
             loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
             onLogin: (user) => updateUIForUser(user),
@@ -640,7 +672,7 @@
                 else auth.show();
             } else auth.show();
         }, 500);
-
+        
         // ========== NAVIGATION ==========
         const menuTrigger = document.getElementById('menuTrigger');
         const sidebar = document.getElementById('sidebar');
@@ -691,7 +723,7 @@
             if (userWalletData?.cardCode) {
                 navigator.clipboard.writeText(userWalletData.cardCode);
                 showToast('Card code copied!');
-            } else showToast('No card code', true);
+            } else showToast('No card code available', true);
         });
         
         document.getElementById('greetingAvatar')?.addEventListener('click', () => document.getElementById('accountModal').classList.add('active'));
@@ -716,17 +748,7 @@
             localStorage.setItem('darkTheme', e.target.checked);
         });
         
-        // ========== PWA ==========
-        if ('serviceWorker' in navigator) {
-            try {
-                const swCode = `self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(e => console.log('SW registration skipped:', e.message));
-            } catch(e) { console.log('SW error:', e.message); }
-        }
-        
+        // PWA Manifest
         const manifest = {
             name: "B.Y PRO App",
             short_name: "B.Y PRO",
@@ -740,11 +762,6 @@ self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));`;
         const manifestURL = URL.createObjectURL(manifestBlob);
         const manifestLink = document.querySelector('link[rel="manifest"]');
         if (manifestLink) manifestLink.href = manifestURL;
-        
-        // Auto-refresh content every 30 seconds
-        setInterval(() => {
-            if (document.hasFocus() && currentUser) loadContentData();
-        }, 30000);
     })();
 </script>
 </body>
