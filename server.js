@@ -166,6 +166,8 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
             return res.status(400).json({ error: 'No file uploaded' });
         }
         
+        console.log('Uploading image:', req.file.originalname, 'Size:', req.file.size);
+        
         // تحويل الصورة إلى base64
         const base64Image = req.file.buffer.toString('base64');
         
@@ -222,8 +224,9 @@ app.get('*', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
-    console.log(`JSON Bin ID: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`📁 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`💾 JSON Bin ID: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`☁️  Cloudinary: Disabled (using ImgBB instead)`);
 });
