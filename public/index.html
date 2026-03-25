@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
     <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#0066cc">
+    <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
-    <title>B.Y PRO App</title>
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO">
+    <title>B.Y PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
@@ -24,9 +24,8 @@
             --primary-dark: #0052a3;
             --danger: #ef4444;
             --success: #10b981;
-            --card-radius: 18px;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.03);
-            --shadow-md: 0 4px 8px rgba(0,0,0,0.05);
+            --shimmer-bg: #e0e0e0;
+            --shimmer-highlight: #f0f0f0;
         }
         .dark-theme {
             --bg: #000000;
@@ -36,6 +35,8 @@
             --border: #333333;
             --primary: #3b82f6;
             --primary-dark: #2563eb;
+            --shimmer-bg: #2a2a2a;
+            --shimmer-highlight: #3a3a3a;
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -47,6 +48,22 @@
             font-size: 14px;
             line-height: 1.4;
         }
+        /* Shimmer loading */
+        .shimmer {
+            background: linear-gradient(90deg, var(--shimmer-bg) 25%, var(--shimmer-highlight) 50%, var(--shimmer-bg) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .loading-card {
+            height: 120px;
+            width: 100%;
+        }
+        /* Menu Trigger (right side) */
         .menu-trigger {
             position: fixed; right: 0; top: 50%; transform: translateY(-50%);
             width: 44px; height: 70px; background: rgba(255,255,255,0.96);
@@ -63,6 +80,7 @@
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
+        /* Sidebar */
         .sidebar {
             width: 260px; background: var(--surface); border-left: 1px solid var(--border);
             position: fixed; right: 0; top: 0; bottom: 0; z-index: 100;
@@ -93,6 +111,7 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
+        /* Main Content */
         .main-content { flex: 1; margin-right: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
@@ -334,72 +353,70 @@
 <div class="app-wrapper">
     <div class="menu-trigger" id="menuTrigger"><span>&lt;</span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
+        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO</span></div>
         <nav class="sidebar-nav">
-            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
-            <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>الإشعارات</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
-            <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>الخدمات الرقمية</span></div>
-            <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>الخدمات المحلية</span></div>
-            <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>خدمات الهاتف</span></div>
-            <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>المنتجات</span></div>
+            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
+            <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
+            <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>Digital Services</span></div>
+            <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
+            <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
+            <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
             <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
-            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>المحفظة</span></div>
-            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>وسائل التواصل</span></div>
-            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>الدعم الفني</span></div>
+            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
+            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
+            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
-        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> الوضع المظلم</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
+        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> Dark Mode</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
     </aside>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
             <div class="home-header">
-                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">مرحباً، <span id="userName" class="user-name">User</span></div></div>
+                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div></div>
                 <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
-            <div class="section-header"><h2 class="section-title">آخر الأخبار</h2><span class="section-badge">تحديثات</span></div>
-            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-spinner fa-spin"></i> جاري التحميل...</div></div></div></div>
+            <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
+            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 80%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%; margin-top: 8px;"></div><div class="card-desc shimmer" style="height: 12px; width: 90%; margin-top: 4px;"></div></div></div></div>
         </div>
-        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">الإشعارات</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
-        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">الخدمات الرقمية</h1><span class="section-badge">أساسية</span></div><div id="digitalContainer" class="cards-grid"></div></div>
-        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">الخدمات المحلية</h1><span class="section-badge">مركز الوثائق</span></div><div id="localContainer" class="cards-grid"></div></div>
-        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">خدمات الهاتف</h1><span class="section-badge">الجزائر</span></div><div id="phoneContainer" class="cards-grid"></div></div>
-        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">المنتجات</h1><span class="section-badge">متوفرة</span></div><div id="productsContainer" class="cards-grid"></div></div>
+        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
+        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
+        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
+        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
+        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
         <div id="walletPage" class="section-page">
             <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card"></i><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
-            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> الرصيد الإجمالي</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
-            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> إيداع</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> تحديث</button></div>
+            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
+            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
-            <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> سجل المعاملات</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
-            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">لا توجد معاملات بعد</div></div></div>
+            <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
+            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
         </div>
-        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">وسائل التواصل</h1><span class="section-badge">تواصل معنا</span></div><div id="socialContainer" class="cards-grid"></div></div>
+        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 60%; margin: 0 auto;"></div><div class="card-desc shimmer" style="height: 12px; width: 80%; margin: 8px auto 0;"></div></div></div></div></div>
         <div id="supportPage" class="section-page">
-            <div class="section-header"><h1 class="section-title">الدعم الفني</h1><span class="section-badge">24/7</span></div>
-            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> متاحون على مدار الساعة</div>
-            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect"><option value="">اختر الخدمة</option><option>الخدمات الرقمية</option><option>الخدمات المحلية</option><option>خدمات الهاتف</option><option>المنتجات</option><option>أخرى</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="الموضوع" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="التفاصيل"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> إرسال</button></form><div id="formMessage" style="margin-top: 8px; font-size: 0.7rem;"></div></div></div>
+            <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
+            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
+            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect"><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button></form><div id="formMessage" style="margin-top: 8px; font-size: 0.7rem;"></div></div></div>
         </div>
     </main>
 </div>
 
-<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> بيانات الحساب</h3><div class="info-row"><span>الاسم:</span><span id="modalUserName">User</span></div><div class="info-row"><span>المعرف:</span><span id="modalUserId">—</span></div><div class="info-row"><span>البريد الإلكتروني:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">إغلاق</button><button class="close-modal" id="logoutBtn" style="margin-top: 8px; background: #ef4444;">تسجيل الخروج</button></div></div>
+<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn" style="margin-top: 8px; background: #ef4444;">Logout</button></div></div>
 
-<div class="modal-overlay" id="paymentModal"><div class="modal-card payment-modal"><h3><i class="fas fa-money-bill-wave"></i> إيداع رصيد</h3><input type="number" id="depositAmount" class="payment-input" placeholder="المبلغ بالدولار" step="0.01" min="1"><input type="password" id="depositPassword" class="payment-input" placeholder="كلمة المرور"><button class="btn-primary" id="confirmDepositBtn">تأكيد الإيداع</button><button class="btn-primary btn-danger" id="closePaymentModal">إلغاء</button></div></div>
+<div class="modal-overlay" id="paymentModal"><div class="modal-card payment-modal"><h3><i class="fas fa-money-bill-wave"></i> Deposit Funds</h3><input type="number" id="depositAmount" class="payment-input" placeholder="Amount in USD" step="0.01" min="1"><input type="password" id="depositPassword" class="payment-input" placeholder="Password"><button class="btn-primary" id="confirmDepositBtn">Confirm Deposit</button><button class="btn-primary btn-danger" id="closePaymentModal">Cancel</button></div></div>
 
 <div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    // ==================== إعدادات السيرفر ====================
+    // ==================== SERVER CONFIGURATION ====================
     const API_BASE = "https://b-y-pro-app.onrender.com";
-    
-    // المحاولة لجلب البيانات من السيرفر المالي إذا كان متاحاً
     const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com";
-    
+
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
 
-    // ==================== دوال مساعدة ====================
+    // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
         const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
         tMsg.textContent = msg;
@@ -417,10 +434,9 @@
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2200);
     }
-    
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== جلب البيانات من JSONBin ====================
+    // ==================== DATA API (JSONBin) ====================
     async function fetchAllData() {
         try {
             const res = await fetch(`${API_BASE}/api/data`);
@@ -432,7 +448,6 @@
             return { users: {}, supportMessages: [] }; 
         }
     }
-    
     async function saveAllData(data) {
         try {
             const res = await fetch(`${API_BASE}/api/data`, {
@@ -447,31 +462,28 @@
         }
     }
 
-    // ==================== المحفظة المالية - النظام الموحد ====================
+    // ==================== WALLET (Unified) ====================
     function generateCardCode() {
         const randomNum = Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0');
         return `byppcn-${randomNum}`;
     }
 
-    // محاولة جلب البيانات من السيرفر المالي إذا كان متاحاً
     async function fetchFinancialData(userId, userEmail) {
         try {
-            // محاولة الاتصال بالسيرفر المالي
             const response = await fetch(`${FINANCIAL_API}/api/financial/${userId}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
-            
             if (response.ok) {
                 const result = await response.json();
                 if (result.success && result.data) {
-                    console.log('✅ تم جلب البيانات من السيرفر المالي:', result.data);
+                    console.log('✅ Financial API data:', result.data);
                     return result.data;
                 }
             }
             return null;
         } catch (error) {
-            console.log('⚠️ السيرفر المالي غير متاح، استخدام JSONBin بدلاً منه');
+            console.log('⚠️ Financial API unavailable, using JSONBin.');
             return null;
         }
     }
@@ -481,12 +493,10 @@
             const allData = await fetchAllData();
             let userWallet = null;
             let userId = null;
-            
-            // 1. محاولة جلب البيانات من السيرفر المالي أولاً
+
+            // Try financial API first
             const financialData = await fetchFinancialData(user.id, user.email);
-            
             if (financialData) {
-                // إذا نجحنا في جلب البيانات من السيرفر المالي، نستخدمها
                 userWallet = {
                     id: financialData.id || user.id,
                     name: financialData.name || user.name || user.username,
@@ -496,17 +506,11 @@
                     transactions: financialData.transactions || []
                 };
                 userId = user.id;
-                
-                // حفظ البيانات في JSONBin للمزامنة
-                if (allData.users[userId]) {
-                    allData.users[userId] = userWallet;
-                } else {
-                    allData.users[userId] = userWallet;
-                }
+                // Sync to JSONBin
+                allData.users[userId] = userWallet;
                 await saveAllData(allData);
-                
             } else {
-                // 2. البحث في JSONBin عن المستخدم
+                // Search in JSONBin by email first
                 if (user.email) {
                     for (const [id, wallet] of Object.entries(allData.users || {})) {
                         if (wallet.email === user.email) {
@@ -516,17 +520,15 @@
                         }
                     }
                 }
-                
                 if (!userWallet && user.id && allData.users[user.id]) {
                     userWallet = allData.users[user.id];
                     userId = user.id;
                 }
-                
                 if (userWallet) {
                     userWalletData = userWallet;
-                    console.log('✅ تم العثور على المحفظة في JSONBin:', userWallet);
+                    console.log('✅ Wallet found in JSONBin:', userWallet);
                 } else {
-                    // إنشاء محفظة جديدة
+                    // Create new wallet
                     const newCard = generateCardCode();
                     const newId = user.email || user.id || Date.now().toString();
                     userWallet = {
@@ -540,17 +542,15 @@
                     };
                     allData.users[newId] = userWallet;
                     await saveAllData(allData);
-                    showToast(`تم إنشاء محفظة جديدة!`);
+                    showToast(`New wallet created!`);
                 }
             }
-            
             userWalletData = userWallet;
             updateWalletUI();
             return userWalletData;
-            
         } catch (error) {
-            console.error('❌ خطأ في تحميل المحفظة:', error);
-            showToast('خطأ في تحميل بيانات المحفظة', true);
+            console.error('❌ Error loading wallet:', error);
+            showToast('Error loading wallet data', true);
             return null;
         }
     }
@@ -558,7 +558,6 @@
     async function saveUserWallet() {
         const allData = await fetchAllData();
         let originalKey = null;
-        
         if (currentUser.email) {
             for (const [key, wallet] of Object.entries(allData.users || {})) {
                 if (wallet.email === currentUser.email) {
@@ -573,39 +572,37 @@
         if (!originalKey && userWalletData.id) {
             originalKey = userWalletData.id;
         }
-
         if (originalKey) {
             allData.users[originalKey] = userWalletData;
             await saveAllData(allData);
+        } else {
+            console.error('Could not determine wallet key to save');
         }
     }
 
     async function refreshWallet() {
         if (!currentUser) return;
-        showToast('جاري تحديث المحفظة...');
+        showToast('Refreshing wallet...');
         await loadUserWallet(currentUser);
-        showToast(`الرصيد: $${userWalletData.balance.toFixed(2)}`);
+        showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
     }
 
     function updateWalletUI() {
         if (!userWalletData) return;
         document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
         document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
-        document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'لا توجد بطاقة';
-        
+        document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
         const tx = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = tx.length;
         const container = document.getElementById('walletTransactionsContainer');
-        
-        if (!tx.length) { 
-            container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">لا توجد معاملات بعد</div></div>`; 
-            return; 
+        if (!tx.length) {
+            container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
+            return;
         }
-        
-        container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString('ar')}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
+        container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
-    // ==================== الإيداع ====================
+    // ==================== DEPOSIT ====================
     const depositBtn = document.getElementById('depositBtn');
     const paymentModal = document.getElementById('paymentModal');
     const closePaymentModal = document.getElementById('closePaymentModal');
@@ -613,93 +610,65 @@
     const depositAmount = document.getElementById('depositAmount');
     const depositPassword = document.getElementById('depositPassword');
 
-    depositBtn.onclick = () => {
-        paymentModal.classList.add('active');
-    };
-    
+    depositBtn.onclick = () => paymentModal.classList.add('active');
     closePaymentModal.onclick = () => {
         paymentModal.classList.remove('active');
         depositAmount.value = '';
         depositPassword.value = '';
     };
-    
     confirmDepositBtn.onclick = async () => {
         const amount = parseFloat(depositAmount.value);
         const password = depositPassword.value;
-        
-        if (isNaN(amount) || amount <= 0) {
-            showToast('الرجاء إدخال مبلغ صحيح', true);
-            return;
-        }
-        
-        if (!password) {
-            showToast('الرجاء إدخال كلمة المرور', true);
-            return;
-        }
-        
-        // التحقق من كلمة المرور
+        if (isNaN(amount) || amount <= 0) { showToast('Enter a valid amount', true); return; }
+        if (!password) { showToast('Enter your password', true); return; }
         try {
-            // محاولة التحقق عبر السيرفر المالي
+            // Verify password (simple fallback)
+            let passwordValid = false;
             const verifyResponse = await fetch(`${FINANCIAL_API}/api/verify-password`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ accountId: currentUser.id, password })
             });
-            
-            let passwordValid = false;
-            
             if (verifyResponse.ok) {
                 const result = await verifyResponse.json();
                 passwordValid = result.success;
             } else {
-                // كلمة مرور افتراضية للتجربة
                 passwordValid = (password === '1234' || password === currentUser.id);
             }
-            
-            if (!passwordValid) {
-                showToast('كلمة المرور غير صحيحة', true);
-                return;
-            }
-            
-            // إتمام عملية الإيداع
-            const oldBalance = userWalletData.balance;
+            if (!passwordValid) { showToast('Incorrect password', true); return; }
+            // Process deposit
             userWalletData.balance += amount;
-            
             if (!userWalletData.transactions) userWalletData.transactions = [];
             userWalletData.transactions.unshift({
                 type: 'deposit',
                 amount: amount,
-                description: `إيداع مبلغ $${amount}`,
+                description: `Deposit $${amount}`,
                 date: new Date().toISOString()
             });
-            
             await saveUserWallet();
             updateWalletUI();
-            
-            addNotification('تم الإيداع بنجاح', `تم إضافة $${amount} إلى محفظتك`, 'fas fa-money-bill-wave', '#10b981');
-            showToast(`تم إيداع $${amount} بنجاح`);
-            
+            addNotification('Deposit Successful', `$${amount} added to your wallet`, 'fas fa-money-bill-wave', '#10b981');
+            showToast(`$${amount} deposited successfully`);
             paymentModal.classList.remove('active');
             depositAmount.value = '';
             depositPassword.value = '';
-            
         } catch (error) {
-            console.error('خطأ في الإيداع:', error);
-            showToast('حدث خطأ أثناء الإيداع', true);
+            console.error('Deposit error:', error);
+            showToast('Deposit failed', true);
         }
     };
 
-    // ==================== نموذج الدعم الفني ====================
+    // ==================== SUPPORT FORM (with external message handling) ====================
     const supportForm = document.getElementById('supportRequestForm'), formMsg = document.getElementById('formMessage');
     if (supportForm) {
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) { formMsg.innerHTML = '<span style="color:#ef4444;">الرجاء إدخال الموضوع</span>'; return; }
+            if (!topic) { formMsg.innerHTML = '<span style="color:#ef4444;">Please enter a subject</span>'; return; }
             const btn = supportForm.querySelector('button');
             btn.disabled = true;
-            formMsg.innerHTML = '<span style="color:#3b82f6;">جاري الإرسال...</span>';
-            const sender = currentUser ? `${currentUser.name || 'User'} (ID: ${currentUser.id || '?'})` : 'مستخدم التطبيق';
+            formMsg.innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
+            const sender = currentUser ? `${currentUser.name || 'User'} (ID: ${currentUser.id || '?'})` : 'App User';
             try {
                 const payload = {
                     sender,
@@ -713,93 +682,101 @@
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
-                    formMsg.innerHTML = '<span style="color:#10b981;">✓ تم الإرسال! سنرد خلال 24 ساعة.</span>';
+                    formMsg.innerHTML = '<span style="color:#10b981;">✓ Sent! We\'ll reply within 24h.</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 2500);
-                    addNotification('تم إرسال طلب الدعم', `طلبك "${topic}" تم استلامه`, 'fas fa-headset', '#10b981');
+                    addNotification('Support Request Sent', `Your request "${topic}" has been received.`, 'fas fa-headset', '#10b981');
                 } else throw new Error('Server error');
             } catch (err) {
                 console.error(err);
-                formMsg.innerHTML = '<span style="color:#ef4444;">فشل الإرسال. حاول مرة أخرى.</span>';
+                formMsg.innerHTML = '<span style="color:#ef4444;">Failed to send. Please try again.</span>';
                 setTimeout(() => formMsg.innerHTML = '', 2000);
             } finally { btn.disabled = false; }
         });
     }
 
-    // ==================== نظام المصادقة ====================
+    // ==================== AUTHENTICATION ====================
     function updateUIForUser(user) {
         currentUser = user;
         document.getElementById('userName').textContent = user.name || user.username || 'User';
         document.getElementById('modalUserName').textContent = user.name || user.username || 'User';
         document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
-        document.getElementById('modalUserEmail').textContent = user.email || 'لا يوجد بريد';
+        document.getElementById('modalUserEmail').textContent = user.email || 'No email';
         const avatarDiv = document.getElementById('avatarIcon');
-        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`; 
+        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         if (user.id) loadUserWallet(user);
-        if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`مرحباً ${user.name || user.username || 'User'}!`), 400); }
+        if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); }
     }
-    
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
         onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadContentData(); },
         onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').textContent = '$0.00'; welcomeShown = false; auth.show(); }
     });
-    
-    setTimeout(() => { 
-        if (auth && auth.isAuthenticated && auth.isAuthenticated()) { 
-            const u = auth.getCurrentUser(); 
-            if (u) updateUIForUser(u); 
-            else auth.show(); 
-        } else auth.show(); 
+    setTimeout(() => {
+        if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
+            const u = auth.getCurrentUser();
+            if (u) updateUIForUser(u);
+            else auth.show();
+        } else auth.show();
     }, 500);
 
-    // ==================== الإشعارات ====================
+    // ==================== NOTIFICATIONS (local + external polling) ====================
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
         if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} }
-        if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'مرحباً بك!', message: 'ستتلقى آخر التحديثات هنا.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }];
+        if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'Welcome!', message: 'You will receive updates here.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }];
         saveNotificationsToStorage();
     }
-    
     function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
-    
-    function formatDate(d) { 
-        const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000); 
-        if (diff < 1) return 'الآن'; 
-        if (diff < 60) return `منذ ${diff} دقيقة`; 
-        if (diff < 1440) return `منذ ${Math.floor(diff / 60)} ساعة`; 
-        return date.toLocaleDateString('ar'); 
+    function formatDate(d) {
+        const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000);
+        if (diff < 1) return 'Just now';
+        if (diff < 60) return `${diff}m ago`;
+        if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
+        return date.toLocaleDateString();
     }
-    
     function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') {
         userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false });
         saveNotificationsToStorage();
         showToast(title);
         if (Notification.permission === 'granted') new Notification(title, { body: msg, icon: 'https://by-pro.kesug.com/App.png?v=3' });
     }
-    
     function updateNotificationUI() {
         const container = document.getElementById('notificationsContainer'), countSpan = document.getElementById('notificationsCount'), pageBadge = document.getElementById('notificationsPageBadge'), homeBellCount = document.getElementById('homeBellCount'), menuDot = document.getElementById('menuDot');
         const unread = userNotifications.filter(n => !n.read).length;
         if (countSpan) { countSpan.style.display = unread ? 'inline-block' : 'none'; if (unread) countSpan.textContent = unread; }
-        if (pageBadge) pageBadge.textContent = `${unread} جديد`;
+        if (pageBadge) pageBadge.textContent = `${unread} new`;
         if (homeBellCount) { homeBellCount.style.display = unread ? 'inline-block' : 'none'; if (unread) homeBellCount.textContent = unread; }
         if (menuDot) menuDot.style.display = unread ? 'block' : 'none';
         if (!container) return;
-        if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> لا توجد إشعارات</div></div></div>'; return; }
-        container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `<div class="notification-card-wrapper" data-id="${n.id}"><div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div><div class="notification-card ${!n.read ? 'unread' : ''}"><div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-right:6px;">جديد</span>' : ''}</div><div class="card-desc">${escapeHtml(n.message)}</div><div class="notification-time">${formatDate(n.date)}</div><div class="notification-actions">${!n.read ? `<button onclick="markRead(${n.id})">قراءة</button>` : ''}<button onclick="deleteNotification(${n.id})">حذف</button></div></div></div>`).join('');
+        if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>'; return; }
+        container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `<div class="notification-card-wrapper" data-id="${n.id}"><div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div><div class="notification-card ${!n.read ? 'unread' : ''}"><div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div><div class="card-desc">${escapeHtml(n.message)}</div><div class="notification-time">${formatDate(n.date)}</div><div class="notification-actions">${!n.read ? `<button onclick="markRead(${n.id})">Read</button>` : ''}<button onclick="deleteNotification(${n.id})">Delete</button></div></div></div>`).join('');
         document.querySelectorAll('.notification-card-wrapper').forEach(w => { let sx = 0; w.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }); w.addEventListener('touchend', e => { if (Math.abs(e.changedTouches[0].clientX - sx) > 70) deleteNotification(parseInt(w.dataset.id)); }); });
     }
-    
     function markRead(id) { const n = userNotifications.find(n => n.id === id); if (n) { n.read = true; saveNotificationsToStorage(); } }
-    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('تم حذف الإشعار'); }
+    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('Notification deleted'); }
     window.markRead = markRead; window.deleteNotification = deleteNotification;
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
-    document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('تم نسخ رقم البطاقة!'); } else showToast('لا يوجد رقم بطاقة', true); });
+    document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
 
-    // ==================== التنقل بين الصفحات ====================
+    // ==================== POLL FOR EXTERNAL MESSAGES ====================
+    async function pollExternalMessages() {
+        try {
+            const res = await fetch(`${API_BASE}/api/support/messages?userId=${currentUser?.id}`);
+            if (res.ok) {
+                const messages = await res.json();
+                // Process new messages (you can implement your own logic)
+                console.log('External messages:', messages);
+            }
+        } catch (e) { /* silent fail */ }
+    }
+    setInterval(() => {
+        if (currentUser) pollExternalMessages();
+    }, 30000); // poll every 30 seconds
+
+    // ==================== NAVIGATION ====================
     const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
     function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
     function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
@@ -818,7 +795,7 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // ==================== المحتوى ====================
+    // ==================== CONTENT (with shimmer removal) ====================
     async function loadContentData() {
         const all = await fetchAllData();
         contentData = {
@@ -827,20 +804,15 @@
         renderCarousel(contentData.images);
         renderAllContent();
     }
-    
     function renderAllContent() {
         renderNews(contentData.news); renderServices('digitalContainer', contentData.digital, 'fas fa-code');
         renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
         renderProducts(contentData.products); renderSocial(contentData.social);
     }
-    
-    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">لا توجد أخبار</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
-    
-    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> لا توجد خدمات</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-    
-    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">لا توجد منتجات</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
-    
-    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">لا توجد روابط تواصل</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
+    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
+    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
+    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
+    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
 
     let carouselImages = [], currentSlide = 0, slideInterval = null;
     function renderCarousel(images) {
@@ -857,7 +829,7 @@
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
-    // ==================== الوضع المظلم ====================
+    // ==================== DARK MODE ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
     if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
     themeToggle.addEventListener('change', e => { if (e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
@@ -866,11 +838,11 @@
     refreshBtn.onclick = refreshWallet;
 
     setInterval(() => { if (document.hasFocus() && currentUser) loadContentData(); }, 30000);
-    
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered', reg))
+            .catch(err => console.error('SW registration failed', err));
     }
-    
     loadContentData();
 </script>
 </body>
