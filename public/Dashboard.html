@@ -8,36 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
             color: #e5e5e5;
         }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 3px; }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #3b82f6;
-            border-radius: 3px;
-        }
-
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        .admin-container { display: flex; min-height: 100vh; }
 
         /* Sidebar */
         .sidebar {
@@ -52,34 +33,10 @@
             z-index: 100;
             transition: transform 0.3s ease;
         }
-
-        .sidebar-header {
-            padding: 20px 16px;
-            border-bottom: 1px solid #2a2a2a;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .sidebar-header img {
-            width: 36px;
-            height: 36px;
-            object-fit: contain;
-            border-radius: 10px;
-        }
-
-        .sidebar-header h2 {
-            font-size: 1rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .sidebar-nav {
-            padding: 16px 12px;
-        }
-
+        .sidebar-header { padding: 20px 16px; border-bottom: 1px solid #2a2a2a; display: flex; align-items: center; gap: 10px; }
+        .sidebar-header img { width: 36px; height: 36px; object-fit: contain; border-radius: 10px; }
+        .sidebar-header h2 { font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sidebar-nav { padding: 16px 12px; }
         .nav-item {
             display: flex;
             align-items: center;
@@ -94,22 +51,9 @@
             font-size: 0.85rem;
             position: relative;
         }
-
-        .nav-item i {
-            width: 22px;
-            font-size: 1rem;
-        }
-
-        .nav-item:hover {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-        }
-
-        .nav-item.active {
-            background: rgba(59, 130, 246, 0.15);
-            color: #3b82f6;
-        }
-
+        .nav-item i { width: 22px; font-size: 1rem; }
+        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .nav-item.active { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
         .badge {
             display: inline-flex;
             align-items: center;
@@ -125,17 +69,16 @@
             margin-left: auto;
         }
 
-        /* Main Content - مع مسافة للشريط السفلي */
+        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 260px;
             padding: 20px 24px;
-            padding-bottom: 32px;
             background: #0a0a0a;
             min-height: 100vh;
         }
 
-        /* Status Bar - شريط ثابت في الأسفل */
+        /* Status Bar */
         .status-bar {
             position: fixed;
             bottom: 0;
@@ -152,149 +95,35 @@
             font-size: 0.7rem;
             font-weight: 500;
             color: white;
-            backdrop-filter: blur(4px);
         }
-
-        .status-bar i {
-            font-size: 0.7rem;
-        }
-
-        .status-bar.success {
-            background: #10b981;
-        }
-
-        .status-bar.error {
-            background: #ef4444;
-        }
-
-        .status-bar.warning {
-            background: #f59e0b;
-        }
-
-        .status-bar.info {
-            background: #3b82f6;
-        }
-
-        .status-bar .status-text {
-            margin-left: 6px;
-        }
-
-        @media (max-width: 768px) {
-            .status-bar {
-                left: 0;
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-                padding-bottom: 48px;
-            }
-        }
+        .status-bar.success { background: #10b981; }
+        .status-bar.error { background: #ef4444; }
+        .status-bar.warning { background: #f59e0b; }
+        .status-bar.info { background: #3b82f6; }
+        @media (max-width: 768px) { .status-bar { left: 0; } .main-content { margin-left: 0; padding: 16px; padding-bottom: 48px; } }
 
         /* Sections */
-        .section-page {
-            display: none;
-            animation: fadeIn 0.25s ease;
-        }
-
-        .section-page.active-page {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .section-page { display: none; animation: fadeIn 0.25s ease; }
+        .section-page.active-page { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* Cards */
-        .card {
-            background: #121212;
-            border-radius: 20px;
-            border: 1px solid #2a2a2a;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #ffffff;
-        }
+        .card { background: #121212; border-radius: 20px; border: 1px solid #2a2a2a; padding: 20px; margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #ffffff; }
 
         /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: #121212;
-            border-radius: 16px;
-            padding: 16px;
-            border: 1px solid #2a2a2a;
-            text-align: center;
-        }
-
-        .stat-card i {
-            font-size: 1.6rem;
-            color: #3b82f6;
-            margin-bottom: 8px;
-        }
-
-        .stat-card h3 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
-        .stat-card p {
-            color: #9ca3af;
-            font-size: 0.7rem;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-card { background: #121212; border-radius: 16px; padding: 16px; border: 1px solid #2a2a2a; text-align: center; }
+        .stat-card i { font-size: 1.6rem; color: #3b82f6; margin-bottom: 8px; }
+        .stat-card h3 { font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .stat-card p { color: #9ca3af; font-size: 0.7rem; }
 
         /* Form Elements */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-            font-size: 0.75rem;
-            color: #9ca3af;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 14px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            color: #e5e5e5;
-            transition: all 0.2s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.75rem; color: #9ca3af; }
+        input, select, textarea { width: 100%; padding: 10px 14px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #e5e5e5; transition: all 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; }
 
         /* Buttons */
         button {
@@ -311,350 +140,71 @@
             gap: 6px;
             font-size: 0.8rem;
         }
-
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #2a2a2a;
-            color: #e5e5e5;
-        }
-
-        .btn-outline:hover {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: #3b82f6;
-            transform: none;
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #10b981, #059669);
-        }
-
-        .action-buttons-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 16px;
-            justify-content: flex-end;
-        }
+        button:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-outline { background: transparent; border: 1px solid #2a2a2a; color: #e5e5e5; }
+        .btn-outline:hover { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; transform: none; }
+        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .action-buttons-row { display: flex; gap: 10px; margin-bottom: 16px; justify-content: flex-end; }
 
         /* Items Grid */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 16px;
-        }
-
-        .item-card {
-            background: #1a1a1a;
-            border-radius: 16px;
-            border: 1px solid #2a2a2a;
-            padding: 16px;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .item-card:hover {
-            border-color: #3b82f6;
-        }
-
-        .drag-handle {
-            cursor: grab;
-            color: #6b7280;
-            position: absolute;
-            top: 12px;
-            right: 12px;
-        }
-
-        .item-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .item-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid #2a2a2a;
-        }
-
-        .image-preview {
-            width: 100%;
-            max-height: 140px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid #2a2a2a;
-        }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+        .item-card { background: #1a1a1a; border-radius: 16px; border: 1px solid #2a2a2a; padding: 16px; transition: all 0.2s; position: relative; }
+        .item-card:hover { border-color: #3b82f6; }
+        .drag-handle { cursor: grab; color: #6b7280; position: absolute; top: 12px; right: 12px; }
+        .item-info { display: flex; flex-direction: column; gap: 10px; }
+        .item-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #2a2a2a; }
+        .image-preview { width: 100%; max-height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #2a2a2a; }
 
         /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 22px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #2a2a2a;
-            transition: 0.2s;
-            border-radius: 22px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: 0.2s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: #10b981;
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(22px);
-        }
+        .toggle-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2a2a2a; transition: 0.2s; border-radius: 22px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
+        input:checked + .toggle-slider { background-color: #10b981; }
+        input:checked + .toggle-slider:before { transform: translateX(22px); }
 
         /* Support Cards */
-        .support-card {
-            background: #1a1a1a;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid #2a2a2a;
-            transition: all 0.2s;
-        }
-
-        .support-card:hover {
-            border-color: #3b82f6;
-        }
-
-        .support-card.unread {
-            border-left: 3px solid #3b82f6;
-        }
-
-        .support-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #2a2a2a;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .support-field {
-            background: rgba(59, 130, 246, 0.2);
-            color: #3b82f6;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.65rem;
-            font-weight: 600;
-        }
-
-        .support-subject {
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: #ffffff;
-            font-size: 0.85rem;
-        }
-
-        .support-details {
-            color: #9ca3af;
-            font-size: 0.8rem;
-            margin-bottom: 6px;
-        }
-
-        .support-date {
-            font-size: 0.65rem;
-            color: #6b7280;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #6b7280;
-        }
-
-        .empty-state i {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
+        .support-card { background: #1a1a1a; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid #2a2a2a; transition: all 0.2s; }
+        .support-card:hover { border-color: #3b82f6; }
+        .support-card.unread { border-left: 3px solid #3b82f6; background: rgba(59, 130, 246, 0.05); }
+        .support-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a; flex-wrap: wrap; gap: 6px; }
+        .support-field { background: rgba(59, 130, 246, 0.2); color: #3b82f6; padding: 3px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; }
+        .support-subject { font-weight: 600; margin-bottom: 6px; color: #ffffff; font-size: 0.85rem; }
+        .support-details { color: #9ca3af; font-size: 0.8rem; margin-bottom: 6px; }
+        .support-date { font-size: 0.65rem; color: #6b7280; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #6b7280; }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.5; }
 
         /* Icon Picker */
-        .icon-color-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .icon-preview {
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 1px solid #2a2a2a;
-            font-size: 1.2rem;
-        }
+        .icon-color-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .icon-preview { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a; font-size: 1.2rem; }
 
         /* Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.2s;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: #121212; border-radius: 24px; width: 90%; max-width: 650px; max-height: 80vh; overflow: auto; padding: 20px; border: 1px solid #2a2a2a; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid #2a2a2a; }
+        .icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; }
+        .icon-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px; border-radius: 12px; cursor: pointer; border: 1px solid #2a2a2a; background: #1a1a1a; transition: all 0.2s; }
+        .icon-item:hover { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
+        .icon-item i { font-size: 1.4rem; color: #3b82f6; }
+        .icon-item span { font-size: 0.6rem; color: #9ca3af; }
 
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
+        /* Toast */
+        .toast-notification { position: fixed; bottom: 20px; right: 20px; background: #1a1a1a; border-radius: 40px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); border-left: 3px solid #10b981; z-index: 2000; transform: translateX(120%); transition: transform 0.3s ease; }
+        .toast-notification.show { transform: translateX(0); }
+        .toast-icon { width: 24px; height: 24px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #10b981; }
+        .toast-message { color: #e5e5e5; font-size: 0.8rem; font-weight: 500; }
 
-        .modal-content {
-            background: #121212;
-            border-radius: 24px;
-            width: 90%;
-            max-width: 650px;
-            max-height: 80vh;
-            overflow: auto;
-            padding: 20px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        .icons-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 12px;
-        }
-
-        .icon-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 1px solid #2a2a2a;
-            background: #1a1a1a;
-            transition: all 0.2s;
-        }
-
-        .icon-item:hover {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: #3b82f6;
-        }
-
-        .icon-item i {
-            font-size: 1.4rem;
-            color: #3b82f6;
-        }
-
-        .icon-item span {
-            font-size: 0.6rem;
-            color: #9ca3af;
-        }
-
-        /* Menu Toggle */
-        .menu-toggle {
-            display: none;
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 201;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 260px;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-                padding-bottom: 56px;
-            }
-            .menu-toggle {
-                display: block;
-            }
-            .items-grid {
-                grid-template-columns: 1fr;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-        }
+        .menu-toggle { display: none; position: fixed; top: 16px; left: 16px; z-index: 201; background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 12px; cursor: pointer; }
+        @media (max-width: 768px) { .menu-toggle { display: block; } .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } .items-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 <div class="admin-container">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo">
-            <h2>B.Y PRO Admin</h2>
-        </div>
+        <div class="sidebar-header"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"><h2>B.Y PRO Admin</h2></div>
         <nav class="sidebar-nav">
             <div class="nav-item active" data-section="homeImages"><i class="fas fa-images"></i> Home Images</div>
             <div class="nav-item" data-section="news"><i class="fas fa-newspaper"></i> News</div>
@@ -672,14 +222,8 @@
         <!-- Home Images -->
         <div id="homeImagesSection" class="section-page active-page">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-images"></i> Home Images</h2>
-                    <button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-images"></i> Home Images</h2><button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button></div>
+                <div class="action-buttons-row"><button onclick="refreshImages()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button><button onclick="saveImages()" class="btn-success"><i class="fas fa-save"></i> Save All</button></div>
                 <div id="imagesContainer" class="items-grid"></div>
             </div>
         </div>
@@ -687,14 +231,8 @@
         <!-- News -->
         <div id="newsSection" class="section-page">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-newspaper"></i> News</h2>
-                    <button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshNews()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                    <button onclick="saveNews()" class="btn-success"><i class="fas fa-save"></i> Save All</button>
-                </div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-newspaper"></i> News</h2><button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button></div>
+                <div class="action-buttons-row"><button onclick="refreshNews()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button><button onclick="saveNews()" class="btn-success"><i class="fas fa-save"></i> Save All</button></div>
                 <div id="newsContainer" class="items-grid"></div>
             </div>
         </div>
@@ -748,11 +286,11 @@
     </main>
 </div>
 
-<!-- Status Bar - ثابت في الأسفل -->
-<div class="status-bar success" id="statusBar">
-    <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
-    <span id="statusText">Connected</span>
-</div>
+<!-- Status Bar -->
+<div class="status-bar success" id="statusBar"><i class="fas fa-circle" style="font-size: 0.5rem;"></i><span id="statusText">Ready</span></div>
+
+<!-- Toast -->
+<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <!-- Icon Modal -->
 <div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3>Select Icon</h3><button class="btn-outline" onclick="closeIconModal()">Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
@@ -769,7 +307,7 @@
     let eventSource = null;
     let hasVisitedSupport = false;
 
-    // Icon List with Money Icons
+    // Icon List
     const iconList = [
         'fab fa-facebook-f', 'fab fa-instagram', 'fab fa-twitter', 'fab fa-youtube', 'fab fa-tiktok',
         'fab fa-whatsapp', 'fab fa-telegram', 'fab fa-discord', 'fab fa-github', 'fab fa-linkedin-in',
@@ -788,31 +326,43 @@
 
     // ==================== Status Bar ====================
     let statusTimeout = null;
-
     function setStatus(status, message) {
         const bar = document.getElementById('statusBar');
         const statusText = document.getElementById('statusText');
         if (!bar) return;
-        
         bar.className = 'status-bar';
         if (status === 'success') bar.classList.add('success');
         else if (status === 'error') bar.classList.add('error');
         else if (status === 'warning') bar.classList.add('warning');
         else if (status === 'info') bar.classList.add('info');
-        
-        if (statusText) statusText.textContent = message || (status === 'success' ? 'Connected' : status);
-        
+        if (statusText) statusText.textContent = message || (status === 'success' ? 'Ready' : status);
         if (statusTimeout) clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(() => {
-            if (statusText && status !== 'error') statusText.textContent = 'Ready';
-        }, 4000);
+        statusTimeout = setTimeout(() => { if (statusText && status !== 'error') statusText.textContent = 'Ready'; }, 4000);
+    }
+
+    function showToast(msg, isErr = false) {
+        const toast = document.getElementById('toast'), toastMsg = document.getElementById('toastMessage'), toastIcon = toast.querySelector('.toast-icon');
+        toastMsg.textContent = msg;
+        if (isErr) {
+            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            toastIcon.style.background = 'rgba(239, 68, 68, 0.2)';
+            toastIcon.style.color = '#ef4444';
+            toast.style.borderLeftColor = '#ef4444';
+        } else {
+            toastIcon.innerHTML = '<i class="fas fa-check"></i>';
+            toastIcon.style.background = 'rgba(16, 185, 129, 0.2)';
+            toastIcon.style.color = '#10b981';
+            toast.style.borderLeftColor = '#10b981';
+        }
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
     }
 
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
     // ==================== SSE Connection ====================
     function connectToStream() {
-        if (eventSource) eventSource.close();
+        if (eventSource) { eventSource.close(); eventSource = null; }
         
         eventSource = new EventSource('/api/events');
         
@@ -836,7 +386,7 @@
                     }
                 } else if (data.type === 'support_reply') {
                     loadAllData();
-                    setStatus('success', `Reply sent to ${data.data?.recipient || 'user'}`);
+                    setStatus('success', `Reply sent successfully`);
                 } else if (data.type === 'notification_new') {
                     loadAllData();
                     setStatus('info', `Notification: ${data.data?.title || 'New'}`);
@@ -844,9 +394,7 @@
                 } else if (data.type === 'data_update') {
                     loadAllData();
                 }
-            } catch (err) {
-                console.error('SSE parse error:', err);
-            }
+            } catch (err) { console.error('SSE parse error:', err); }
         };
         
         eventSource.onerror = () => {
@@ -859,13 +407,9 @@
 
     // ==================== Badge Updates ====================
     function updateNotificationBadge() {
-        const notifications = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
-        const unreadCount = notifications.filter(n => !n.read).length;
+        const unreadCount = 0; // يمكن تعديل حسب الحاجة
         const badge = document.getElementById('notificationBadge');
-        if (badge) {
-            badge.style.display = unreadCount ? 'inline-flex' : 'none';
-            if (unreadCount) badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-        }
+        if (badge) { badge.style.display = 'none'; }
     }
 
     function updateSupportBadge() {
@@ -882,7 +426,6 @@
         const badge = document.getElementById('supportBadge');
         if (badge) badge.style.display = 'none';
         supportMessages.forEach(msg => { msg.read = true; });
-        saveAllData();
         updateStatsCards();
     }
     
@@ -949,9 +492,11 @@
             });
             if (!response.ok) throw new Error('Save failed');
             setStatus('success', 'All changes saved');
+            showToast('All changes saved successfully');
         } catch (err) {
             console.error('Save failed:', err);
             setStatus('error', 'Save failed');
+            showToast('Save failed', true);
         }
     }
 
@@ -964,14 +509,14 @@
             color = document.getElementById('broadcastColor').value;
             icon = broadcastIcon;
             recipient = 'all';
-            if (!title) return setStatus('warning', 'Enter title');
+            if (!title) { setStatus('warning', 'Enter title'); return; }
         } else {
             recipient = document.getElementById('individualRecipient').value;
             title = document.getElementById('individualTitle').value;
             message = document.getElementById('individualDesc').value;
             color = document.getElementById('individualColor').value;
             icon = individualIcon;
-            if (!recipient || !title) return setStatus('warning', 'Enter recipient and title');
+            if (!recipient || !title) { setStatus('warning', 'Enter recipient and title'); return; }
         }
         
         try {
@@ -982,6 +527,7 @@
             });
             if (res.ok) {
                 setStatus('success', `Sent to ${recipient === 'all' ? 'all' : recipient}`);
+                showToast(`Notification sent to ${recipient === 'all' ? 'all users' : recipient}`);
                 if (type === 'broadcast') {
                     document.getElementById('broadcastTitle').value = '';
                     document.getElementById('broadcastDesc').value = '';
@@ -992,9 +538,11 @@
                 }
             } else {
                 setStatus('error', 'Send failed');
+                showToast('Failed to send notification', true);
             }
         } catch (err) {
             setStatus('error', 'Connection error');
+            showToast('Connection error', true);
         }
     }
     
@@ -1020,6 +568,7 @@
             
             if (response.ok) {
                 setStatus('success', `Reply sent to ${recipient}`);
+                showToast(`Reply sent to ${recipient}`);
                 const message = supportMessages.find(m => m.id === messageId);
                 if (message) {
                     message.replied = true;
@@ -1027,13 +576,15 @@
                     message.replyDate = new Date().toISOString();
                 }
                 renderSupportMessages();
-                saveAllData();
+                await saveAllData();
             } else {
                 setStatus('error', 'Failed to send reply');
+                showToast('Failed to send reply', true);
             }
         } catch (err) {
             console.error('Reply error:', err);
             setStatus('error', 'Failed to send reply');
+            showToast('Failed to send reply', true);
         }
     }
     
@@ -1043,6 +594,7 @@
             renderSupportMessages(); 
             saveAllData(); 
             setStatus('success', 'Message deleted');
+            showToast('Message deleted');
         } 
     }
     
@@ -1087,6 +639,7 @@
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
                     setStatus('success', 'Image uploaded');
+                    showToast('Image uploaded successfully');
                 }
             }
         };
@@ -1308,7 +861,7 @@
     
     function renderAll() { renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages(); }
 
-    // ==================== Save Functions ====================
+    // ==================== Save Functions (Manual Save) ====================
     async function saveImages() { await saveAllData(); }
     async function saveNews() { await saveAllData(); }
     async function saveDigital() { await saveAllData(); }
@@ -1316,6 +869,7 @@
     async function savePhone() { await saveAllData(); }
     async function saveProducts() { await saveAllData(); }
     async function saveSocial() { await saveAllData(); }
+    
     async function refreshImages() { await loadAllData(); }
     async function refreshNews() { await loadAllData(); }
     async function refreshDigital() { await loadAllData(); }
