@@ -58,10 +58,11 @@ async function saveData(data) {
     }
 }
 
-// SSE Clients
+// SSE Clients - تخزين العملاء المتصلين
 let clients = [];
 
 app.get('/api/events', (req, res) => {
+    // إعدادات SSE
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -70,20 +71,39 @@ app.get('/api/events', (req, res) => {
     });
     
     const clientId = Date.now();
-    clients.push({ id: clientId, res });
+    const newClient = { id: clientId, res };
+    clients.push(newClient);
     
-    res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected' })}\n\n`);
+    console.log(`✅ New SSE client connected: ${clientId}, Total clients: ${clients.length}`);
+    
+    // إرسال رسالة ترحيب
+    res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to server', clientId })}\n\n`);
+    
+    // إرسال ping كل 30 ثانية للحفاظ على الاتصال
+    const pingInterval = setInterval(() => {
+        try {
+            res.write(`: ping\n\n`);
+        } catch (err) {
+            clearInterval(pingInterval);
+        }
+    }, 30000);
     
     req.on('close', () => {
+        clearInterval(pingInterval);
         clients = clients.filter(client => client.id !== clientId);
+        console.log(`❌ SSE client disconnected: ${clientId}, Total clients: ${clients.length}`);
     });
 });
 
+// دالة لإرسال التحديثات لجميع العملاء
 function broadcastUpdate(type, data) {
+    console.log(`📢 Broadcasting ${type} to ${clients.length} clients`);
     clients.forEach(client => {
         try {
             client.res.write(`data: ${JSON.stringify({ type, data })}\n\n`);
-        } catch (err) {}
+        } catch (err) {
+            console.error(`Error sending to client ${client.id}:`, err.message);
+        }
     });
 }
 
@@ -112,12 +132,13 @@ app.put('/api/data', async (req, res) => {
     }
 });
 
-// Support message endpoint
+// Support message endpoint - مع إشعار فوري
 app.post('/api/support', async (req, res) => {
     try {
         const newMessage = req.body;
         newMessage.date = new Date().toISOString();
         newMessage.id = Date.now();
+        newMessage.read = false; // إضافة حالة القراءة
         
         const currentData = await fetchData();
         const support = currentData.support || [];
@@ -126,9 +147,11 @@ app.post('/api/support', async (req, res) => {
         
         await saveData(currentData);
         
+        // إرسال إشعار فوري لجميع المشرفين المتصلين
         broadcastUpdate('support_new', newMessage);
-        broadcastUpdate('data_update', currentData);
+        broadcastUpdate('support_unread_count', { count: support.filter(m => !m.read).length });
         
+        console.log(`📨 New support message from ${newMessage.sender}`);
         res.json({ success: true, message: 'Support request received' });
     } catch (error) {
         console.error('Support error:', error);
@@ -136,12 +159,40 @@ app.post('/api/support', async (req, res) => {
     }
 });
 
-// Notification endpoint
+// تحديث حالة قراءة رسالة الدعم
+app.post('/api/support/read/:id', async (req, res) => {
+    try {
+        const messageId = parseInt(req.params.id);
+        const currentData = await fetchData();
+        const support = currentData.support || [];
+        const message = support.find(m => m.id === messageId);
+        if (message) {
+            message.read = true;
+            await saveData(currentData);
+            broadcastUpdate('support_read', { id: messageId });
+            broadcastUpdate('support_unread_count', { count: support.filter(m => !m.read).length });
+        }
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error marking message as read:', error);
+        res.status(500).json({ error: 'Failed to update message' });
+    }
+});
+
+// Notification endpoint - إرسال إشعارات
 app.post('/api/notifications', async (req, res) => {
     try {
-        const newNotification = req.body;
-        newNotification.id = Date.now();
-        newNotification.date = new Date().toISOString();
+        const { title, message, icon, color, recipient } = req.body;
+        const newNotification = {
+            id: Date.now(),
+            title,
+            message,
+            icon: icon || 'fas fa-bell',
+            color: color || '#3b82f6',
+            date: new Date().toISOString(),
+            read: false,
+            recipient: recipient || 'all' // 'all' أو اسم مستخدم محدد
+        };
         
         const currentData = await fetchData();
         const notifications = currentData.notifications || [];
@@ -149,13 +200,35 @@ app.post('/api/notifications', async (req, res) => {
         currentData.notifications = notifications;
         await saveData(currentData);
         
+        // إرسال الإشعار لجميع المشرفين المتصلين
         broadcastUpdate('notification_new', newNotification);
-        broadcastUpdate('data_update', currentData);
+        broadcastUpdate('notification_unread_count', { count: notifications.filter(n => !n.read).length });
         
-        res.json({ success: true });
+        console.log(`🔔 Notification sent: ${title} to ${recipient || 'all'}`);
+        res.json({ success: true, notification: newNotification });
     } catch (error) {
         console.error('Error sending notification:', error);
         res.status(500).json({ error: 'Failed to send notification' });
+    }
+});
+
+// تحديث حالة قراءة الإشعار
+app.post('/api/notifications/read/:id', async (req, res) => {
+    try {
+        const notifId = parseInt(req.params.id);
+        const currentData = await fetchData();
+        const notifications = currentData.notifications || [];
+        const notification = notifications.find(n => n.id === notifId);
+        if (notification) {
+            notification.read = true;
+            await saveData(currentData);
+            broadcastUpdate('notification_read', { id: notifId });
+            broadcastUpdate('notification_unread_count', { count: notifications.filter(n => !n.read).length });
+        }
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error marking notification as read:', error);
+        res.status(500).json({ error: 'Failed to update notification' });
     }
 });
 
@@ -168,21 +241,14 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         
         console.log('Uploading image:', req.file.originalname, 'Size:', req.file.size);
         
-        // تحويل الصورة إلى base64
         const base64Image = req.file.buffer.toString('base64');
-        
-        // إنشاء FormData للطلب إلى ImgBB
         const formData = new FormData();
         formData.append('key', process.env.IMGBB_API_KEY);
         formData.append('image', base64Image);
         
-        // إرسال الصورة إلى ImgBB
         const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
-            headers: {
-                ...formData.getHeaders(),
-                'Accept': 'application/json'
-            },
-            timeout: 30000 // 30 seconds timeout
+            headers: { ...formData.getHeaders(), 'Accept': 'application/json' },
+            timeout: 30000
         });
         
         if (response.data && response.data.success && response.data.data && response.data.data.url) {
@@ -194,39 +260,23 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         }
         
     } catch (error) {
-        console.error('Upload error details:', {
-            message: error.message,
-            response: error.response?.data,
-            status: error.response?.status
-        });
-        
-        // رسالة خطأ مفيدة
-        let errorMessage = 'Upload failed';
-        if (error.response?.data?.error?.message) {
-            errorMessage = error.response.data.error.message;
-        } else if (error.message) {
-            errorMessage = error.message;
-        }
-        
-        res.status(500).json({ error: errorMessage });
+        console.error('Upload error:', error.message);
+        res.status(500).json({ error: 'Upload failed: ' + error.message });
     }
 });
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString() });
+    res.json({ status: 'ok', timestamp: new Date().toISOString(), clients: clients.length });
 });
 
-// Serve static files - fallback to index.html for SPA
+// Serve static files
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
-    console.log(`📁 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
-    console.log(`💾 JSON Bin ID: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
-    console.log(`☁️  Cloudinary: Disabled (using ImgBB instead)`);
+    console.log(`💾 JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
 });
