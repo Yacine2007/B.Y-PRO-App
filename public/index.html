@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
     <meta name="application-name" content="B.Y PRO App">
     <title>B.Y PRO App</title>
@@ -433,7 +434,6 @@
 
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
-    let eventSource = null;
     let toastTimeout = null;
 
     // ==================== UTILITIES ====================
@@ -457,83 +457,47 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== SSE CONNECTION ====================
-    function connectToSSE() {
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
-        }
-        if (!currentUser) return;
-        try {
-            eventSource = new EventSource(`${API_BASE}/api/events`);
-            eventSource.onopen = () => { console.log('SSE connected'); };
-            eventSource.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.type === 'support_reply') {
-                        showToast(`Reply: ${(data.data?.message || 'Support reply').substring(0, 50)}...`);
-                        addNotification('Support Reply', data.data?.message || 'You have a new reply', 'fas fa-reply', '#10b981');
-                    }
-                    else if (data.type === 'notification_new') {
-                        const title = data.data?.title || 'New Notification';
-                        const message = data.data?.message || '';
-                        const recipient = data.data?.recipient;
-                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
-                            showToast(title);
-                            addNotification(title, message, data.data?.icon || 'fas fa-bell', data.data?.color || '#3b82f6');
-                        }
-                    }
-                    else if (data.type === 'data_update') { loadAllContent(); }
-                    else if (data.type === 'wallet_update') {
-                        if (data.data?.balance !== undefined && userWalletData) {
-                            userWalletData.balance = data.data.balance;
-                            updateWalletUI();
-                        }
-                    }
-                } catch (err) { console.error('SSE parse error:', err); }
-            };
-            eventSource.onerror = () => {
-                eventSource.close();
-                eventSource = null;
-                if (currentUser) setTimeout(() => connectToSSE(), 5000);
-            };
-        } catch (err) { console.error('SSE error:', err); }
-    }
-    function disconnectSSE() { if (eventSource) { eventSource.close(); eventSource = null; } }
-
-    // ==================== DATA API ====================
-    async function fetchContentData() {
-        try {
-            const res = await fetch(`${API_BASE}/api/data`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return await res.json();
-        } catch (e) { 
-            console.error('Fetch error:', e); 
-            return { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; 
-        }
-    }
-
     // ==================== WALLET ====================
     async function loadUserWallet() {
         document.getElementById('walletBalanceContainer').style.display = 'flex';
         document.getElementById('walletBalanceValue').style.display = 'none';
         document.getElementById('userCardCode').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
         document.getElementById('homeWalletAmount').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
+        
         try {
             const response = await fetch(`${FINANCIAL_API}/api/financial/1`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const result = await response.json();
+            
             if (result.success && result.data) {
                 userWalletData = result.data;
+                console.log('✅ Wallet loaded:', userWalletData);
                 updateWalletUI();
-            } else throw new Error('Invalid response');
+            } else {
+                throw new Error('Invalid response');
+            }
         } catch (error) {
-            console.error('Wallet error:', error);
-            userWalletData = { id: "1", name: currentUser?.name || "User", balance: 0, cardCode: "byppcn-fallback", transactions: [] };
-            updateWalletUI();
+            console.error('❌ Wallet error:', error);
+            // Try to load from localStorage fallback
+            const saved = localStorage.getItem('bypro_wallet');
+            if (saved) {
+                try {
+                    userWalletData = JSON.parse(saved);
+                    updateWalletUI();
+                } catch(e) { userWalletData = null; }
+            }
+            if (!userWalletData) {
+                userWalletData = { id: "1", name: currentUser?.name || "User", balance: 0, cardCode: "byppcn-fallback", transactions: [] };
+                updateWalletUI();
+            }
         }
     }
-    async function refreshWallet() { if (currentUser) await loadUserWallet(); }
+    
+    async function refreshWallet() {
+        if (!currentUser) return;
+        await loadUserWallet();
+    }
+    
     function updateWalletUI() {
         if (!userWalletData) return;
         document.getElementById('walletBalanceContainer').style.display = 'none';
@@ -541,13 +505,19 @@
         document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
         document.getElementById('homeWalletAmount').innerHTML = `$${userWalletData.balance.toFixed(2)}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
+        
+        // Save to localStorage
+        localStorage.setItem('bypro_wallet', JSON.stringify(userWalletData));
+        
         const tx = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = tx.length;
         const container = document.getElementById('walletTransactionsContainer');
+        
         if (!tx.length) {
             container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
             return;
         }
+        
         container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
@@ -558,6 +528,7 @@
     const confirmDepositBtn = document.getElementById('confirmDepositBtn');
     const depositAmount = document.getElementById('depositAmount');
     const depositPassword = document.getElementById('depositPassword');
+    
     depositBtn.onclick = () => paymentModal.classList.add('active');
     closePaymentModal.onclick = () => { paymentModal.classList.remove('active'); depositAmount.value = ''; depositPassword.value = ''; };
     confirmDepositBtn.onclick = async () => {
@@ -622,22 +593,27 @@
         const avatarDiv = document.getElementById('avatarIcon');
         if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+        
         loadUserWallet();
-        disconnectSSE();
-        connectToSSE();
+        
+        // No welcome toast anymore
         if (!welcomeShown) { welcomeShown = true; }
     }
+    
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
         onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadAllContent(); },
         onLogout: () => { 
-            currentUser = null; userWalletData = null; 
+            currentUser = null; 
+            userWalletData = null; 
             document.getElementById('userName').textContent = 'User'; 
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
             document.getElementById('homeWalletAmount').innerHTML = '$0.00'; 
-            welcomeShown = false; disconnectSSE(); auth.show(); 
+            welcomeShown = false; 
+            auth.show(); 
         }
     });
+    
     setTimeout(() => {
         if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
             const u = auth.getCurrentUser();
@@ -706,22 +682,70 @@
 
     // ==================== CONTENT ====================
     async function loadAllContent() {
-        const data = await fetchContentData();
-        contentData = {
-            images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || []
-        };
-        renderCarousel(contentData.images);
-        renderAllContent();
+        try {
+            const res = await fetch(`${API_BASE}/api/data`);
+            if (res.ok) {
+                const data = await res.json();
+                contentData = {
+                    images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || []
+                };
+                renderCarousel(contentData.images);
+                renderAllContent();
+            }
+        } catch (e) { console.error('Content error:', e); }
     }
+    
     function renderAllContent() {
-        renderNews(contentData.news); renderServices('digitalContainer', contentData.digital, 'fas fa-code');
-        renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
-        renderProducts(contentData.products); renderSocial(contentData.social);
+        renderNews(contentData.news); 
+        renderServices('digitalContainer', contentData.digital, 'fas fa-code');
+        renderServices('localContainer', contentData.local, 'fas fa-print'); 
+        renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
+        renderProducts(contentData.products); 
+        renderSocial(contentData.social);
     }
-    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.title)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
-    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
-    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
+    
+    function renderNews(news) { 
+        const c = document.getElementById('newsContainer'); 
+        if (!c) return; 
+        const active = news.filter(n => n.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.title)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); 
+    }
+    
+    function renderServices(cid, services, icon) { 
+        const c = document.getElementById(cid); 
+        if (!c) return; 
+        const active = services.filter(s => s.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; 
+            return; 
+        } 
+        c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); 
+    }
+    
+    function renderProducts(products) { 
+        const c = document.getElementById('productsContainer'); 
+        if (!c) return; 
+        const active = products.filter(p => p.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); 
+    }
+    
+    function renderSocial(social) { 
+        const c = document.getElementById('socialContainer'); 
+        if (!c) return; 
+        if (!social.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); 
+    }
 
     let carouselImages = [], currentSlide = 0, slideInterval = null;
     function renderCarousel(images) {
@@ -750,10 +774,54 @@
     
     // ==================== PWA INSTALLATION ====================
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('SW registered:', reg.scope))
-            .catch(err => console.error('SW failed:', err));
+        const basePath = window.location.pathname.includes('/B.Y-PRO-App/') ? '/B.Y-PRO-App/' : '/';
+        const swPath = basePath + 'sw.js';
+        
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(reg => {
+                if (reg.scope !== basePath) reg.unregister();
+            });
+        });
+        
+        navigator.serviceWorker.register(swPath, { scope: basePath })
+            .then(reg => console.log('✅ SW registered:', reg.scope))
+            .catch(err => console.error('❌ SW failed:', err));
     }
+    
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        console.log('✅ PWA install prompt ready');
+    });
+    
+    window.installPWA = function() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(choice => {
+                if (choice.outcome === 'accepted') console.log('✅ App installed');
+                deferredPrompt = null;
+            });
+        } else {
+            showToast('Use browser menu to install', true);
+        }
+    };
+    
+    // Add install button to sidebar
+    const installBtn = document.createElement('div');
+    installBtn.className = 'nav-item';
+    installBtn.innerHTML = '<i class="fas fa-download"></i><span>Install App</span>';
+    installBtn.onclick = () => window.installPWA();
+    const sidebarNav = document.querySelector('.sidebar-nav');
+    if (sidebarNav && !document.querySelector('.install-item')) {
+        installBtn.classList.add('install-item');
+        sidebarNav.appendChild(installBtn);
+    }
+    
+    window.addEventListener('appinstalled', () => {
+        console.log('✅ B.Y PRO App installed');
+        deferredPrompt = null;
+    });
     
     loadAllContent();
 </script>
