@@ -428,10 +428,10 @@
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    // ==================== SERVER CONFIGURATION (UPDATED) ====================
-    // This server now acts as a proxy to B.Y PRO financial server
-    const API_BASE = window.location.origin;
-    const FINANCIAL_API = `${API_BASE}/api/financial`;
+    // ==================== SERVER CONFIGURATION (FIXED) ====================
+    // Use the correct backend server, not GitHub Pages
+    const API_BASE = "https://b-y-pro-app.onrender.com";
+    const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com/api/financial";
 
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
@@ -512,6 +512,7 @@
             };
             
             eventSource.onerror = () => {
+                console.log('SSE error, reconnecting...');
                 eventSource.close();
                 eventSource = null;
                 if (currentUser) setTimeout(() => connectToSSE(), 5000);
@@ -539,6 +540,7 @@
         
         try {
             const userId = currentUser.id || currentUser.userId || '1';
+            console.log('Fetching wallet from:', `${FINANCIAL_API}/${userId}`);
             const response = await fetch(`${FINANCIAL_API}/${userId}`);
             
             if (!response.ok) {
@@ -773,6 +775,7 @@
     // ==================== CONTENT ====================
     async function loadAllContent() {
         try {
+            console.log('Fetching content from:', `${API_BASE}/api/data`);
             const res = await fetch(`${API_BASE}/api/data`);
             if (res.ok) {
                 const data = await res.json();
@@ -865,7 +868,6 @@
     // ==================== PWA INSTALLATION ====================
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
-        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW not supported'));
     }
     
     let deferredPrompt;
@@ -887,7 +889,6 @@
         }
     };
     
-    // Add install button
     const installBtn = document.createElement('div');
     installBtn.className = 'nav-item';
     installBtn.innerHTML = '<i class="fas fa-download"></i><span>Install App</span>';
