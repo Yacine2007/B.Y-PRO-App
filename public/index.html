@@ -59,6 +59,26 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .wallet-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
         /* Menu Trigger (left side) */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
@@ -252,6 +272,10 @@
         }
         .balance-label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
         .balance-amount { font-size: 1.8rem; font-weight: 700; color: var(--success); }
+        .balance-loading {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            min-height: 60px;
+        }
         .action-buttons { display: flex; gap: 8px; margin-bottom: 16px; }
         .btn-deposit, .btn-refresh {
             flex: 1; padding: 8px; border-radius: 40px; font-weight: 600;
@@ -285,14 +309,14 @@
         }
         .empty-icon { font-size: 1.5rem; margin-bottom: 4px; opacity: 0.5; }
         .empty-text { font-size: 0.65rem; }
-        /* Toast */
+        /* Toast - removed animation, only appears when needed */
         .toast-notification {
-            position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px);
+            position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%);
             background: var(--surface); border-radius: 40px; padding: 8px 16px;
-            display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 2000; transition: transform 0.3s ease; border-left: 3px solid var(--success);
+            display: none; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 2000; border-left: 3px solid var(--success);
         }
-        .toast-notification.show { transform: translateX(-50%) translateY(0); }
+        .toast-notification.show { display: flex; }
         .toast-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: #d1fae5; color: var(--success); }
         .toast-message { font-size: 0.7rem; font-weight: 500; }
         /* Modal */
@@ -354,7 +378,7 @@
 </head>
 <body>
 <div class="app-wrapper">
-    <div class="menu-trigger" id="menuTrigger"><span>&gt;</span><div class="menu-dot" id="menuDot"></div></div>
+    <div class="menu-trigger" id="menuTrigger"><span><i class="fas fa-chevron-right"></i></span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO</span></div>
         <nav class="sidebar-nav">
@@ -376,7 +400,7 @@
         <div id="homePage" class="section-page active-page">
             <div class="home-header">
                 <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div></div>
-                <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount">$0.00</span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
+                <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount"><span class="spinner" style="width:12px;height:12px;"></span></span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
             <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
@@ -388,8 +412,15 @@
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
         <div id="walletPage" class="section-page">
-            <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
-            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
+            <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card"></i><span class="card-code" id="userCardCode"><span class="spinner" style="width:12px;height:12px;"></span></span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
+            <div class="balance-card">
+                <div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div>
+                <div id="walletBalanceContainer" class="balance-loading">
+                    <span class="spinner"></span>
+                    <span>Loading...</span>
+                </div>
+                <div id="walletBalanceValue" class="balance-amount" style="display: none;">$<span id="walletBalance">0.00</span></div>
+            </div>
             <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
             <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
@@ -419,6 +450,7 @@
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
     let eventSource = null;
+    let toastTimeout = null;
 
     // ==================== SSE CONNECTION FOR REAL-TIME UPDATES ====================
     function connectToSSE() {
@@ -427,40 +459,34 @@
         eventSource = new EventSource(`${API_BASE}/api/events`);
         
         eventSource.onopen = () => {
-            console.log('✅ SSE Connected to server');
+            console.log('SSE Connected');
         };
         
         eventSource.onmessage = (e) => {
             try {
                 const data = JSON.parse(e.data);
-                console.log('📨 SSE Received:', data);
+                console.log('SSE Received:', data);
                 
                 if (data.type === 'support_new') {
-                    // New support message
-                    showToast(`📩 New support message from ${data.data?.sender || 'user'}`);
+                    showToast(`New support message from ${data.data?.sender || 'user'}`);
                     addNotification('New Support Message', `From: ${data.data?.sender || 'User'} - ${data.data?.subject || 'No subject'}`, 'fas fa-headset', '#ef4444');
                 }
                 else if (data.type === 'notification_new') {
-                    // New admin notification
-                    showToast(`🔔 ${data.data?.title || 'New notification'}`);
+                    showToast(`${data.data?.title || 'New notification'}`);
                     addNotification(data.data?.title || 'Notification', data.data?.message || '', data.data?.icon || 'fas fa-bell', data.data?.color || '#3b82f6');
                 }
                 else if (data.type === 'support_reply') {
-                    // Reply to support message
-                    showToast(`📨 Reply received for your support message`);
+                    showToast(`Reply received for your support message`);
                     addNotification('Support Reply', data.data?.message || 'You have a new reply to your support request', 'fas fa-reply', '#10b981');
                 }
                 else if (data.type === 'data_update') {
-                    // Content update (news, services, etc.)
-                    showToast(`🔄 Content updated`);
                     loadAllContent();
                 }
                 else if (data.type === 'wallet_update') {
-                    // Wallet balance update
                     if (data.data?.balance !== undefined) {
                         userWalletData.balance = data.data.balance;
                         updateWalletUI();
-                        showToast(`💰 Balance updated: $${data.data.balance}`);
+                        showToast(`Balance updated: $${data.data.balance}`);
                     }
                 }
             } catch (err) {
@@ -491,7 +517,8 @@
             toast.style.borderLeftColor = '#10b981';
         }
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2200);
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
@@ -510,10 +537,13 @@
 
     // ==================== WALLET - DIRECT FROM FINANCIAL API ====================
     async function loadUserWallet() {
+        // Show loading state
+        document.getElementById('walletBalanceContainer').style.display = 'flex';
+        document.getElementById('walletBalanceValue').style.display = 'none';
+        document.getElementById('userCardCode').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
+        document.getElementById('homeWalletAmount').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
+        
         try {
-            showToast('Loading wallet data...');
-            
-            // Fetch directly from the financial API
             const response = await fetch(`${FINANCIAL_API}/api/financial/1`);
             
             if (!response.ok) {
@@ -524,19 +554,14 @@
             
             if (result.success && result.data) {
                 userWalletData = result.data;
-                console.log('✅ Wallet loaded successfully:', userWalletData);
-                console.log('Card Code:', userWalletData.cardCode);
-                console.log('Balance:', userWalletData.balance);
+                console.log('Wallet loaded:', userWalletData);
                 updateWalletUI();
-                showToast(`Wallet loaded: $${userWalletData.balance}`);
-                return userWalletData;
             } else {
-                throw new Error('Invalid response structure');
+                throw new Error('Invalid response');
             }
         } catch (error) {
-            console.error('❌ Error loading wallet:', error);
+            console.error('Error loading wallet:', error);
             showToast('Failed to load wallet data', true);
-            // Create fallback wallet
             userWalletData = {
                 id: "1",
                 name: currentUser?.name || "User",
@@ -546,7 +571,6 @@
                 transactions: []
             };
             updateWalletUI();
-            return userWalletData;
         }
     }
 
@@ -557,8 +581,12 @@
 
     function updateWalletUI() {
         if (!userWalletData) return;
+        
+        // Hide loading, show values
+        document.getElementById('walletBalanceContainer').style.display = 'none';
+        document.getElementById('walletBalanceValue').style.display = 'block';
         document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
-        document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
+        document.getElementById('homeWalletAmount').innerHTML = `$${userWalletData.balance.toFixed(2)}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
         
         const tx = userWalletData.transactions || [];
@@ -593,11 +621,9 @@
         if (isNaN(amount) || amount <= 0) { showToast('Enter a valid amount', true); return; }
         if (!password) { showToast('Enter your password', true); return; }
         try {
-            // Simple password check (you can replace with real verification)
             const passwordValid = (password === '1234' || password === currentUser?.id);
             if (!passwordValid) { showToast('Incorrect password', true); return; }
             
-            // Update local wallet
             userWalletData.balance += amount;
             if (!userWalletData.transactions) userWalletData.transactions = [];
             userWalletData.transactions.unshift({
@@ -642,7 +668,7 @@
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
-                    formMsg.innerHTML = '<span style="color:#10b981;">✓ Sent! We\'ll reply within 24h.</span>';
+                    formMsg.innerHTML = '<span style="color:#10b981;">Sent! We will reply within 24h.</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 2500);
                     addNotification('Support Request Sent', `Your request "${topic}" has been received.`, 'fas fa-headset', '#10b981');
@@ -666,10 +692,7 @@
         if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         
-        // Load wallet after user is authenticated
         loadUserWallet();
-        
-        // Connect to SSE for real-time updates
         connectToSSE();
         
         if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); }
@@ -682,9 +705,8 @@
             userWalletData = null; 
             document.getElementById('userName').textContent = 'User'; 
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
-            document.getElementById('homeWalletAmount').textContent = '$0.00'; 
+            document.getElementById('homeWalletAmount').innerHTML = '$0.00'; 
             welcomeShown = false; 
-            // Close SSE connection on logout
             if (eventSource) {
                 eventSource.close();
                 eventSource = null;
@@ -804,9 +826,7 @@
     setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
     
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('SW registered', reg))
-            .catch(err => console.error('SW registration failed', err));
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
     }
     
     loadAllContent();
