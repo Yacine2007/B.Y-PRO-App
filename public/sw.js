@@ -26,9 +26,7 @@ self.addEventListener('install', event => {
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
-      if (response) {
-        return response;
-      }
+      if (response) return response;
       return fetch(event.request).then(networkResponse => {
         if (event.request.url.includes('github.io') || event.request.url.includes('by-pro.kesug.com')) {
           const responseToCache = networkResponse.clone();
