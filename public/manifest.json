@@ -1,8 +1,8 @@
 {
   "name": "B.Y PRO App",
-  "short_name": "B.Y PRO",
+  "short_name": "B.Y PRO App",
   "description": "Your all-in-one digital services platform",
-  "start_url": "/B.Y-PRO-App/public/",
+  "start_url": "/B.Y-PRO-App/public/index.html",
   "scope": "/B.Y-PRO-App/public/",
   "display": "standalone",
   "theme_color": "#ffffff",
