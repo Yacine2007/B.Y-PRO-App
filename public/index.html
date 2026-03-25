@@ -14,6 +14,10 @@
     <title>B.Y PRO App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+
+    <link rel="manifest" href="/B.Y-PRO-App/public/manifest.json">
+    <link rel="manifest" href="/B.Y-PRO-App/public/manifest.json">
+    <base href="/B.Y-PRO-App/public/">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -949,6 +953,29 @@
     });
     
     loadAllContent();
+</script>
+<script>
+// ==================== FIX PWA INSTALLATION PATH ====================
+if ('serviceWorker' in navigator) {
+    // Unregister any existing service workers
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            if (registration.scope !== '/B.Y-PRO-App/public/') {
+                console.log('Unregistering old SW:', registration.scope);
+                registration.unregister();
+            }
+        }
+    });
+    
+    // Register new service worker with correct path
+    navigator.serviceWorker.register('/B.Y-PRO-App/public/sw.js', {
+        scope: '/B.Y-PRO-App/public/'
+    }).then(function(registration) {
+        console.log('✅ Service Worker registered with scope:', registration.scope);
+    }).catch(function(error) {
+        console.error('❌ Service Worker registration failed:', error);
+    });
+}
 </script>
 </body>
 </html>
