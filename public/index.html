@@ -59,10 +59,6 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
-        .loading-card {
-            height: 120px;
-            width: 100%;
-        }
         /* Menu Trigger (left side) */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
@@ -418,6 +414,7 @@
 <script>
     // ==================== SERVER CONFIGURATION ====================
     const API_BASE = "https://b-y-pro-app.onrender.com";
+    const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com";
 
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
@@ -442,130 +439,64 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== DATA API (JSONBin) ====================
-    async function fetchAllData() {
+    // ==================== DATA API (JSONBin for content only) ====================
+    async function fetchContentData() {
         try {
             const res = await fetch(`${API_BASE}/api/data`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
-            return data || { users: {}, supportMessages: [], images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+            return data;
         } catch (e) { 
             console.error('Fetch error:', e); 
-            return { users: {}, supportMessages: [] }; 
-        }
-    }
-    async function saveAllData(data) {
-        try {
-            const res = await fetch(`${API_BASE}/api/data`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return res.ok;
-        } catch (e) { 
-            console.error('Save error:', e); 
-            return false; 
+            return { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; 
         }
     }
 
-    // ==================== WALLET (Fixed - uses email to find existing wallet) ====================
-    function generateCardCode() {
-        const randomNum = Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0');
-        return `byppcn-${randomNum}`;
-    }
-
-    async function loadUserWallet(user) {
+    // ==================== WALLET - DIRECT FROM FINANCIAL API ====================
+    async function loadUserWallet() {
         try {
-            const allData = await fetchAllData();
-            let existingWallet = null;
-            let walletKey = null;
-
-            // Search by email first (most stable)
-            if (user.email) {
-                for (const [key, wallet] of Object.entries(allData.users || {})) {
-                    if (wallet.email === user.email) {
-                        existingWallet = wallet;
-                        walletKey = key;
-                        break;
-                    }
-                }
+            showToast('Loading wallet data...');
+            
+            // Fetch directly from the financial API
+            const response = await fetch(`${FINANCIAL_API}/api/financial/1`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
             }
-
-            // If not found, try by user id
-            if (!existingWallet && user.id && allData.users[user.id]) {
-                existingWallet = allData.users[user.id];
-                walletKey = user.id;
-            }
-
-            if (existingWallet) {
-                userWalletData = existingWallet;
-                // Update name if changed
-                if (userWalletData.name !== (user.name || user.username)) {
-                    userWalletData.name = user.name || user.username;
-                    allData.users[walletKey] = userWalletData;
-                    await saveAllData(allData);
-                }
-                console.log('✅ Wallet loaded:', userWalletData);
+            
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                userWalletData = result.data;
+                console.log('✅ Wallet loaded successfully:', userWalletData);
+                console.log('Card Code:', userWalletData.cardCode);
+                console.log('Balance:', userWalletData.balance);
+                updateWalletUI();
+                showToast(`Wallet loaded: $${userWalletData.balance}`);
+                return userWalletData;
             } else {
-                // Create new wallet
-                const newKey = user.email || user.id;
-                if (!newKey) {
-                    console.error('No identifier for wallet');
-                    return null;
-                }
-                const newCard = generateCardCode();
-                userWalletData = {
-                    id: newKey,
-                    name: user.name || user.username || 'User',
-                    email: user.email || null,
-                    balance: 0,
-                    transactions: [],
-                    cardCode: newCard,
-                    createdAt: new Date().toISOString()
-                };
-                allData.users[newKey] = userWalletData;
-                await saveAllData(allData);
-                showToast(`New wallet created!`);
+                throw new Error('Invalid response structure');
             }
-            updateWalletUI();
-            return userWalletData;
         } catch (error) {
             console.error('❌ Error loading wallet:', error);
-            showToast('Error loading wallet data', true);
-            return null;
-        }
-    }
-
-    async function saveUserWallet() {
-        const allData = await fetchAllData();
-        let originalKey = null;
-        if (currentUser.email) {
-            for (const [key, wallet] of Object.entries(allData.users || {})) {
-                if (wallet.email === currentUser.email) {
-                    originalKey = key;
-                    break;
-                }
-            }
-        }
-        if (!originalKey && currentUser.id && allData.users[currentUser.id]) {
-            originalKey = currentUser.id;
-        }
-        if (!originalKey && userWalletData.id) {
-            originalKey = userWalletData.id;
-        }
-        if (originalKey) {
-            allData.users[originalKey] = userWalletData;
-            await saveAllData(allData);
-        } else {
-            console.error('Could not determine wallet key to save');
+            showToast('Failed to load wallet data', true);
+            // Create fallback wallet
+            userWalletData = {
+                id: "1",
+                name: currentUser?.name || "User",
+                email: currentUser?.email || "",
+                balance: 0,
+                cardCode: "byppcn-fallback",
+                transactions: []
+            };
+            updateWalletUI();
+            return userWalletData;
         }
     }
 
     async function refreshWallet() {
         if (!currentUser) return;
-        showToast('Refreshing wallet...');
-        await loadUserWallet(currentUser);
-        showToast(`Balance: $${userWalletData.balance.toFixed(2)}`);
+        await loadUserWallet();
     }
 
     function updateWalletUI() {
@@ -573,13 +504,16 @@
         document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
         document.getElementById('homeWalletAmount').textContent = `$${userWalletData.balance.toFixed(2)}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
+        
         const tx = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = tx.length;
         const container = document.getElementById('walletTransactionsContainer');
+        
         if (!tx.length) {
             container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
             return;
         }
+        
         container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
@@ -603,10 +537,11 @@
         if (isNaN(amount) || amount <= 0) { showToast('Enter a valid amount', true); return; }
         if (!password) { showToast('Enter your password', true); return; }
         try {
-            // Simple password check (replace with your real verification if needed)
-            const passwordValid = (password === '1234' || password === currentUser.id);
+            // Simple password check (you can replace with real verification)
+            const passwordValid = (password === '1234' || password === currentUser?.id);
             if (!passwordValid) { showToast('Incorrect password', true); return; }
-            // Process deposit
+            
+            // Update local wallet
             userWalletData.balance += amount;
             if (!userWalletData.transactions) userWalletData.transactions = [];
             userWalletData.transactions.unshift({
@@ -615,7 +550,6 @@
                 description: `Deposit $${amount}`,
                 date: new Date().toISOString()
             });
-            await saveUserWallet();
             updateWalletUI();
             addNotification('Deposit Successful', `$${amount} added to your wallet`, 'fas fa-money-bill-wave', '#10b981');
             showToast(`$${amount} deposited successfully`);
@@ -675,12 +609,15 @@
         const avatarDiv = document.getElementById('avatarIcon');
         if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
-        if (user.id) loadUserWallet(user);
+        
+        // Load wallet after user is authenticated
+        loadUserWallet();
+        
         if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); }
     }
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
-        onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadContentData(); },
+        onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadAllContent(); },
         onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').textContent = '$0.00'; welcomeShown = false; auth.show(); }
     });
     setTimeout(() => {
@@ -750,11 +687,11 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // ==================== CONTENT (with shimmer removal) ====================
-    async function loadContentData() {
-        const all = await fetchAllData();
+    // ==================== CONTENT (from JSONBin) ====================
+    async function loadAllContent() {
+        const data = await fetchContentData();
         contentData = {
-            images: all.images || [], news: all.news || [], digital: all.digital || [], local: all.local || [], phone: all.phone || [], products: all.products || [], social: all.social || []
+            images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || []
         };
         renderCarousel(contentData.images);
         renderAllContent();
@@ -792,13 +729,15 @@
     const refreshBtn = document.getElementById('refreshWalletBtn');
     refreshBtn.onclick = refreshWallet;
 
-    setInterval(() => { if (document.hasFocus() && currentUser) loadContentData(); }, 30000);
+    setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
+    
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/service-worker.js')
             .then(reg => console.log('SW registered', reg))
             .catch(err => console.error('SW registration failed', err));
     }
-    loadContentData();
+    
+    loadAllContent();
 </script>
 </body>
 </html>
