@@ -428,12 +428,14 @@
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    // ==================== SERVER CONFIGURATION ====================
-    const API_BASE = "https://b-y-pro-app.onrender.com";
-    const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com";
+    // ==================== SERVER CONFIGURATION (UPDATED) ====================
+    // This server now acts as a proxy to B.Y PRO financial server
+    const API_BASE = window.location.origin;
+    const FINANCIAL_API = `${API_BASE}/api/financial`;
 
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
+    let eventSource = null;
     let toastTimeout = null;
 
     // ==================== UTILITIES ====================
@@ -457,28 +459,104 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== WALLET ====================
+    // ==================== SSE CONNECTION ====================
+    function connectToSSE() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+        if (!currentUser) return;
+        
+        try {
+            eventSource = new EventSource(`${API_BASE}/api/events`);
+            
+            eventSource.onopen = () => {
+                console.log('✅ SSE Connected');
+            };
+            
+            eventSource.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('📨 SSE:', data.type);
+                    
+                    if (data.type === 'support_reply') {
+                        const replyMessage = data.message || 'You have a new reply from support';
+                        showToast(`Reply: ${replyMessage.substring(0, 50)}...`);
+                        addNotification('Support Reply', replyMessage, 'fas fa-reply', '#10b981');
+                    }
+                    else if (data.type === 'notification_new') {
+                        const title = data.title || 'New Notification';
+                        const message = data.message || '';
+                        const icon = data.icon || 'fas fa-bell';
+                        const color = data.color || '#3b82f6';
+                        const recipient = data.recipient;
+                        
+                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
+                            showToast(title);
+                            addNotification(title, message, icon, color);
+                        }
+                    }
+                    else if (data.type === 'data_update') {
+                        loadAllContent();
+                    }
+                    else if (data.type === 'payment_completed') {
+                        if (data.accountId === currentUser?.id) {
+                            showToast(`💰 Payment completed: $${data.amount}`);
+                            addNotification('Payment Completed', `$${data.amount} - ${data.description || 'Transaction'}`, 'fas fa-credit-card', '#10b981');
+                            refreshWallet();
+                        }
+                    }
+                } catch (err) {
+                    console.error('SSE parse error:', err);
+                }
+            };
+            
+            eventSource.onerror = () => {
+                eventSource.close();
+                eventSource = null;
+                if (currentUser) setTimeout(() => connectToSSE(), 5000);
+            };
+        } catch (err) {
+            console.error('SSE error:', err);
+        }
+    }
+    
+    function disconnectSSE() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+    }
+
+    // ==================== WALLET (via proxy server) ====================
     async function loadUserWallet() {
+        if (!currentUser) return;
+        
         document.getElementById('walletBalanceContainer').style.display = 'flex';
         document.getElementById('walletBalanceValue').style.display = 'none';
         document.getElementById('userCardCode').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
         document.getElementById('homeWalletAmount').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
         
         try {
-            const response = await fetch(`${FINANCIAL_API}/api/financial/1`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const userId = currentUser.id || currentUser.userId || '1';
+            const response = await fetch(`${FINANCIAL_API}/${userId}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
             const result = await response.json();
+            console.log('Wallet API response:', result);
             
             if (result.success && result.data) {
                 userWalletData = result.data;
                 console.log('✅ Wallet loaded:', userWalletData);
                 updateWalletUI();
             } else {
-                throw new Error('Invalid response');
+                throw new Error(result.error || 'Invalid response');
             }
         } catch (error) {
             console.error('❌ Wallet error:', error);
-            // Try to load from localStorage fallback
             const saved = localStorage.getItem('bypro_wallet');
             if (saved) {
                 try {
@@ -487,9 +565,10 @@
                 } catch(e) { userWalletData = null; }
             }
             if (!userWalletData) {
-                userWalletData = { id: "1", name: currentUser?.name || "User", balance: 0, cardCode: "byppcn-fallback", transactions: [] };
+                userWalletData = { id: currentUser?.id || "1", name: currentUser?.name || "User", balance: 0, cardCode: "byppcn-fallback", transactions: [] };
                 updateWalletUI();
             }
+            showToast('Failed to load wallet', true);
         }
     }
     
@@ -506,7 +585,6 @@
         document.getElementById('homeWalletAmount').innerHTML = `$${userWalletData.balance.toFixed(2)}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
         
-        // Save to localStorage
         localStorage.setItem('bypro_wallet', JSON.stringify(userWalletData));
         
         const tx = userWalletData.transactions || [];
@@ -537,8 +615,18 @@
         if (isNaN(amount) || amount <= 0) { showToast('Enter a valid amount', true); return; }
         if (!password) { showToast('Enter your password', true); return; }
         try {
-            const passwordValid = (password === '1234' || password === currentUser?.id);
-            if (!passwordValid) { showToast('Incorrect password', true); return; }
+            const verifyRes = await fetch(`${API_BASE}/api/verify-password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accountId: currentUser?.id || '1', password })
+            });
+            const verifyResult = await verifyRes.json();
+            
+            if (!verifyResult.success) {
+                showToast('Incorrect password', true);
+                return;
+            }
+            
             userWalletData.balance += amount;
             if (!userWalletData.transactions) userWalletData.transactions = [];
             userWalletData.transactions.unshift({ type: 'deposit', amount: amount, description: `Deposit $${amount}`, date: new Date().toISOString() });
@@ -595,8 +683,9 @@
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         
         loadUserWallet();
+        disconnectSSE();
+        connectToSSE();
         
-        // No welcome toast anymore
         if (!welcomeShown) { welcomeShown = true; }
     }
     
@@ -610,6 +699,7 @@
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
             document.getElementById('homeWalletAmount').innerHTML = '$0.00'; 
             welcomeShown = false; 
+            disconnectSSE();
             auth.show(); 
         }
     });
@@ -774,18 +864,8 @@
     
     // ==================== PWA INSTALLATION ====================
     if ('serviceWorker' in navigator) {
-        const basePath = window.location.pathname.includes('/B.Y-PRO-App/') ? '/B.Y-PRO-App/' : '/';
-        const swPath = basePath + 'sw.js';
-        
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-            registrations.forEach(reg => {
-                if (reg.scope !== basePath) reg.unregister();
-            });
-        });
-        
-        navigator.serviceWorker.register(swPath, { scope: basePath })
-            .then(reg => console.log('✅ SW registered:', reg.scope))
-            .catch(err => console.error('❌ SW failed:', err));
+        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW not supported'));
     }
     
     let deferredPrompt;
@@ -807,7 +887,7 @@
         }
     };
     
-    // Add install button to sidebar
+    // Add install button
     const installBtn = document.createElement('div');
     installBtn.className = 'nav-item';
     installBtn.innerHTML = '<i class="fas fa-download"></i><span>Install App</span>';
