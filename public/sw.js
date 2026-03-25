@@ -1,9 +1,11 @@
 // sw.js - Service Worker for B.Y PRO App
 const CACHE_NAME = 'bypro-pwa-v2';
+const BASE_PATH = '/B.Y-PRO-App/public/';
+
 const urlsToCache = [
-  '/B.Y-PRO-App/',
-  '/B.Y-PRO-App/index.html',
-  '/B.Y-PRO-App/manifest.json',
+  BASE_PATH,
+  BASE_PATH + 'index.html',
+  BASE_PATH + 'manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
   'https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap',
   'https://by-pro.kesug.com/App.png?v=3',
