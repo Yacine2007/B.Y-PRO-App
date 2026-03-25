@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
     <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/B.Y-PRO-App/public/manifest.json">
+    <base href="/B.Y-PRO-App/public/">
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,10 +15,6 @@
     <title>B.Y PRO App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-
-    <link rel="manifest" href="/B.Y-PRO-App/public/manifest.json">
-    <link rel="manifest" href="/B.Y-PRO-App/public/manifest.json">
-    <base href="/B.Y-PRO-App/public/">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -462,73 +459,16 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== SSE CONNECTION ====================
-    function connectToSSE() {
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
-        }
-        if (!currentUser) return;
-        
+    // ==================== DATA API ====================
+    async function fetchContentData() {
         try {
-            eventSource = new EventSource(`${API_BASE}/api/events`);
-            
-            eventSource.onopen = () => {
-                console.log('✅ SSE Connected');
-            };
-            
-            eventSource.onmessage = (event) => {
-                try {
-                    const data = JSON.parse(event.data);
-                    console.log('📨 SSE:', data.type);
-                    
-                    if (data.type === 'support_reply') {
-                        const replyMessage = data.message || 'You have a new reply from support';
-                        showToast(`Reply: ${replyMessage.substring(0, 50)}...`);
-                        addNotification('Support Reply', replyMessage, 'fas fa-reply', '#10b981');
-                    }
-                    else if (data.type === 'notification_new') {
-                        const title = data.title || 'New Notification';
-                        const message = data.message || '';
-                        const icon = data.icon || 'fas fa-bell';
-                        const color = data.color || '#3b82f6';
-                        const recipient = data.recipient;
-                        
-                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
-                            showToast(title);
-                            addNotification(title, message, icon, color);
-                        }
-                    }
-                    else if (data.type === 'data_update') {
-                        loadAllContent();
-                    }
-                    else if (data.type === 'payment_completed') {
-                        if (data.accountId === currentUser?.id) {
-                            showToast(`💰 Payment completed: $${data.amount}`);
-                            addNotification('Payment Completed', `$${data.amount} - ${data.description || 'Transaction'}`, 'fas fa-credit-card', '#10b981');
-                            refreshWallet();
-                        }
-                    }
-                } catch (err) {
-                    console.error('SSE parse error:', err);
-                }
-            };
-            
-            eventSource.onerror = () => {
-                console.log('SSE error, reconnecting...');
-                eventSource.close();
-                eventSource = null;
-                if (currentUser) setTimeout(() => connectToSSE(), 5000);
-            };
-        } catch (err) {
-            console.error('SSE error:', err);
-        }
-    }
-    
-    function disconnectSSE() {
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
+            const res = await fetch(`${API_BASE}/api/data`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            return data;
+        } catch (e) { 
+            console.error('Fetch error:', e); 
+            return { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; 
         }
     }
 
@@ -686,15 +626,15 @@
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         
         loadUserWallet();
-        disconnectSSE();
         connectToSSE();
+        loadAllContent();  // <-- IMPORTANT: Load content after login
         
         if (!welcomeShown) { welcomeShown = true; }
     }
     
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
-        onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadAllContent(); },
+        onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); },
         onLogout: () => { 
             currentUser = null; 
             userWalletData = null; 
@@ -714,6 +654,179 @@
             else auth.show();
         } else auth.show();
     }, 500);
+
+    // ==================== SSE CONNECTION ====================
+    function connectToSSE() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+        if (!currentUser) return;
+        
+        try {
+            eventSource = new EventSource(`${API_BASE}/api/events`);
+            
+            eventSource.onopen = () => {
+                console.log('✅ SSE Connected');
+            };
+            
+            eventSource.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('📨 SSE:', data.type);
+                    
+                    if (data.type === 'support_reply') {
+                        const replyMessage = data.message || 'You have a new reply from support';
+                        showToast(`Reply: ${replyMessage.substring(0, 50)}...`);
+                        addNotification('Support Reply', replyMessage, 'fas fa-reply', '#10b981');
+                    }
+                    else if (data.type === 'notification_new') {
+                        const title = data.title || 'New Notification';
+                        const message = data.message || '';
+                        const icon = data.icon || 'fas fa-bell';
+                        const color = data.color || '#3b82f6';
+                        const recipient = data.recipient;
+                        
+                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
+                            showToast(title);
+                            addNotification(title, message, icon, color);
+                        }
+                    }
+                    else if (data.type === 'data_update') {
+                        loadAllContent();
+                    }
+                    else if (data.type === 'payment_completed') {
+                        if (data.accountId === currentUser?.id) {
+                            showToast(`💰 Payment completed: $${data.amount}`);
+                            addNotification('Payment Completed', `$${data.amount} - ${data.description || 'Transaction'}`, 'fas fa-credit-card', '#10b981');
+                            refreshWallet();
+                        }
+                    }
+                } catch (err) {
+                    console.error('SSE parse error:', err);
+                }
+            };
+            
+            eventSource.onerror = () => {
+                console.log('SSE error, reconnecting...');
+                eventSource.close();
+                eventSource = null;
+                if (currentUser) setTimeout(() => connectToSSE(), 5000);
+            };
+        } catch (err) {
+            console.error('SSE error:', err);
+        }
+    }
+    
+    function disconnectSSE() {
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
+    }
+
+    // ==================== CONTENT LOADING ====================
+    async function loadAllContent() {
+        try {
+            const data = await fetchContentData();
+            console.log('📦 Content loaded:', data);
+            
+            contentData = {
+                images: data.images || [],
+                news: data.news || [],
+                digital: data.digital || [],
+                local: data.local || [],
+                phone: data.phone || [],
+                products: data.products || [],
+                social: data.social || []
+            };
+            
+            console.log('🖼️ Images:', contentData.images.length);
+            console.log('📰 News:', contentData.news.length);
+            console.log('💻 Digital:', contentData.digital.length);
+            console.log('🏠 Local:', contentData.local.length);
+            console.log('📱 Phone:', contentData.phone.length);
+            console.log('📦 Products:', contentData.products.length);
+            console.log('🔗 Social:', contentData.social.length);
+            
+            renderCarousel(contentData.images);
+            renderAllContent();
+        } catch (error) {
+            console.error('❌ Error loading content:', error);
+        }
+    }
+    
+    function renderAllContent() {
+        renderNews(contentData.news); 
+        renderServices('digitalContainer', contentData.digital, 'fas fa-code');
+        renderServices('localContainer', contentData.local, 'fas fa-print'); 
+        renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
+        renderProducts(contentData.products); 
+        renderSocial(contentData.social);
+    }
+    
+    function renderNews(news) { 
+        const c = document.getElementById('newsContainer'); 
+        if (!c) return; 
+        const active = news.filter(n => n.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No News</div><div class="card-desc">Check back later for updates</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); 
+    }
+    
+    function renderServices(cid, services, icon) { 
+        const c = document.getElementById(cid); 
+        if (!c) return; 
+        const active = services.filter(s => s.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No Services</div><div class="card-desc">No services available yet</div></div></div>`; 
+            return; 
+        } 
+        c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); 
+    }
+    
+    function renderProducts(products) { 
+        const c = document.getElementById('productsContainer'); 
+        if (!c) return; 
+        const active = products.filter(p => p.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); 
+    }
+    
+    function renderSocial(social) { 
+        const c = document.getElementById('socialContainer'); 
+        if (!c) return; 
+        if (!social.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); 
+    }
+
+    // ==================== CAROUSEL ====================
+    let carouselImages = [], currentSlide = 0, slideInterval = null;
+    function renderCarousel(images) {
+        const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators');
+        if (!slides || !inds) return;
+        if (!images || !images.length) { 
+            slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>'; 
+            inds.innerHTML = ''; 
+            return; 
+        }
+        carouselImages = images;
+        slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'Slide'}"></div>`).join('');
+        inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
+        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if (!isNaN(idx)) goToSlide(idx); }));
+        startAutoSlide();
+    }
+    function goToSlide(i) { const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator'); if (!slides.length) return; slides[currentSlide].classList.remove('active'); if (inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide = (i + slides.length) % slides.length; slides[currentSlide].classList.add('active'); if (inds[currentSlide]) inds[currentSlide].classList.add('active'); }
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
     // ==================== NOTIFICATIONS ====================
     function loadNotificationsFromStorage() {
@@ -773,136 +886,6 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // ==================== CONTENT ====================
-    async function loadAllContent() {
-        try {
-            const res = await fetch(`${API_BASE}/api/data`);
-            if (res.ok) {
-                const data = await res.json();
-                
-                // Extract data from the record structure
-                const record = data.record || data;
-                
-                contentData = {
-                    images: record.images || [],
-                    news: record.news || [],
-                    digital: record.digital || [],
-                    local: record.local || [],
-                    phone: record.phone || [],
-                    products: record.products || [],
-                    social: record.social || []
-                };
-                
-                console.log('Content loaded:', {
-                    images: contentData.images.length,
-                    news: contentData.news.length,
-                    digital: contentData.digital.length,
-                    local: contentData.local.length,
-                    phone: contentData.phone.length,
-                    products: contentData.products.length,
-                    social: contentData.social.length
-                });
-                
-                renderCarousel(contentData.images);
-                renderAllContent();
-            } else {
-                console.error('Failed to fetch content:', res.status);
-                showEmptyStates();
-            }
-        } catch (e) { 
-            console.error('Content error:', e);
-            showEmptyStates();
-        }
-    }
-    
-    function showEmptyStates() {
-        const containers = ['newsContainer', 'digitalContainer', 'localContainer', 'phoneContainer', 'productsContainer', 'socialContainer'];
-        containers.forEach(id => {
-            const c = document.getElementById(id);
-            if (c && c.innerHTML === '') {
-                c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-database"></i> No data available</div><div class="card-desc">Data will appear here when added via admin panel</div></div></div>';
-            }
-        });
-        const carouselContainer = document.getElementById('carouselContainer');
-        if (carouselContainer && !contentData.images.length) {
-            const slides = document.getElementById('carouselSlides');
-            if (slides && slides.innerHTML === '') {
-                slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>';
-            }
-        }
-    }
-    
-    function renderAllContent() {
-        renderNews(contentData.news); 
-        renderServices('digitalContainer', contentData.digital, 'fas fa-code');
-        renderServices('localContainer', contentData.local, 'fas fa-print'); 
-        renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
-        renderProducts(contentData.products); 
-        renderSocial(contentData.social);
-    }
-    
-    function renderNews(news) { 
-        const c = document.getElementById('newsContainer'); 
-        if (!c) return; 
-        const active = news.filter(n => n.enabled !== false); 
-        if (!active.length) { 
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No News</div><div class="card-desc">Check back later for updates</div></div></div>'; 
-            return; 
-        } 
-        c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.title)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); 
-    }
-    
-    function renderServices(cid, services, icon) { 
-        const c = document.getElementById(cid); 
-        if (!c) return; 
-        const active = services.filter(s => s.enabled !== false); 
-        if (!active.length) { 
-            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No Services</div><div class="card-desc">No services available yet</div></div></div>`; 
-            return; 
-        } 
-        c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); 
-    }
-    
-    function renderProducts(products) { 
-        const c = document.getElementById('productsContainer'); 
-        if (!c) return; 
-        const active = products.filter(p => p.enabled !== false); 
-        if (!active.length) { 
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; 
-            return; 
-        } 
-        c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); 
-    }
-    
-    function renderSocial(social) { 
-        const c = document.getElementById('socialContainer'); 
-        if (!c) return; 
-        if (!social.length) { 
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; 
-            return; 
-        } 
-        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); 
-    }
-
-    let carouselImages = [], currentSlide = 0, slideInterval = null;
-    function renderCarousel(images) {
-        const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators');
-        if (!slides || !inds) return;
-        if (!images || !images.length) { 
-            slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>'; 
-            inds.innerHTML = ''; 
-            return; 
-        }
-        carouselImages = images;
-        slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt||'Slide'}"></div>`).join('');
-        inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
-        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if (!isNaN(idx)) goToSlide(idx); }));
-        startAutoSlide();
-    }
-    function goToSlide(i) { const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator'); if (!slides.length) return; slides[currentSlide].classList.remove('active'); if (inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide = (i + slides.length) % slides.length; slides[currentSlide].classList.add('active'); if (inds[currentSlide]) inds[currentSlide].classList.add('active'); }
-    function nextSlide() { goToSlide(currentSlide + 1); }
-    function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
-
     // ==================== DARK MODE ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
     if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
@@ -915,7 +898,18 @@
     
     // ==================== PWA INSTALLATION ====================
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+            for(let registration of registrations) {
+                if (registration.scope !== '/B.Y-PRO-App/public/') {
+                    console.log('Unregistering old SW:', registration.scope);
+                    registration.unregister();
+                }
+            }
+        });
+        
+        navigator.serviceWorker.register('/B.Y-PRO-App/public/sw.js', { scope: '/B.Y-PRO-App/public/' })
+            .then(reg => console.log('✅ Service Worker registered with scope:', reg.scope))
+            .catch(err => console.error('❌ Service Worker registration failed:', err));
     }
     
     let deferredPrompt;
@@ -952,30 +946,71 @@
         deferredPrompt = null;
     });
     
-    loadAllContent();
-</script>
-<script>
-// ==================== FIX PWA INSTALLATION PATH ====================
-if ('serviceWorker' in navigator) {
-    // Unregister any existing service workers
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for(let registration of registrations) {
-            if (registration.scope !== '/B.Y-PRO-App/public/') {
-                console.log('Unregistering old SW:', registration.scope);
-                registration.unregister();
-            }
-        }
-    });
+    // ==================== DEBUG FUNCTIONS ====================
+    function debugData() {
+        console.log('🔍 === DEBUG DATA ===');
+        console.log('API_BASE:', API_BASE);
+        console.log('Content Data:', contentData);
+        console.log('Images:', contentData.images);
+        console.log('News:', contentData.news);
+        console.log('Digital Services:', contentData.digital);
+        console.log('Local Services:', contentData.local);
+        console.log('Phone Services:', contentData.phone);
+        console.log('Products:', contentData.products);
+        console.log('Social Links:', contentData.social);
+        console.log('===================');
+        
+        fetch(`${API_BASE}/api/data`)
+            .then(res => res.json())
+            .then(data => {
+                console.log('✅ API Response:', data);
+                console.log('📊 Images in API:', data.images?.length || 0);
+                console.log('📊 News in API:', data.news?.length || 0);
+                console.log('📊 Digital in API:', data.digital?.length || 0);
+                console.log('📊 Local in API:', data.local?.length || 0);
+                console.log('📊 Phone in API:', data.phone?.length || 0);
+                console.log('📊 Products in API:', data.products?.length || 0);
+                console.log('📊 Social in API:', data.social?.length || 0);
+            })
+            .catch(err => console.error('❌ API Error:', err));
+    }
     
-    // Register new service worker with correct path
-    navigator.serviceWorker.register('/B.Y-PRO-App/public/sw.js', {
-        scope: '/B.Y-PRO-App/public/'
-    }).then(function(registration) {
-        console.log('✅ Service Worker registered with scope:', registration.scope);
-    }).catch(function(error) {
-        console.error('❌ Service Worker registration failed:', error);
-    });
-}
+    function testImageUrls() {
+        console.log('🖼️ === TESTING IMAGE URLs ===');
+        
+        if (contentData.images && contentData.images.length) {
+            contentData.images.forEach((img, idx) => {
+                console.log(`Image ${idx + 1}:`, img.imageUrl);
+                const testImg = new Image();
+                testImg.onload = () => console.log(`  ✅ Image ${idx + 1} loads successfully`);
+                testImg.onerror = () => console.log(`  ❌ Image ${idx + 1} failed to load`);
+                testImg.src = img.imageUrl;
+            });
+        } else {
+            console.log('No images in contentData');
+        }
+        
+        const services = ['digital', 'local', 'phone', 'products'];
+        services.forEach(service => {
+            if (contentData[service] && contentData[service].length) {
+                contentData[service].forEach((item, idx) => {
+                    console.log(`${service} ${idx + 1} image:`, item.imageUrl);
+                    if (item.imageUrl) {
+                        const testImg = new Image();
+                        testImg.onload = () => console.log(`  ✅ ${service} ${idx + 1} loads`);
+                        testImg.onerror = () => console.log(`  ❌ ${service} ${idx + 1} failed`);
+                        testImg.src = item.imageUrl;
+                    }
+                });
+            }
+        });
+    }
+    
+    window.debugData = debugData;
+    window.testImageUrls = testImageUrls;
+    
+    // Initial load
+    loadAllContent();
 </script>
 </body>
 </html>
