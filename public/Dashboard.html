@@ -20,25 +20,13 @@
             color: #e5e5e5;
         }
 
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #3b82f6;
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
 
-        /* Layout */
-        .admin-container {
-            display: flex;
-            min-height: 100vh;
-        }
+        .admin-container { display: flex; min-height: 100vh; }
 
-        /* Sidebar - Premium */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%);
@@ -77,9 +65,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .sidebar-nav {
-            padding: 20px 16px;
-        }
+        .sidebar-nav { padding: 20px 16px; }
 
         .nav-category {
             font-size: 0.65rem;
@@ -105,17 +91,8 @@
             position: relative;
         }
 
-        .nav-item i {
-            width: 22px;
-            font-size: 1rem;
-        }
-
-        .nav-item:hover {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-            transform: translateX(4px);
-        }
-
+        .nav-item i { width: 22px; font-size: 1rem; }
+        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; transform: translateX(4px); }
         .nav-item.active {
             background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent);
             color: #3b82f6;
@@ -146,7 +123,7 @@
             min-height: 100vh;
         }
 
-        /* Status Bar - Thin & Elegant */
+        /* Status Bar */
         .status-bar {
             position: fixed;
             bottom: 0;
@@ -571,7 +548,7 @@
             <div id="newsContainer" class="items-grid"></div>
         </div>
 
-        <!-- Broadcast Section -->
+        <!-- Broadcast Section - إشعارات جماعية -->
         <div id="broadcastSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-bullhorn"></i> Broadcast</h1><p class="page-subtitle">Send notifications to all users</p></div></div>
             <div class="card">
@@ -583,25 +560,32 @@
             </div>
         </div>
 
-        <!-- Individual Section -->
+        <!-- Individual Section - إشعارات فردية فقط -->
         <div id="individualSection" class="section-page">
-            <div class="page-header"><div><h1 class="page-title"><i class="fas fa-user"></i> Individual & Replies</h1><p class="page-subtitle">Send direct notifications or reply to support messages</p></div></div>
-            <div class="stats-grid" style="margin-bottom: 24px;">
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-envelope"></i></div><div class="stat-value" id="totalSupportCount">0</div><div class="stat-label">Total Support</div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value" id="unreadSupportCount">0</div><div class="stat-label">Unread</div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-reply-all"></i></div><div class="stat-value" id="repliedSupportCount">0</div><div class="stat-label">Replied</div></div>
-                <div class="stat-card"><div class="stat-icon"><i class="fas fa-paper-plane"></i></div><div class="stat-value" id="sentCount">0</div><div class="stat-label">Sent Today</div></div>
-            </div>
-            
-            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-paper-plane"></i> Send Individual Notification</div></div>
+            <div class="page-header"><div><h1 class="page-title"><i class="fas fa-user"></i> Individual Notification</h1><p class="page-subtitle">Send direct notifications to specific users</p></div></div>
+            <div class="card">
+                <div class="card-header"><div class="card-title"><i class="fas fa-paper-plane"></i> Send Individual Notification</div></div>
                 <div class="form-group"><label>Recipient Username</label><input type="text" id="individualRecipient" placeholder="Enter username"></div>
                 <div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Notification title"></div>
                 <div class="form-group"><label>Message</label><textarea id="individualDesc" rows="2" placeholder="Notification message"></textarea></div>
                 <div class="icon-color-row"><button class="btn btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button><div class="icon-preview" id="individualIconPreview"><i class="fas fa-envelope"></i></div><input type="color" id="individualColor" value="#3b82f6"></div>
                 <div style="margin-top: 16px;"><button class="btn btn-primary" onclick="sendIndividual()"><i class="fas fa-paper-plane"></i> Send Notification</button></div>
             </div>
+        </div>
+
+        <!-- Support Section - رسائل الدعم والإحصائيات -->
+        <div id="supportSection" class="section-page">
+            <div class="page-header"><div><h1 class="page-title"><i class="fas fa-headset"></i> Support Management</h1><p class="page-subtitle">Manage support messages and reply to users</p></div><button class="btn btn-outline btn-sm" onclick="refreshSupport()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             
-            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-headset"></i> Support Messages</div><button class="btn btn-outline btn-sm" onclick="refreshSupport()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-envelope"></i></div><div class="stat-value" id="totalSupportCount">0</div><div class="stat-label">Total Messages</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-value" id="unreadSupportCount">0</div><div class="stat-label">Unread</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-reply-all"></i></div><div class="stat-value" id="repliedSupportCount">0</div><div class="stat-label">Replied</div></div>
+                <div class="stat-card"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div class="stat-value" id="supportResponseRate">0</div><div class="stat-label">Response Rate</div></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><div class="card-title"><i class="fas fa-headset"></i> Support Messages</div><span class="btn-outline btn-sm" style="padding: 4px 12px;"><i class="fas fa-envelope"></i> Total: <span id="supportTotal">0</span></span></div>
                 <div id="supportMessagesContainer"></div>
             </div>
         </div>
@@ -681,8 +665,17 @@
         eventSource.onmessage = (e) => {
             try {
                 const data = JSON.parse(e.data);
-                if (data.type === 'support_new') { setStatus('info'); showToast('New support message'); if (!hasVisitedSupport) updateSupportBadge(); if (document.getElementById('individualSection').classList.contains('active-page')) refreshSupport(); }
-                else if (data.type === 'support_reply') { setStatus('success'); showToast('Reply sent'); }
+                if (data.type === 'support_new') { 
+                    setStatus('info'); 
+                    showToast('New support message received'); 
+                    loadAllData();
+                    if (document.getElementById('supportSection').classList.contains('active-page')) {
+                        renderSupportMessages();
+                        updateSupportStats();
+                    }
+                    updateSupportBadge();
+                }
+                else if (data.type === 'support_reply') { setStatus('success'); showToast('Reply sent successfully'); }
                 else if (data.type === 'notification_new') { setStatus('info'); showToast(`Notification: ${data.data?.title}`); }
             } catch (err) { console.error('SSE error:', err); }
         };
@@ -693,15 +686,23 @@
         if (hasVisitedSupport) return;
         const unreadCount = supportMessages.filter(m => !m.read).length;
         const badge = document.getElementById('supportBadge');
-        if (badge) { badge.style.display = unreadCount ? 'inline-flex' : 'none'; if (unreadCount) badge.textContent = unreadCount > 99 ? '99+' : unreadCount; }
+        if (badge) { 
+            badge.style.display = unreadCount ? 'inline-flex' : 'none'; 
+            if (unreadCount) badge.textContent = unreadCount > 99 ? '99+' : unreadCount; 
+        }
     }
     
-    function updateStats() {
-        document.getElementById('totalSupportCount').textContent = supportMessages.length;
-        document.getElementById('unreadSupportCount').textContent = supportMessages.filter(m => !m.read).length;
-        document.getElementById('repliedSupportCount').textContent = supportMessages.filter(m => m.replied).length;
-        const sentToday = JSON.parse(localStorage.getItem('sentCount') || '0');
-        document.getElementById('sentCount').textContent = sentToday;
+    function updateSupportStats() {
+        const total = supportMessages.length;
+        const unread = supportMessages.filter(m => !m.read).length;
+        const replied = supportMessages.filter(m => m.replied).length;
+        const responseRate = total > 0 ? Math.round((replied / total) * 100) : 0;
+        
+        document.getElementById('totalSupportCount').textContent = total;
+        document.getElementById('unreadSupportCount').textContent = unread;
+        document.getElementById('repliedSupportCount').textContent = replied;
+        document.getElementById('supportResponseRate').textContent = responseRate;
+        document.getElementById('supportTotal').textContent = total;
     }
 
     async function uploadToServer(file) {
@@ -730,7 +731,7 @@
                 nextId = record.nextId || { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
             }
             renderAll();
-            updateStats();
+            updateSupportStats();
             if (!hasVisitedSupport) updateSupportBadge();
             setStatus('success');
         } catch (err) { setStatus('error'); showToast('Failed to load', true); }
@@ -766,10 +767,13 @@
             const res = await fetch('/api/notifications', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ title, message, icon, color, recipient }) });
             if (res.ok) {
                 setStatus('success'); showToast(`Sent to ${recipient === 'all' ? 'all' : recipient}`);
-                if (type === 'broadcast') { document.getElementById('broadcastTitle').value = ''; document.getElementById('broadcastDesc').value = ''; }
-                else { 
-                    document.getElementById('individualRecipient').value = ''; document.getElementById('individualTitle').value = ''; document.getElementById('individualDesc').value = '';
-                    let sent = parseInt(localStorage.getItem('sentCount') || '0'); sent++; localStorage.setItem('sentCount', sent); updateStats();
+                if (type === 'broadcast') { 
+                    document.getElementById('broadcastTitle').value = ''; 
+                    document.getElementById('broadcastDesc').value = ''; 
+                } else { 
+                    document.getElementById('individualRecipient').value = ''; 
+                    document.getElementById('individualTitle').value = ''; 
+                    document.getElementById('individualDesc').value = '';
                 }
             } else { showToast('Send failed', true); }
         } catch (err) { showToast('Connection error', true); }
@@ -787,21 +791,47 @@
                 setStatus('success'); showToast(`Reply sent to ${recipient}`);
                 const message = supportMessages.find(m => m.id === messageId);
                 if (message) { message.replied = true; message.replyMessage = replyText; message.replyDate = new Date().toISOString(); }
-                renderSupportMessages(); await saveAllData();
+                renderSupportMessages(); 
+                updateSupportStats();
+                await saveAllData();
             } else { showToast('Failed to send', true); }
         } catch (err) { showToast('Failed', true); }
     }
 
     function deleteSupportMessage(idx) { 
-        if (confirm('Delete this message?')) { supportMessages.splice(idx, 1); renderSupportMessages(); saveAllData(); showToast('Message deleted'); } 
+        if (confirm('Delete this message?')) { 
+            supportMessages.splice(idx, 1); 
+            renderSupportMessages(); 
+            updateSupportStats();
+            saveAllData(); 
+            showToast('Message deleted'); 
+        } 
     }
 
     function renderSupportMessages() {
         const container = document.getElementById('supportMessagesContainer');
         if (!container) return;
-        if (!supportMessages.length) { container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No support messages</p></div>'; return; }
-        container.innerHTML = supportMessages.map((msg, idx) => `<div class="support-card ${!msg.read ? 'unread' : ''}"><div class="support-header"><strong><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</strong><span class="support-field">${escapeHtml(msg.field || 'General')}</span></div><div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div><div class="support-details">${escapeHtml(msg.details)}</div><div class="support-date">${new Date(msg.date).toLocaleString()}</div>${msg.replied ? '<div class="support-date" style="color:#10b981;"><i class="fas fa-reply"></i> Replied</div>' : ''}<div class="item-actions"><button class="btn btn-primary btn-sm" onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}', ${msg.id})"><i class="fas fa-reply"></i> Reply</button><button class="btn btn-danger btn-sm" onclick="deleteSupportMessage(${idx})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
-        updateStats();
+        if (!supportMessages.length) { 
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No support messages</p></div>'; 
+            return; 
+        }
+        container.innerHTML = supportMessages.map((msg, idx) => `<div class="support-card ${!msg.read ? 'unread' : ''}">
+            <div class="support-header">
+                <strong><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</strong>
+                <span class="support-field">${escapeHtml(msg.field || 'General')}</span>
+            </div>
+            <div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div>
+            <div class="support-details">${escapeHtml(msg.details)}</div>
+            <div class="support-date">${new Date(msg.date).toLocaleString()}</div>
+            ${msg.replied ? '<div class="support-date" style="color:#10b981;"><i class="fas fa-reply"></i> Replied: ' + new Date(msg.replyDate).toLocaleString() + '</div>' : ''}
+            <div class="item-actions">
+                <button class="btn btn-primary btn-sm" onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}', ${msg.id})"><i class="fas fa-reply"></i> Reply</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteSupportMessage(${idx})"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+        </div>`).join('');
+        updateSupportStats();
+        const badge = document.getElementById('supportBadge');
+        if (badge) badge.style.display = 'none';
     }
 
     // Image functions
@@ -962,7 +992,14 @@
         const activeNav = document.querySelector(`.nav-item[data-section="${s}"]`);
         if (activeNav) activeNav.classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        if (s === 'support') { hasVisitedSupport = true; renderSupportMessages(); const badge = document.getElementById('supportBadge'); if (badge) badge.style.display = 'none'; }
+        
+        if (s === 'support') { 
+            hasVisitedSupport = true; 
+            renderSupportMessages(); 
+            updateSupportStats();
+            const badge = document.getElementById('supportBadge'); 
+            if (badge) badge.style.display = 'none'; 
+        }
         if (s === 'homeImages') renderImages();
         if (s === 'news') renderNews();
         if (s === 'digital') renderDigital();
