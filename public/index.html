@@ -418,6 +418,62 @@
 
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
+    let eventSource = null;
+
+    // ==================== SSE CONNECTION FOR REAL-TIME UPDATES ====================
+    function connectToSSE() {
+        if (eventSource) eventSource.close();
+        
+        eventSource = new EventSource(`${API_BASE}/api/events`);
+        
+        eventSource.onopen = () => {
+            console.log('✅ SSE Connected to server');
+        };
+        
+        eventSource.onmessage = (e) => {
+            try {
+                const data = JSON.parse(e.data);
+                console.log('📨 SSE Received:', data);
+                
+                if (data.type === 'support_new') {
+                    // New support message
+                    showToast(`📩 New support message from ${data.data?.sender || 'user'}`);
+                    addNotification('New Support Message', `From: ${data.data?.sender || 'User'} - ${data.data?.subject || 'No subject'}`, 'fas fa-headset', '#ef4444');
+                }
+                else if (data.type === 'notification_new') {
+                    // New admin notification
+                    showToast(`🔔 ${data.data?.title || 'New notification'}`);
+                    addNotification(data.data?.title || 'Notification', data.data?.message || '', data.data?.icon || 'fas fa-bell', data.data?.color || '#3b82f6');
+                }
+                else if (data.type === 'support_reply') {
+                    // Reply to support message
+                    showToast(`📨 Reply received for your support message`);
+                    addNotification('Support Reply', data.data?.message || 'You have a new reply to your support request', 'fas fa-reply', '#10b981');
+                }
+                else if (data.type === 'data_update') {
+                    // Content update (news, services, etc.)
+                    showToast(`🔄 Content updated`);
+                    loadAllContent();
+                }
+                else if (data.type === 'wallet_update') {
+                    // Wallet balance update
+                    if (data.data?.balance !== undefined) {
+                        userWalletData.balance = data.data.balance;
+                        updateWalletUI();
+                        showToast(`💰 Balance updated: $${data.data.balance}`);
+                    }
+                }
+            } catch (err) {
+                console.error('SSE parse error:', err);
+            }
+        };
+        
+        eventSource.onerror = (err) => {
+            console.error('SSE error:', err);
+            eventSource.close();
+            setTimeout(connectToSSE, 5000);
+        };
+    }
 
     // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
@@ -613,12 +669,28 @@
         // Load wallet after user is authenticated
         loadUserWallet();
         
+        // Connect to SSE for real-time updates
+        connectToSSE();
+        
         if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); }
     }
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
         onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadAllContent(); },
-        onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').textContent = '$0.00'; welcomeShown = false; auth.show(); }
+        onLogout: () => { 
+            currentUser = null; 
+            userWalletData = null; 
+            document.getElementById('userName').textContent = 'User'; 
+            document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
+            document.getElementById('homeWalletAmount').textContent = '$0.00'; 
+            welcomeShown = false; 
+            // Close SSE connection on logout
+            if (eventSource) {
+                eventSource.close();
+                eventSource = null;
+            }
+            auth.show(); 
+        }
     });
     setTimeout(() => {
         if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
