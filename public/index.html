@@ -389,13 +389,13 @@
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
             <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
-            <div id="newsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 80%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%; margin-top: 8px;"></div><div class="card-desc shimmer" style="height: 12px; width: 90%; margin-top: 4px;"></div></div></div></div>
+            <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
-        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
-        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
-        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
-        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
+        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
+        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
+        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
+        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
         <div id="walletPage" class="section-page">
             <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card"></i><span class="card-code" id="userCardCode"><span class="spinner" style="width:12px;height:12px;"></span></span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
             <div class="balance-card">
@@ -411,7 +411,7 @@
             <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
             <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
         </div>
-        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 60%; margin: 0 auto;"></div><div class="card-desc shimmer" style="height: 12px; width: 80%; margin: 8px auto 0;"></div></div></div></div></div>
+        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
         <div id="supportPage" class="section-page">
             <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
             <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
@@ -428,8 +428,7 @@
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    // ==================== SERVER CONFIGURATION (FIXED) ====================
-    // Use the correct backend server, not GitHub Pages
+    // ==================== SERVER CONFIGURATION ====================
     const API_BASE = "https://b-y-pro-app.onrender.com";
     const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com/api/financial";
 
@@ -529,7 +528,7 @@
         }
     }
 
-    // ==================== WALLET (via proxy server) ====================
+    // ==================== WALLET ====================
     async function loadUserWallet() {
         if (!currentUser) return;
         
@@ -540,7 +539,6 @@
         
         try {
             const userId = currentUser.id || currentUser.userId || '1';
-            console.log('Fetching wallet from:', `${FINANCIAL_API}/${userId}`);
             const response = await fetch(`${FINANCIAL_API}/${userId}`);
             
             if (!response.ok) {
@@ -548,7 +546,6 @@
             }
             
             const result = await response.json();
-            console.log('Wallet API response:', result);
             
             if (result.success && result.data) {
                 userWalletData = result.data;
@@ -775,17 +772,60 @@
     // ==================== CONTENT ====================
     async function loadAllContent() {
         try {
-            console.log('Fetching content from:', `${API_BASE}/api/data`);
             const res = await fetch(`${API_BASE}/api/data`);
             if (res.ok) {
                 const data = await res.json();
+                
+                // Extract data from the record structure
+                const record = data.record || data;
+                
                 contentData = {
-                    images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || []
+                    images: record.images || [],
+                    news: record.news || [],
+                    digital: record.digital || [],
+                    local: record.local || [],
+                    phone: record.phone || [],
+                    products: record.products || [],
+                    social: record.social || []
                 };
+                
+                console.log('Content loaded:', {
+                    images: contentData.images.length,
+                    news: contentData.news.length,
+                    digital: contentData.digital.length,
+                    local: contentData.local.length,
+                    phone: contentData.phone.length,
+                    products: contentData.products.length,
+                    social: contentData.social.length
+                });
+                
                 renderCarousel(contentData.images);
                 renderAllContent();
+            } else {
+                console.error('Failed to fetch content:', res.status);
+                showEmptyStates();
             }
-        } catch (e) { console.error('Content error:', e); }
+        } catch (e) { 
+            console.error('Content error:', e);
+            showEmptyStates();
+        }
+    }
+    
+    function showEmptyStates() {
+        const containers = ['newsContainer', 'digitalContainer', 'localContainer', 'phoneContainer', 'productsContainer', 'socialContainer'];
+        containers.forEach(id => {
+            const c = document.getElementById(id);
+            if (c && c.innerHTML === '') {
+                c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-database"></i> No data available</div><div class="card-desc">Data will appear here when added via admin panel</div></div></div>';
+            }
+        });
+        const carouselContainer = document.getElementById('carouselContainer');
+        if (carouselContainer && !contentData.images.length) {
+            const slides = document.getElementById('carouselSlides');
+            if (slides && slides.innerHTML === '') {
+                slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>';
+            }
+        }
     }
     
     function renderAllContent() {
@@ -802,7 +842,7 @@
         if (!c) return; 
         const active = news.filter(n => n.enabled !== false); 
         if (!active.length) { 
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No News</div><div class="card-desc">Check back later for updates</div></div></div>'; 
             return; 
         } 
         c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.title)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); 
@@ -813,7 +853,7 @@
         if (!c) return; 
         const active = services.filter(s => s.enabled !== false); 
         if (!active.length) { 
-            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; 
+            c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No Services</div><div class="card-desc">No services available yet</div></div></div>`; 
             return; 
         } 
         c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); 
@@ -824,7 +864,7 @@
         if (!c) return; 
         const active = products.filter(p => p.enabled !== false); 
         if (!active.length) { 
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; 
             return; 
         } 
         c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); 
@@ -834,7 +874,7 @@
         const c = document.getElementById('socialContainer'); 
         if (!c) return; 
         if (!social.length) { 
-            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>'; 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; 
             return; 
         } 
         c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); 
@@ -844,7 +884,11 @@
     function renderCarousel(images) {
         const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators');
         if (!slides || !inds) return;
-        if (!images || !images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400?text=No+Images"></div>'; inds.innerHTML = ''; return; }
+        if (!images || !images.length) { 
+            slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>'; 
+            inds.innerHTML = ''; 
+            return; 
+        }
         carouselImages = images;
         slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt||'Slide'}"></div>`).join('');
         inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join('');
