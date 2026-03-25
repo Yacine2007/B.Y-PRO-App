@@ -627,7 +627,7 @@
         
         loadUserWallet();
         connectToSSE();
-        loadAllContent();  // <-- IMPORTANT: Load content after login
+        loadAllContent();
         
         if (!welcomeShown) { welcomeShown = true; }
     }
@@ -673,21 +673,27 @@
             eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    console.log('📨 SSE:', data.type);
+                    console.log('📨 SSE:', data.type, data);
                     
                     if (data.type === 'support_reply') {
-                        const replyMessage = data.message || 'You have a new reply from support';
-                        showToast(`Reply: ${replyMessage.substring(0, 50)}...`);
-                        addNotification('Support Reply', replyMessage, 'fas fa-reply', '#10b981');
+                        // استخراج محتوى الرد بشكل صحيح
+                        const replyMessage = data.message || data.data?.message || 'You have a new reply from support';
+                        const replySubject = data.subject || data.data?.subject || 'Support Reply';
+                        const replyContent = data.replyMessage || data.data?.replyMessage || data.message || '';
+                        
+                        console.log('📨 Support reply received:', { replySubject, replyMessage: replyContent });
+                        
+                        showToast(`Reply: ${replyContent.substring(0, 50)}...`);
+                        addNotification(`Reply: ${replySubject}`, replyContent, 'fas fa-reply', '#10b981');
                     }
                     else if (data.type === 'notification_new') {
-                        const title = data.title || 'New Notification';
-                        const message = data.message || '';
-                        const icon = data.icon || 'fas fa-bell';
-                        const color = data.color || '#3b82f6';
-                        const recipient = data.recipient;
+                        const title = data.title || data.data?.title || 'New Notification';
+                        const message = data.message || data.data?.message || '';
+                        const icon = data.icon || data.data?.icon || 'fas fa-bell';
+                        const color = data.color || data.data?.color || '#3b82f6';
+                        const recipient = data.recipient || data.data?.recipient;
                         
-                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
+                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id || !recipient) {
                             showToast(title);
                             addNotification(title, message, icon, color);
                         }
@@ -702,8 +708,11 @@
                             refreshWallet();
                         }
                     }
+                    else if (data.type === 'connected') {
+                        console.log('✅ SSE Connected to server');
+                    }
                 } catch (err) {
-                    console.error('SSE parse error:', err);
+                    console.error('SSE parse error:', err, 'Raw data:', event.data);
                 }
             };
             
@@ -896,12 +905,12 @@
 
     setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
     
-    // ==================== PWA INSTALLATION ====================
+    // ==================== PWA INSTALLATION (REMOVED - no install button) ====================
+    // Service worker registration is kept for caching but no install prompt
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
             for(let registration of registrations) {
                 if (registration.scope !== '/B.Y-PRO-App/public/') {
-                    console.log('Unregistering old SW:', registration.scope);
                     registration.unregister();
                 }
             }
@@ -912,39 +921,7 @@
             .catch(err => console.error('❌ Service Worker registration failed:', err));
     }
     
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        console.log('✅ PWA install prompt ready');
-    });
-    
-    window.installPWA = function() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(choice => {
-                if (choice.outcome === 'accepted') console.log('✅ App installed');
-                deferredPrompt = null;
-            });
-        } else {
-            showToast('Use browser menu to install', true);
-        }
-    };
-    
-    const installBtn = document.createElement('div');
-    installBtn.className = 'nav-item';
-    installBtn.innerHTML = '<i class="fas fa-download"></i><span>Install App</span>';
-    installBtn.onclick = () => window.installPWA();
-    const sidebarNav = document.querySelector('.sidebar-nav');
-    if (sidebarNav && !document.querySelector('.install-item')) {
-        installBtn.classList.add('install-item');
-        sidebarNav.appendChild(installBtn);
-    }
-    
-    window.addEventListener('appinstalled', () => {
-        console.log('✅ B.Y PRO App installed');
-        deferredPrompt = null;
-    });
+    // No install button or beforeinstallprompt handling
     
     // ==================== DEBUG FUNCTIONS ====================
     function debugData() {
@@ -966,11 +943,6 @@
                 console.log('✅ API Response:', data);
                 console.log('📊 Images in API:', data.images?.length || 0);
                 console.log('📊 News in API:', data.news?.length || 0);
-                console.log('📊 Digital in API:', data.digital?.length || 0);
-                console.log('📊 Local in API:', data.local?.length || 0);
-                console.log('📊 Phone in API:', data.phone?.length || 0);
-                console.log('📊 Products in API:', data.products?.length || 0);
-                console.log('📊 Social in API:', data.social?.length || 0);
             })
             .catch(err => console.error('❌ API Error:', err));
     }
