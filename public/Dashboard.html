@@ -21,18 +21,17 @@
         }
 
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
             background: #1a1a1a;
-            border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb {
             background: #3b82f6;
-            border-radius: 10px;
+            border-radius: 3px;
         }
 
         .admin-container {
@@ -40,8 +39,9 @@
             min-height: 100vh;
         }
 
+        /* Sidebar */
         .sidebar {
-            width: 280px;
+            width: 260px;
             background: #0f0f0f;
             border-right: 1px solid #2a2a2a;
             position: fixed;
@@ -54,50 +54,50 @@
         }
 
         .sidebar-header {
-            padding: 24px 20px;
+            padding: 20px 16px;
             border-bottom: 1px solid #2a2a2a;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .sidebar-header img {
-            width: 44px;
-            height: 44px;
+            width: 36px;
+            height: 36px;
             object-fit: contain;
-            border-radius: 12px;
+            border-radius: 10px;
         }
 
         .sidebar-header h2 {
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
             background: linear-gradient(135deg, #3b82f6, #8b5cf6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .sidebar-nav {
-            padding: 20px 16px;
+            padding: 16px 12px;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            margin-bottom: 6px;
-            border-radius: 14px;
+            gap: 10px;
+            padding: 10px 14px;
+            margin-bottom: 4px;
+            border-radius: 12px;
             color: #9ca3af;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 500;
+            font-size: 0.85rem;
             position: relative;
         }
 
         .nav-item i {
-            width: 24px;
-            font-size: 1.1rem;
+            width: 22px;
+            font-size: 1rem;
         }
 
         .nav-item:hover {
@@ -106,35 +106,73 @@
         }
 
         .nav-item.active {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.1));
+            background: rgba(59, 130, 246, 0.15);
             color: #3b82f6;
-            border-left: 3px solid #3b82f6;
         }
 
         .badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 22px;
-            height: 22px;
-            border-radius: 11px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
             background: #ef4444;
             color: white;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
-            padding: 0 6px;
+            padding: 0 5px;
             margin-left: auto;
         }
 
+        /* Main Content */
         .main-content {
             flex: 1;
-            margin-left: 280px;
-            padding: 24px 32px;
+            margin-left: 260px;
+            padding: 20px 24px;
+            background: #0a0a0a;
+            min-height: 100vh;
         }
 
+        /* Status Bar - Thin Fixed Bar */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 260px;
+            right: 0;
+            height: 3px;
+            background: #10b981;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            opacity: 0.8;
+        }
+
+        .status-bar.success {
+            background: #10b981;
+        }
+
+        .status-bar.error {
+            background: #ef4444;
+        }
+
+        .status-bar.warning {
+            background: #f59e0b;
+        }
+
+        .status-bar.info {
+            background: #3b82f6;
+        }
+
+        @media (max-width: 768px) {
+            .status-bar {
+                left: 0;
+            }
+        }
+
+        /* Sections */
         .section-page {
             display: none;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.25s ease;
         }
 
         .section-page.active-page {
@@ -142,96 +180,92 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(5px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Cards - Clean Design */
         .card {
             background: #121212;
-            border-radius: 24px;
+            border-radius: 20px;
             border: 1px solid #2a2a2a;
-            padding: 24px;
-            margin-bottom: 28px;
-            transition: all 0.3s;
-        }
-
-        .card:hover {
-            border-color: #3b82f6;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 10px;
         }
 
         .card-title {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: #ffffff;
         }
 
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 28px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
-            border-radius: 20px;
-            padding: 20px;
+            background: #121212;
+            border-radius: 16px;
+            padding: 16px;
             border: 1px solid #2a2a2a;
             text-align: center;
         }
 
         .stat-card i {
-            font-size: 2rem;
+            font-size: 1.6rem;
             color: #3b82f6;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .stat-card h3 {
-            font-size: 2rem;
-            font-weight: 800;
+            font-size: 1.6rem;
+            font-weight: 700;
             color: #ffffff;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .stat-card p {
             color: #9ca3af;
-            font-size: 0.85rem;
+            font-size: 0.7rem;
         }
 
+        /* Form Elements */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #9ca3af;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
-            border-radius: 14px;
+            border-radius: 12px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #e5e5e5;
             transition: all 0.2s;
         }
@@ -239,26 +273,26 @@
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
+        /* Buttons */
         button {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 14px;
+            padding: 8px 16px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 500;
             transition: all 0.2s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
+            gap: 6px;
+            font-size: 0.8rem;
         }
 
         button:hover {
-            transform: translateY(-2px);
+            transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
@@ -284,28 +318,28 @@
 
         .action-buttons-row {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 16px;
             justify-content: flex-end;
         }
 
+        /* Items Grid */
         .items-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
         }
 
         .item-card {
             background: #1a1a1a;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid #2a2a2a;
-            padding: 18px;
+            padding: 16px;
             transition: all 0.2s;
             position: relative;
         }
 
         .item-card:hover {
-            transform: translateY(-3px);
             border-color: #3b82f6;
         }
 
@@ -313,38 +347,39 @@
             cursor: grab;
             color: #6b7280;
             position: absolute;
-            top: 16px;
-            right: 16px;
+            top: 12px;
+            right: 12px;
         }
 
         .item-info {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .item-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-top: 16px;
-            padding-top: 12px;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 10px;
             border-top: 1px solid #2a2a2a;
         }
 
         .image-preview {
             width: 100%;
-            max-height: 160px;
+            max-height: 140px;
             object-fit: cover;
-            border-radius: 16px;
+            border-radius: 12px;
             border: 1px solid #2a2a2a;
         }
 
+        /* Toggle Switch */
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 24px;
+            width: 44px;
+            height: 22px;
         }
 
         .toggle-switch input {
@@ -362,7 +397,7 @@
             bottom: 0;
             background-color: #2a2a2a;
             transition: 0.2s;
-            border-radius: 24px;
+            border-radius: 22px;
         }
 
         .toggle-slider:before {
@@ -370,8 +405,8 @@
             content: "";
             height: 18px;
             width: 18px;
-            left: 3px;
-            bottom: 3px;
+            left: 2px;
+            bottom: 2px;
             background-color: white;
             transition: 0.2s;
             border-radius: 50%;
@@ -382,14 +417,15 @@
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(24px);
+            transform: translateX(22px);
         }
 
+        /* Support Cards */
         .support-card {
             background: #1a1a1a;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 16px;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             border: 1px solid #2a2a2a;
             transition: all 0.2s;
         }
@@ -399,78 +435,80 @@
         }
 
         .support-card.unread {
-            border-left: 4px solid #3b82f6;
-            background: rgba(59, 130, 246, 0.05);
+            border-left: 3px solid #3b82f6;
         }
 
         .support-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             padding-bottom: 8px;
             border-bottom: 1px solid #2a2a2a;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .support-field {
             background: rgba(59, 130, 246, 0.2);
             color: #3b82f6;
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
         }
 
         .support-subject {
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #ffffff;
+            font-size: 0.85rem;
         }
 
         .support-details {
             color: #9ca3af;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
         }
 
         .support-date {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: #6b7280;
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: #6b7280;
         }
 
         .empty-state i {
-            font-size: 3.5rem;
-            margin-bottom: 16px;
+            font-size: 2.5rem;
+            margin-bottom: 12px;
             opacity: 0.5;
         }
 
+        /* Icon Picker */
         .icon-color-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-top: 8px;
         }
 
         .icon-preview {
-            width: 48px;
-            height: 48px;
+            width: 42px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: #1a1a1a;
-            border-radius: 12px;
+            border-radius: 10px;
             border: 1px solid #2a2a2a;
+            font-size: 1.2rem;
         }
 
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -478,7 +516,7 @@
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -495,12 +533,12 @@
 
         .modal-content {
             background: #121212;
-            border-radius: 28px;
+            border-radius: 24px;
             width: 90%;
-            max-width: 700px;
+            max-width: 650px;
             max-height: 80vh;
             overflow: auto;
-            padding: 24px;
+            padding: 20px;
             border: 1px solid #2a2a2a;
         }
 
@@ -508,24 +546,24 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #2a2a2a;
         }
 
         .icons-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
         }
 
         .icon-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 14px;
-            border-radius: 16px;
+            gap: 6px;
+            padding: 10px;
+            border-radius: 12px;
             cursor: pointer;
             border: 1px solid #2a2a2a;
             background: #1a1a1a;
@@ -535,26 +573,31 @@
         .icon-item:hover {
             background: rgba(59, 130, 246, 0.2);
             border-color: #3b82f6;
-            transform: scale(1.05);
         }
 
         .icon-item i {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             color: #3b82f6;
         }
 
+        .icon-item span {
+            font-size: 0.6rem;
+            color: #9ca3af;
+        }
+
+        /* Toast */
         .toast-notification {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
+            bottom: 20px;
+            right: 20px;
             background: #1a1a1a;
-            border-radius: 20px;
-            padding: 14px 24px;
+            border-radius: 40px;
+            padding: 10px 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            border-left: 4px solid #10b981;
+            gap: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border-left: 3px solid #10b981;
             z-index: 2000;
             transform: translateX(120%);
             transition: transform 0.3s ease;
@@ -565,43 +608,51 @@
         }
 
         .toast-icon {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             background: rgba(16, 185, 129, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.7rem;
             color: #10b981;
         }
 
+        .toast-message {
+            color: #e5e5e5;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Menu Toggle */
         .menu-toggle {
             display: none;
             position: fixed;
-            top: 20px;
-            left: 20px;
+            top: 16px;
+            left: 16px;
             z-index: 201;
             background: #3b82f6;
             color: white;
             border: none;
-            padding: 12px;
-            border-radius: 14px;
+            padding: 10px;
+            border-radius: 12px;
             cursor: pointer;
+            font-size: 1rem;
         }
 
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                position: fixed;
-                z-index: 200;
+                width: 260px;
             }
             .sidebar.open {
                 transform: translateX(0);
             }
             .main-content {
                 margin-left: 0;
-                padding: 20px;
-                padding-top: 70px;
+                padding: 16px;
+                padding-top: 60px;
             }
             .menu-toggle {
                 display: block;
@@ -611,12 +662,7 @@
             }
             .stats-grid {
                 grid-template-columns: 1fr;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .menu-toggle {
-                display: none;
+                gap: 12px;
             }
         }
     </style>
@@ -629,40 +675,20 @@
             <h2>B.Y PRO Admin</h2>
         </div>
         <nav class="sidebar-nav">
-            <div class="nav-item active" data-section="homeImages">
-                <i class="fas fa-images"></i> Home Images
-            </div>
-            <div class="nav-item" data-section="news">
-                <i class="fas fa-newspaper"></i> News
-            </div>
-            <div class="nav-item" data-section="notifications">
-                <i class="fas fa-bell"></i> Notifications
-                <span id="notificationBadge" class="badge" style="display: none;"></span>
-            </div>
-            <div class="nav-item" data-section="support">
-                <i class="fas fa-headset"></i> Support
-                <span id="supportBadge" class="badge" style="display: none;"></span>
-            </div>
-            <div class="nav-item" data-section="digital">
-                <i class="fas fa-code"></i> Digital Services
-            </div>
-            <div class="nav-item" data-section="local">
-                <i class="fas fa-print"></i> Local Services
-            </div>
-            <div class="nav-item" data-section="phone">
-                <i class="fas fa-mobile-alt"></i> Phone Services
-            </div>
-            <div class="nav-item" data-section="products">
-                <i class="fas fa-cubes"></i> Products
-            </div>
-            <div class="nav-item" data-section="social">
-                <i class="fas fa-share-alt"></i> Social Media
-            </div>
+            <div class="nav-item active" data-section="homeImages"><i class="fas fa-images"></i> Home Images</div>
+            <div class="nav-item" data-section="news"><i class="fas fa-newspaper"></i> News</div>
+            <div class="nav-item" data-section="notifications"><i class="fas fa-bell"></i> Notifications <span id="notificationBadge" class="badge" style="display: none;"></span></div>
+            <div class="nav-item" data-section="support"><i class="fas fa-headset"></i> Support <span id="supportBadge" class="badge" style="display: none;"></span></div>
+            <div class="nav-item" data-section="digital"><i class="fas fa-code"></i> Digital Services</div>
+            <div class="nav-item" data-section="local"><i class="fas fa-print"></i> Local Services</div>
+            <div class="nav-item" data-section="phone"><i class="fas fa-mobile-alt"></i> Phone Services</div>
+            <div class="nav-item" data-section="products"><i class="fas fa-cubes"></i> Products</div>
+            <div class="nav-item" data-section="social"><i class="fas fa-share-alt"></i> Social Media</div>
         </nav>
     </aside>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
     <main class="main-content">
-        <!-- Home Images Section -->
+        <!-- Home Images -->
         <div id="homeImagesSection" class="section-page active-page">
             <div class="card">
                 <div class="card-header">
@@ -677,7 +703,7 @@
             </div>
         </div>
 
-        <!-- News Section -->
+        <!-- News -->
         <div id="newsSection" class="section-page">
             <div class="card">
                 <div class="card-header">
@@ -692,179 +718,63 @@
             </div>
         </div>
 
-        <!-- Notifications Section -->
+        <!-- Notifications -->
         <div id="notificationsSection" class="section-page">
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-globe"></i> Broadcast Notification</h2>
-                </div>
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="broadcastTitle" placeholder="Enter notification title">
-                </div>
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea id="broadcastDesc" rows="3" placeholder="Enter notification message"></textarea>
-                </div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-globe"></i> Broadcast</h2></div>
+                <div class="form-group"><label>Title</label><input type="text" id="broadcastTitle" placeholder="Enter notification title"></div>
+                <div class="form-group"><label>Message</label><textarea id="broadcastDesc" rows="2" placeholder="Enter notification message"></textarea></div>
                 <div class="icon-color-row">
-                    <button class="btn-outline" onclick="openIconLibraryForBroadcast()"><i class="fas fa-icons"></i> Choose Icon</button>
+                    <button class="btn-outline" onclick="openIconLibraryForBroadcast()"><i class="fas fa-icons"></i> Icon</button>
                     <div class="icon-preview" id="broadcastIconPreview"><i class="fas fa-bell"></i></div>
                     <input type="color" id="broadcastColor" value="#3b82f6">
                 </div>
-                <button onclick="sendBroadcast()" style="margin-top:16px;"><i class="fas fa-paper-plane"></i> Send to All</button>
+                <button onclick="sendBroadcast()" style="margin-top:12px;"><i class="fas fa-paper-plane"></i> Send to All</button>
             </div>
-
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-user"></i> Individual Notification</h2>
-                </div>
-                <div class="form-group">
-                    <label>Recipient</label>
-                    <input type="text" id="individualRecipient" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="individualTitle" placeholder="Notification title">
-                </div>
-                <div class="form-group">
-                    <label>Message</label>
-                    <textarea id="individualDesc" rows="3" placeholder="Notification message"></textarea>
-                </div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-user"></i> Individual</h2></div>
+                <div class="form-group"><label>Recipient</label><input type="text" id="individualRecipient" placeholder="Username"></div>
+                <div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Notification title"></div>
+                <div class="form-group"><label>Message</label><textarea id="individualDesc" rows="2" placeholder="Notification message"></textarea></div>
                 <div class="icon-color-row">
-                    <button class="btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Choose Icon</button>
+                    <button class="btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button>
                     <div class="icon-preview" id="individualIconPreview"><i class="fas fa-envelope"></i></div>
                     <input type="color" id="individualColor" value="#3b82f6">
                 </div>
-                <button onclick="sendIndividual()" style="margin-top:16px;"><i class="fas fa-paper-plane"></i> Send</button>
+                <button onclick="sendIndividual()" style="margin-top:12px;"><i class="fas fa-paper-plane"></i> Send</button>
             </div>
         </div>
 
-        <!-- Support Section with Stats -->
+        <!-- Support with Stats -->
         <div id="supportSection" class="section-page">
-            <!-- Stats Cards -->
             <div class="stats-grid">
-                <div class="stat-card">
-                    <i class="fas fa-envelope"></i>
-                    <h3 id="totalSupportCount">0</h3>
-                    <p>Total Messages</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-clock"></i>
-                    <h3 id="unreadSupportCount">0</h3>
-                    <p>Unread Messages</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-reply-all"></i>
-                    <h3 id="repliedSupportCount">0</h3>
-                    <p>Replied</p>
-                </div>
+                <div class="stat-card"><i class="fas fa-envelope"></i><h3 id="totalSupportCount">0</h3><p>Total Messages</p></div>
+                <div class="stat-card"><i class="fas fa-clock"></i><h3 id="unreadSupportCount">0</h3><p>Unread</p></div>
+                <div class="stat-card"><i class="fas fa-reply-all"></i><h3 id="repliedSupportCount">0</h3><p>Replied</p></div>
             </div>
-
             <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2>
-                    <button onclick="refreshSupport()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button>
-                </div>
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-headset"></i> Support Messages</h2><button onclick="refreshSupport()" class="btn-outline"><i class="fas fa-sync-alt"></i> Refresh</button></div>
                 <div id="supportMessagesContainer"></div>
             </div>
         </div>
 
-        <!-- Digital Services Section -->
-        <div id="digitalSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-code"></i> Digital Services</h3>
-                    <button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshDigital()" class="btn-outline">Refresh</button>
-                    <button onclick="saveDigital()" class="btn-success">Save All</button>
-                </div>
-                <div id="digitalServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Local Services Section -->
-        <div id="localSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-print"></i> Local Services</h3>
-                    <button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshLocal()" class="btn-outline">Refresh</button>
-                    <button onclick="saveLocal()" class="btn-success">Save All</button>
-                </div>
-                <div id="localServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Phone Services Section -->
-        <div id="phoneSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-mobile-alt"></i> Phone Services</h3>
-                    <button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshPhone()" class="btn-outline">Refresh</button>
-                    <button onclick="savePhone()" class="btn-success">Save All</button>
-                </div>
-                <div id="phoneServicesContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Products Section -->
-        <div id="productsSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-cubes"></i> Products</h3>
-                    <button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshProducts()" class="btn-outline">Refresh</button>
-                    <button onclick="saveProducts()" class="btn-success">Save All</button>
-                </div>
-                <div id="productsContainer" class="items-grid"></div>
-            </div>
-        </div>
-
-        <!-- Social Media Section -->
-        <div id="socialSection" class="section-page">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media</h3>
-                    <div>
-                        <button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icon Library</button>
-                        <button onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button>
-                    </div>
-                </div>
-                <div class="action-buttons-row">
-                    <button onclick="refreshSocial()" class="btn-outline">Refresh</button>
-                    <button onclick="saveSocial()" class="btn-success">Save All</button>
-                </div>
-                <div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div>
-            </div>
-        </div>
+        <!-- Digital Services -->
+        <div id="digitalSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-code"></i> Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshDigital()" class="btn-outline">Refresh</button><button onclick="saveDigital()" class="btn-success">Save All</button></div><div id="digitalServicesContainer" class="items-grid"></div></div></div>
+        <div id="localSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-print"></i> Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshLocal()" class="btn-outline">Refresh</button><button onclick="saveLocal()" class="btn-success">Save All</button></div><div id="localServicesContainer" class="items-grid"></div></div></div>
+        <div id="phoneSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-mobile-alt"></i> Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshPhone()" class="btn-outline">Refresh</button><button onclick="savePhone()" class="btn-success">Save All</button></div><div id="phoneServicesContainer" class="items-grid"></div></div></div>
+        <div id="productsSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-cubes"></i> Products</h3><button onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshProducts()" class="btn-outline">Refresh</button><button onclick="saveProducts()" class="btn-success">Save All</button></div><div id="productsContainer" class="items-grid"></div></div></div>
+        <div id="socialSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media</h3><div><button class="btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icons</button><button onclick="addSocial()" style="margin-left:8px;">Add</button></div></div><div class="action-buttons-row"><button onclick="refreshSocial()" class="btn-outline">Refresh</button><button onclick="saveSocial()" class="btn-success">Save All</button></div><div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div></div></div>
     </main>
 </div>
 
-<!-- Toast Notification -->
-<div class="toast-notification" id="toast">
-    <div class="toast-icon"><i class="fas fa-check"></i></div>
-    <div class="toast-message" id="toastMessage"></div>
-</div>
+<!-- Status Bar -->
+<div class="status-bar success" id="statusBar"></div>
+
+<!-- Toast -->
+<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 
 <!-- Icon Modal -->
-<div class="modal-overlay" id="iconModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-icons"></i> Select Icon</h3>
-            <button class="btn-outline" onclick="closeIconModal()"><i class="fas fa-times"></i> Close</button>
-        </div>
-        <div class="icons-grid" id="iconsGrid"></div>
-    </div>
-</div>
+<div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3>Select Icon</h3><button class="btn-outline" onclick="closeIconModal()">Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
 
 <script>
     // ==================== CONFIG ====================
@@ -876,9 +786,9 @@
     let broadcastIcon = 'fas fa-bell', broadcastColor = '#3b82f6', individualIcon = 'fas fa-envelope', individualColor = '#3b82f6';
     let currentIconCallback = null;
     let eventSource = null;
-    let hasVisitedSupport = false; // Track if user has visited support section
-    
-    // Complete icon list
+    let hasVisitedSupport = false;
+
+    // Icon List with Money Icons
     const iconList = [
         'fab fa-facebook-f', 'fab fa-instagram', 'fab fa-twitter', 'fab fa-youtube', 'fab fa-tiktok',
         'fab fa-whatsapp', 'fab fa-telegram', 'fab fa-discord', 'fab fa-github', 'fab fa-linkedin-in',
@@ -895,6 +805,30 @@
         'fas fa-scale-balanced', 'fas fa-piggy-bank'
     ];
 
+    // ==================== Status Bar ====================
+    let statusTimeout = null;
+
+    function setStatus(status, message) {
+        const bar = document.getElementById('statusBar');
+        if (!bar) return;
+        
+        bar.className = 'status-bar';
+        if (status === 'success') bar.classList.add('success');
+        else if (status === 'error') bar.classList.add('error');
+        else if (status === 'warning') bar.classList.add('warning');
+        else if (status === 'info') bar.classList.add('info');
+        
+        bar.style.opacity = '1';
+        
+        if (statusTimeout) clearTimeout(statusTimeout);
+        statusTimeout = setTimeout(() => {
+            bar.style.opacity = '0.4';
+        }, 3000);
+        
+        if (message) showToast(message, status === 'error');
+    }
+
+    // ==================== Toast ====================
     function showToast(msg, isErr = false) {
         const toast = document.getElementById('toast');
         const toastMsg = document.getElementById('toastMessage');
@@ -912,13 +846,10 @@
             toast.style.borderLeftColor = '#10b981';
         }
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
+        setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    function escapeHtml(s) { 
-        if (!s) return ''; 
-        return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); 
-    }
+    function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
     // ==================== SSE Connection ====================
     function connectToStream() {
@@ -928,6 +859,7 @@
         
         eventSource.onopen = () => {
             console.log('✅ SSE Connected');
+            setStatus('success', 'Connected to server');
         };
         
         eventSource.onmessage = (e) => {
@@ -937,19 +869,18 @@
                 
                 if (data.type === 'support_new') {
                     loadAllData();
-                    showToast(`📩 New support message from ${data.data?.sender || 'user'}`);
-                    // Only show badge if user hasn't visited support section
-                    if (!hasVisitedSupport) {
-                        updateSupportBadge();
-                    }
+                    setStatus('info', `New support from ${data.data?.sender || 'user'}`);
+                    if (!hasVisitedSupport) updateSupportBadge();
                     if (document.getElementById('supportSection').classList.contains('active-page')) {
                         renderSupportMessages();
-                        // Clear badge when viewing support section
                         clearSupportBadge();
                     }
+                } else if (data.type === 'support_reply') {
+                    loadAllData();
+                    setStatus('success', `Reply sent to ${data.data?.recipient || 'user'}`);
                 } else if (data.type === 'notification_new') {
                     loadAllData();
-                    showToast(`🔔 ${data.data?.title || 'New notification'}`);
+                    setStatus('info', `Notification: ${data.data?.title || 'New'}`);
                     updateNotificationBadge();
                 } else if (data.type === 'data_update') {
                     loadAllData();
@@ -960,7 +891,8 @@
         };
         
         eventSource.onerror = () => {
-            console.error('SSE error, reconnecting...');
+            console.error('SSE error');
+            setStatus('error', 'Connection lost, reconnecting...');
             eventSource.close();
             setTimeout(connectToStream, 5000);
         };
@@ -968,57 +900,40 @@
 
     // ==================== Badge Updates ====================
     function updateNotificationBadge() {
-        const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+        const notifications = JSON.parse(localStorage.getItem('admin_notifications') || '[]');
         const unreadCount = notifications.filter(n => !n.read).length;
         const badge = document.getElementById('notificationBadge');
         if (badge) {
-            if (unreadCount > 0) {
-                badge.style.display = 'inline-flex';
-                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-            } else {
-                badge.style.display = 'none';
-            }
+            badge.style.display = unreadCount ? 'inline-flex' : 'none';
+            if (unreadCount) badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
         }
     }
 
     function updateSupportBadge() {
-        // Only show badge for new unread messages if user hasn't visited support section
         if (hasVisitedSupport) return;
-        
         const unreadCount = supportMessages.filter(m => !m.read).length;
         const badge = document.getElementById('supportBadge');
         if (badge) {
-            if (unreadCount > 0) {
-                badge.style.display = 'inline-flex';
-                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-            } else {
-                badge.style.display = 'none';
-            }
+            badge.style.display = unreadCount ? 'inline-flex' : 'none';
+            if (unreadCount) badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
         }
     }
     
     function clearSupportBadge() {
         const badge = document.getElementById('supportBadge');
-        if (badge) {
-            badge.style.display = 'none';
-        }
-        // Mark all messages as read
+        if (badge) badge.style.display = 'none';
         supportMessages.forEach(msg => { msg.read = true; });
         saveAllData();
         updateStatsCards();
     }
     
     function updateStatsCards() {
-        const totalCount = supportMessages.length;
-        const unreadCount = supportMessages.filter(m => !m.read).length;
-        const repliedCount = supportMessages.filter(m => m.replied).length;
-        
-        document.getElementById('totalSupportCount').textContent = totalCount;
-        document.getElementById('unreadSupportCount').textContent = unreadCount;
-        document.getElementById('repliedSupportCount').textContent = repliedCount;
+        document.getElementById('totalSupportCount').textContent = supportMessages.length;
+        document.getElementById('unreadSupportCount').textContent = supportMessages.filter(m => !m.read).length;
+        document.getElementById('repliedSupportCount').textContent = supportMessages.filter(m => m.replied).length;
     }
 
-    // ==================== Upload to ImgBB ====================
+    // ==================== Upload ====================
     async function uploadToServer(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -1053,14 +968,11 @@
             }
             renderAll();
             updateStatsCards();
-            // Only update badge if not in support section
-            if (!hasVisitedSupport) {
-                updateSupportBadge();
-            }
-            showToast('Data loaded');
+            if (!hasVisitedSupport) updateSupportBadge();
+            setStatus('success', 'Data loaded');
         } catch (err) {
             console.error('Load failed:', err);
-            showToast('Failed to load data', true);
+            setStatus('error', 'Failed to load data');
         }
     }
 
@@ -1077,10 +989,10 @@
                 body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Save failed');
-            showToast('All changes saved');
+            setStatus('success', 'All changes saved');
         } catch (err) {
             console.error('Save failed:', err);
-            showToast('Save failed', true);
+            setStatus('error', 'Save failed');
         }
     }
 
@@ -1093,7 +1005,7 @@
             color = document.getElementById('broadcastColor').value;
             icon = broadcastIcon;
             recipient = 'all';
-            if (!title) return showToast('Enter notification title', true);
+            if (!title) return showToast('Enter title', true);
         } else {
             recipient = document.getElementById('individualRecipient').value;
             title = document.getElementById('individualTitle').value;
@@ -1110,7 +1022,7 @@
                 body: JSON.stringify({ title, message, icon, color, recipient }) 
             });
             if (res.ok) {
-                showToast('Notification sent');
+                setStatus('success', `Notification sent to ${recipient === 'all' ? 'all' : recipient}`);
                 if (type === 'broadcast') {
                     document.getElementById('broadcastTitle').value = '';
                     document.getElementById('broadcastDesc').value = '';
@@ -1120,10 +1032,10 @@
                     document.getElementById('individualDesc').value = '';
                 }
             } else {
-                showToast('Send failed', true);
+                setStatus('error', 'Send failed');
             }
         } catch (err) {
-            showToast('Connection error', true);
+            setStatus('error', 'Connection error');
         }
     }
     
@@ -1131,6 +1043,50 @@
     function sendIndividual() { sendNotification('individual'); }
 
     // ==================== Support ====================
+    async function replyToMessage(recipient, subject, messageId) {
+        const replyText = prompt(`Reply to ${recipient} about "${subject}":`, '');
+        if (!replyText) return;
+        
+        try {
+            const response = await fetch('/api/support/reply', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    messageId: messageId,
+                    recipient: recipient,
+                    subject: subject,
+                    replyMessage: replyText
+                })
+            });
+            
+            if (response.ok) {
+                setStatus('success', `Reply sent to ${recipient}`);
+                const message = supportMessages.find(m => m.id === messageId);
+                if (message) {
+                    message.replied = true;
+                    message.replyMessage = replyText;
+                    message.replyDate = new Date().toISOString();
+                }
+                renderSupportMessages();
+                saveAllData();
+            } else {
+                setStatus('error', 'Failed to send reply');
+            }
+        } catch (err) {
+            console.error('Reply error:', err);
+            setStatus('error', 'Failed to send reply');
+        }
+    }
+    
+    function deleteSupportMessage(idx) { 
+        if (confirm('Delete this message?')) { 
+            supportMessages.splice(idx, 1); 
+            renderSupportMessages(); 
+            saveAllData(); 
+            setStatus('success', 'Message deleted');
+        } 
+    }
+    
     function renderSupportMessages() {
         const container = document.getElementById('supportMessagesContainer');
         if (!container) return;
@@ -1147,6 +1103,7 @@
                 <div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div>
                 <div class="support-details">${escapeHtml(msg.details)}</div>
                 <div class="support-date"><i class="far fa-calendar-alt"></i> ${new Date(msg.date).toLocaleString()}</div>
+                ${msg.replied ? '<div class="support-date" style="color:#10b981;"><i class="fas fa-reply"></i> Replied: ' + new Date(msg.replyDate).toLocaleString() + '</div>' : ''}
                 <div class="item-actions">
                     <button onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}', ${msg.id})"><i class="fas fa-reply"></i> Reply</button>
                     <button class="btn-danger" onclick="deleteSupportMessage(${idx})"><i class="fas fa-trash"></i> Delete</button>
@@ -1154,34 +1111,7 @@
             </div>
         `).join('');
         updateStatsCards();
-        // Clear badge when viewing messages
         clearSupportBadge();
-    }
-    
-    function deleteSupportMessage(idx) { 
-        if (confirm('Delete this message?')) { 
-            supportMessages.splice(idx, 1); 
-            renderSupportMessages(); 
-            saveAllData(); 
-            showToast('Message deleted'); 
-        } 
-    }
-    
-    async function replyToMessage(recipient, subject, messageId) {
-        // Mark as replied
-        const message = supportMessages.find(m => m.id === messageId);
-        if (message) {
-            message.replied = true;
-            await saveAllData();
-            updateStatsCards();
-        }
-        
-        // Switch to notifications section
-        showSection('notifications');
-        document.getElementById('individualRecipient').value = recipient;
-        document.getElementById('individualTitle').value = `Re: ${subject}`;
-        document.getElementById('individualDesc').focus();
-        showToast('Write your reply and click Send');
     }
 
     // ==================== Home Images ====================
@@ -1192,12 +1122,12 @@
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                showToast('Uploading...');
+                setStatus('info', 'Uploading...');
                 const url = await uploadToServer(file);
                 if (url) {
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
-                    showToast('Image uploaded!');
+                    setStatus('success', 'Image uploaded');
                 }
             }
         };
@@ -1214,9 +1144,7 @@
                     <input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImageLocally(${img.id}, 'alt', this.value)">
                     <button class="btn-outline" onclick="replaceImage(${img.id})"><i class="fas fa-sync-alt"></i> Replace</button>
                 </div>
-                <div class="item-actions">
-                    <button class="btn-danger" onclick="removeImageLocal(${img.id})"><i class="fas fa-trash"></i> Delete</button>
-                </div>
+                <div class="item-actions"><button class="btn-danger" onclick="removeImageLocal(${img.id})"><i class="fas fa-trash"></i> Delete</button></div>
             </div>
         `).join('');
         if (!homeImages.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No images. Click "Add Image"</p></div>';
@@ -1225,15 +1153,13 @@
     async function replaceImage(id) {
         const img = homeImages.find(i => i.id === id);
         if (!img) return;
-        const input = document.createElement('input'); 
-        input.type = 'file'; 
-        input.accept = 'image/*';
+        const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                showToast('Uploading...');
+                setStatus('info', 'Uploading...');
                 const url = await uploadToServer(file);
-                if (url) { img.imageUrl = url; renderImages(); }
+                if (url) { img.imageUrl = url; renderImages(); setStatus('success', 'Image replaced'); }
             }
         };
         input.click();
@@ -1250,7 +1176,7 @@
             <div class="item-card">
                 <div class="item-info">
                     <div class="icon-color-row">
-                        <div class="icon-preview"><i class="${item.icon || 'fas fa-newspaper'}" style="font-size: 1.3rem; color: ${item.color || '#3b82f6'}"></i></div>
+                        <div class="icon-preview"><i class="${item.icon || 'fas fa-newspaper'}" style="font-size: 1.2rem; color: ${item.color || '#3b82f6'}"></i></div>
                         <button class="btn-outline" onclick="selectNewsIcon(${item.id})"><i class="fas fa-icons"></i></button>
                         <input type="color" value="${item.color || '#3b82f6'}" onchange="updateNewsLocally(${item.id}, 'color', this.value)">
                     </div>
@@ -1272,7 +1198,7 @@
     function toggleNewsLocally(id, val) { const i = newsItems.find(i => i.id === id); if (i) i.enabled = val; renderNews(); }
     function deleteNewsLocal(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); }
 
-    // ==================== Generic Render Functions ====================
+    // ==================== Generic Services ====================
     function renderImageBased(containerId, items, updateFn, deleteFn, emptyMsg) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -1302,15 +1228,13 @@
         else return;
         const item = arr.find(i => i.id === id);
         if (!item) return;
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = 'image/*';
+        const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                showToast('Uploading...');
+                setStatus('info', 'Uploading...');
                 const url = await uploadToServer(file);
-                if (url) { item.imageUrl = url; renderAll(); }
+                if (url) { item.imageUrl = url; renderAll(); setStatus('success', 'Image updated'); }
             }
         };
         input.click();
@@ -1353,26 +1277,20 @@
                 <div class="drag-handle"><i class="fas fa-grip-vertical"></i></div>
                 <div class="item-info">
                     <div class="icon-color-row">
-                        <div class="icon-preview"><i class="${s.icon}" style="font-size: 1.8rem; color: ${s.color}"></i></div>
+                        <div class="icon-preview"><i class="${s.icon}" style="font-size: 1.5rem; color: ${s.color}"></i></div>
                         <button class="btn-outline" onclick="openIconLibraryForSocial(${s.id})"><i class="fas fa-icons"></i> Change</button>
                         <input type="color" value="${s.color}" onchange="updateSocialLocal(${s.id}, 'color', this.value)">
                     </div>
                     <input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocialLocal(${s.id}, 'name', this.value)">
                     <input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocialLocal(${s.id}, 'url', this.value)">
                 </div>
-                <div class="item-actions">
-                    <button class="btn-danger" onclick="deleteSocialLocal(${s.id})"><i class="fas fa-trash"></i> Delete</button>
-                </div>
+                <div class="item-actions"><button class="btn-danger" onclick="deleteSocialLocal(${s.id})"><i class="fas fa-trash"></i> Delete</button></div>
             </div>
         `).join('');
         if (!socialLinks.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-share-alt"></i><p>No social links</p></div>';
     }
     
-    function addSocial() { 
-        socialLinks.push({ id: nextId.social++, name: "New Platform", icon: "fab fa-facebook-f", color: "#3b82f6", url: "#", order: socialLinks.length }); 
-        renderSocial(); 
-    }
-    
+    function addSocial() { socialLinks.push({ id: nextId.social++, name: "New Platform", icon: "fab fa-facebook-f", color: "#3b82f6", url: "#", order: socialLinks.length }); renderSocial(); }
     function updateSocialLocal(id, f, v) { const i = socialLinks.find(i => i.id === id); if (i) i[f] = v; renderSocial(); }
     function deleteSocialLocal(id) { socialLinks = socialLinks.filter(i => i.id !== id); socialLinks.forEach((s, idx) => s.order = idx); renderSocial(); }
     
@@ -1399,45 +1317,15 @@
     function openIconLibrary(callback) {
         currentIconCallback = callback;
         const grid = document.getElementById('iconsGrid');
-        grid.innerHTML = iconList.map(icon => `
-            <div class="icon-item" onclick="selectIcon('${icon}')">
-                <i class="${icon}"></i>
-                <span>${icon.split(' ')[1] || icon.split('-').pop()}</span>
-            </div>
-        `).join('');
+        grid.innerHTML = iconList.map(icon => `<div class="icon-item" onclick="selectIcon('${icon}')"><i class="${icon}"></i><span>${icon.split(' ')[1] || icon.split('-').pop()}</span></div>`).join('');
         document.getElementById('iconModal').classList.add('active');
     }
     
-    function selectIcon(icon) { 
-        if (currentIconCallback) currentIconCallback(icon); 
-        closeIconModal(); 
-    }
-    
-    function closeIconModal() { 
-        document.getElementById('iconModal').classList.remove('active'); 
-        currentIconCallback = null; 
-    }
-    
-    function openIconLibraryForBroadcast() { 
-        openIconLibrary((icon) => { 
-            broadcastIcon = icon; 
-            document.getElementById('broadcastIconPreview').innerHTML = `<i class="${icon}" style="color: ${broadcastColor}; font-size: 1.3rem;"></i>`; 
-        }); 
-    }
-    
-    function openIconLibraryForIndividual() { 
-        openIconLibrary((icon) => { 
-            individualIcon = icon; 
-            document.getElementById('individualIconPreview').innerHTML = `<i class="${icon}" style="color: ${individualColor}; font-size: 1.3rem;"></i>`; 
-        }); 
-    }
-    
-    function openIconLibraryForSocial(socialId) {
-        openIconLibrary((icon) => {
-            const item = socialLinks.find(s => s.id === socialId);
-            if (item) { item.icon = icon; renderSocial(); }
-        });
-    }
+    function selectIcon(icon) { if (currentIconCallback) currentIconCallback(icon); closeIconModal(); }
+    function closeIconModal() { document.getElementById('iconModal').classList.remove('active'); currentIconCallback = null; }
+    function openIconLibraryForBroadcast() { openIconLibrary((icon) => { broadcastIcon = icon; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${icon}" style="color: ${broadcastColor}; font-size: 1.2rem;"></i>`; }); }
+    function openIconLibraryForIndividual() { openIconLibrary((icon) => { individualIcon = icon; document.getElementById('individualIconPreview').innerHTML = `<i class="${icon}" style="color: ${individualColor}; font-size: 1.2rem;"></i>`; }); }
+    function openIconLibraryForSocial(socialId) { openIconLibrary((icon) => { const item = socialLinks.find(s => s.id === socialId); if (item) { item.icon = icon; renderSocial(); } }); }
 
     // ==================== Navigation ====================
     const sections = ['homeImages', 'news', 'notifications', 'support', 'digital', 'local', 'phone', 'products', 'social'];
@@ -1449,12 +1337,7 @@
         document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
         
-        // Handle support section visit
-        if (s === 'support') {
-            hasVisitedSupport = true;
-            renderSupportMessages();
-            clearSupportBadge();
-        }
+        if (s === 'support') { hasVisitedSupport = true; renderSupportMessages(); clearSupportBadge(); }
         if (s === 'homeImages') renderImages();
         if (s === 'news') renderNews();
         if (s === 'digital') renderDigital();
@@ -1464,9 +1347,7 @@
         if (s === 'social') renderSocial();
     }
     
-    function renderAll() {
-        renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages();
-    }
+    function renderAll() { renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages(); }
 
     // ==================== Save Functions ====================
     async function saveImages() { await saveAllData(); }
@@ -1488,64 +1369,29 @@
     // ==================== Event Listeners ====================
     document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
     document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
-    document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}; font-size: 1.3rem;"></i>`; });
-    document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}; font-size: 1.3rem;"></i>`; });
+    document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}; font-size: 1.2rem;"></i>`; });
+    document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}; font-size: 1.2rem;"></i>`; });
 
     // ==================== Expose Globals ====================
-    window.openIconLibrary = openIconLibrary;
-    window.selectIcon = selectIcon;
-    window.closeIconModal = closeIconModal;
-    window.openIconLibraryForBroadcast = openIconLibraryForBroadcast;
-    window.openIconLibraryForIndividual = openIconLibraryForIndividual;
+    window.openIconLibrary = openIconLibrary; window.selectIcon = selectIcon; window.closeIconModal = closeIconModal;
+    window.openIconLibraryForBroadcast = openIconLibraryForBroadcast; window.openIconLibraryForIndividual = openIconLibraryForIndividual;
     window.openIconLibraryForSocial = openIconLibraryForSocial;
-    window.sendBroadcast = sendBroadcast;
-    window.sendIndividual = sendIndividual;
-    window.replyToMessage = replyToMessage;
-    window.deleteSupportMessage = deleteSupportMessage;
-    window.addImage = addImage;
-    window.replaceImage = replaceImage;
-    window.updateImageLocally = updateImageLocally;
-    window.removeImageLocal = removeImageLocal;
-    window.addNews = addNews;
-    window.updateNewsLocally = updateNewsLocally;
-    window.selectNewsIcon = selectNewsIcon;
-    window.toggleNewsLocally = toggleNewsLocally;
-    window.deleteNewsLocal = deleteNewsLocal;
-    window.addDigital = addDigital;
-    window.updateDigitalLocal = updateDigitalLocal;
-    window.deleteDigitalLocal = deleteDigitalLocal;
-    window.addLocal = addLocal;
-    window.updateLocalLocal = updateLocalLocal;
-    window.deleteLocalLocal = deleteLocalLocal;
-    window.addPhone = addPhone;
-    window.updatePhoneLocal = updatePhoneLocal;
-    window.deletePhoneLocal = deletePhoneLocal;
-    window.addProduct = addProduct;
-    window.updateProductLocal = updateProductLocal;
-    window.deleteProductLocal = deleteProductLocal;
-    window.addSocial = addSocial;
-    window.updateSocialLocal = updateSocialLocal;
-    window.deleteSocialLocal = deleteSocialLocal;
-    window.dragSocialStart = dragSocialStart;
-    window.dragSocialEnd = dragSocialEnd;
-    window.allowDrop = allowDrop;
-    window.dropSocial = dropSocial;
-    window.refreshImages = refreshImages;
-    window.refreshNews = refreshNews;
-    window.refreshDigital = refreshDigital;
-    window.refreshLocal = refreshLocal;
-    window.refreshPhone = refreshPhone;
-    window.refreshProducts = refreshProducts;
-    window.refreshSocial = refreshSocial;
-    window.refreshSupport = refreshSupport;
-    window.saveImages = saveImages;
-    window.saveNews = saveNews;
-    window.saveDigital = saveDigital;
-    window.saveLocal = saveLocal;
-    window.savePhone = savePhone;
-    window.saveProducts = saveProducts;
-    window.saveSocial = saveSocial;
-    window.showSection = showSection;
+    window.sendBroadcast = sendBroadcast; window.sendIndividual = sendIndividual;
+    window.replyToMessage = replyToMessage; window.deleteSupportMessage = deleteSupportMessage;
+    window.addImage = addImage; window.replaceImage = replaceImage; window.updateImageLocally = updateImageLocally; window.removeImageLocal = removeImageLocal;
+    window.addNews = addNews; window.updateNewsLocally = updateNewsLocally; window.selectNewsIcon = selectNewsIcon; window.toggleNewsLocally = toggleNewsLocally; window.deleteNewsLocal = deleteNewsLocal;
+    window.addDigital = addDigital; window.updateDigitalLocal = updateDigitalLocal; window.deleteDigitalLocal = deleteDigitalLocal;
+    window.addLocal = addLocal; window.updateLocalLocal = updateLocalLocal; window.deleteLocalLocal = deleteLocalLocal;
+    window.addPhone = addPhone; window.updatePhoneLocal = updatePhoneLocal; window.deletePhoneLocal = deletePhoneLocal;
+    window.addProduct = addProduct; window.updateProductLocal = updateProductLocal; window.deleteProductLocal = deleteProductLocal;
+    window.addSocial = addSocial; window.updateSocialLocal = updateSocialLocal; window.deleteSocialLocal = deleteSocialLocal;
+    window.dragSocialStart = dragSocialStart; window.dragSocialEnd = dragSocialEnd; window.allowDrop = allowDrop; window.dropSocial = dropSocial;
+    window.refreshImages = refreshImages; window.refreshNews = refreshNews; window.refreshDigital = refreshDigital;
+    window.refreshLocal = refreshLocal; window.refreshPhone = refreshPhone; window.refreshProducts = refreshProducts;
+    window.refreshSocial = refreshSocial; window.refreshSupport = refreshSupport;
+    window.saveImages = saveImages; window.saveNews = saveNews; window.saveDigital = saveDigital;
+    window.saveLocal = saveLocal; window.savePhone = savePhone; window.saveProducts = saveProducts; window.saveSocial = saveSocial;
+    window.showSection = showSection; window.setStatus = setStatus;
 
     // ==================== Initialize ====================
     loadAllData();
