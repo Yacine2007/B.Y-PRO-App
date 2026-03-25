@@ -61,7 +61,33 @@ async function saveData(data) {
 // SSE Clients
 let clients = [];
 
+// منع التحديثات المفرطة
+let lastBroadcastTime = 0;
+const BROADCAST_COOLDOWN = 2000; // 2 ثانية بين التحديثات
+
+function broadcastUpdate(type, data) {
+    // منع التحديثات المتكررة جداً - فقط لـ data_update
+    if (type === 'data_update') {
+        const now = Date.now();
+        if ((now - lastBroadcastTime) < BROADCAST_COOLDOWN) {
+            console.log(`⏸️ Skipping rapid broadcast (${type}), cooldown active`);
+            return;
+        }
+        lastBroadcastTime = now;
+    }
+    
+    console.log(`📢 Broadcasting ${type} to ${clients.length} clients`);
+    clients.forEach(client => {
+        try {
+            client.res.write(`data: ${JSON.stringify({ type, data })}\n\n`);
+        } catch (err) {
+            console.error(`Error sending to client ${client.id}:`, err.message);
+        }
+    });
+}
+
 app.get('/api/events', (req, res) => {
+    // إعدادات SSE
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -75,8 +101,10 @@ app.get('/api/events', (req, res) => {
     
     console.log(`✅ New SSE client connected: ${clientId}, Total clients: ${clients.length}`);
     
+    // إرسال رسالة ترحيب
     res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to server', clientId })}\n\n`);
     
+    // إرسال ping كل 30 ثانية للحفاظ على الاتصال
     const pingInterval = setInterval(() => {
         try {
             res.write(`: ping\n\n`);
@@ -91,17 +119,6 @@ app.get('/api/events', (req, res) => {
         console.log(`❌ SSE client disconnected: ${clientId}, Total clients: ${clients.length}`);
     });
 });
-
-function broadcastUpdate(type, data) {
-    console.log(`📢 Broadcasting ${type} to ${clients.length} clients`);
-    clients.forEach(client => {
-        try {
-            client.res.write(`data: ${JSON.stringify({ type, data })}\n\n`);
-        } catch (err) {
-            console.error(`Error sending to client ${client.id}:`, err.message);
-        }
-    });
-}
 
 // ==================== API Routes ====================
 
@@ -120,7 +137,8 @@ app.get('/api/data', async (req, res) => {
 app.put('/api/data', async (req, res) => {
     try {
         await saveData(req.body);
-        broadcastUpdate('data_update', req.body);
+        // فقط إرسال إشعار بأن البيانات تغيرت، لكن لا نرسل البيانات الكاملة لتجنب الـ flood
+        broadcastUpdate('data_update', { timestamp: Date.now(), message: 'Data updated' });
         res.json({ success: true });
     } catch (error) {
         console.error('Error saving data:', error);
@@ -144,8 +162,14 @@ app.post('/api/support', async (req, res) => {
         
         await saveData(currentData);
         
-        broadcastUpdate('support_new', newMessage);
-        broadcastUpdate('support_unread_count', { count: support.filter(m => !m.read).length });
+        // إرسال إشعار برسالة الدعم الجديدة
+        broadcastUpdate('support_new', {
+            id: newMessage.id,
+            sender: newMessage.sender,
+            subject: newMessage.subject,
+            message: newMessage.details,
+            date: newMessage.date
+        });
         
         console.log(`📨 New support message from ${newMessage.sender}`);
         res.json({ success: true, message: 'Support request received' });
@@ -166,7 +190,7 @@ app.post('/api/support/reply', async (req, res) => {
         
         const currentData = await fetchData();
         
-        // Create reply notification
+        // إنشاء إشعار الرد
         const replyNotification = {
             id: Date.now(),
             title: `Reply to: ${subject}`,
@@ -179,12 +203,12 @@ app.post('/api/support/reply', async (req, res) => {
             type: 'support_reply'
         };
         
-        // Add to notifications
+        // إضافة الإشعار لقاعدة البيانات
         const notifications = currentData.notifications || [];
         notifications.unshift(replyNotification);
         currentData.notifications = notifications;
         
-        // Update original support message
+        // تحديث رسالة الدعم الأصلية
         const support = currentData.support || [];
         const originalMessage = support.find(m => m.id === parseInt(messageId));
         if (originalMessage) {
@@ -195,16 +219,25 @@ app.post('/api/support/reply', async (req, res) => {
         
         await saveData(currentData);
         
-        // Broadcast to all connected clients
+        // إرسال إشعار الرد للمستخدم
         broadcastUpdate('support_reply', {
             id: replyNotification.id,
             message: replyMessage,
             subject: subject,
             recipient: recipient,
-            sender: 'Admin'
+            sender: 'Admin',
+            date: new Date().toISOString()
         });
         
-        broadcastUpdate('notification_new', replyNotification);
+        // إرسال إشعار عادي أيضاً
+        broadcastUpdate('notification_new', {
+            id: replyNotification.id,
+            title: replyNotification.title,
+            message: replyNotification.message,
+            icon: replyNotification.icon,
+            color: replyNotification.color,
+            recipient: recipient
+        });
         
         console.log(`📧 Reply sent to ${recipient} about: ${subject}`);
         res.json({ success: true, message: 'Reply sent successfully', notification: replyNotification });
@@ -226,7 +259,6 @@ app.post('/api/support/read/:id', async (req, res) => {
             message.read = true;
             await saveData(currentData);
             broadcastUpdate('support_read', { id: messageId });
-            broadcastUpdate('support_unread_count', { count: support.filter(m => !m.read).length });
         }
         res.json({ success: true });
     } catch (error) {
@@ -256,8 +288,16 @@ app.post('/api/notifications', async (req, res) => {
         currentData.notifications = notifications;
         await saveData(currentData);
         
-        broadcastUpdate('notification_new', newNotification);
-        broadcastUpdate('notification_unread_count', { count: notifications.filter(n => !n.read).length });
+        // إرسال الإشعار لجميع العملاء المتصلين
+        broadcastUpdate('notification_new', {
+            id: newNotification.id,
+            title: newNotification.title,
+            message: newNotification.message,
+            icon: newNotification.icon,
+            color: newNotification.color,
+            recipient: newNotification.recipient,
+            date: newNotification.date
+        });
         
         console.log(`🔔 Notification sent: ${title} to ${recipient || 'all'}`);
         res.json({ success: true, notification: newNotification });
@@ -278,7 +318,6 @@ app.post('/api/notifications/read/:id', async (req, res) => {
             notification.read = true;
             await saveData(currentData);
             broadcastUpdate('notification_read', { id: notifId });
-            broadcastUpdate('notification_unread_count', { count: notifications.filter(n => !n.read).length });
         }
         res.json({ success: true });
     } catch (error) {
@@ -359,4 +398,5 @@ app.listen(PORT, () => {
     console.log(`💾 JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
     console.log(`📡 SSE endpoint: /api/events`);
     console.log(`📨 Support reply endpoint: /api/support/reply`);
+    console.log(`⏱️  Broadcast cooldown: ${BROADCAST_COOLDOWN}ms`);
 });
