@@ -307,6 +307,13 @@
             transition: all 0.2s;
         }
         .item-card:hover { border-color: #3b82f6; transform: translateY(-2px); }
+        .drag-handle {
+            text-align: center;
+            margin-bottom: 12px;
+            color: #6b7280;
+            cursor: grab;
+        }
+        .drag-handle:active { cursor: grabbing; }
         .item-info { display: flex; flex-direction: column; gap: 12px; }
         .item-actions {
             display: flex;
@@ -382,6 +389,9 @@
             font-size: 0.65rem;
             font-weight: 600;
         }
+        .support-subject { font-weight: 600; margin: 8px 0 4px; }
+        .support-details { color: #9ca3af; font-size: 0.8rem; margin: 8px 0; }
+        .support-date { font-size: 0.65rem; color: #6b7280; margin-top: 8px; }
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -565,7 +575,7 @@
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-user"></i> Individual Notification</h1><p class="page-subtitle">Send direct notifications to specific users</p></div></div>
             <div class="card">
                 <div class="card-header"><div class="card-title"><i class="fas fa-paper-plane"></i> Send Individual Notification</div></div>
-                <div class="form-group"><label>Recipient Username</label><input type="text" id="individualRecipient" placeholder="Enter username"></div>
+                <div class="form-group"><label>Recipient Username</label><input type="text" id="individualRecipient" placeholder="Enter username or email"></div>
                 <div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Notification title"></div>
                 <div class="form-group"><label>Message</label><textarea id="individualDesc" rows="2" placeholder="Notification message"></textarea></div>
                 <div class="icon-color-row"><button class="btn btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button><div class="icon-preview" id="individualIconPreview"><i class="fas fa-envelope"></i></div><input type="color" id="individualColor" value="#3b82f6"></div>
@@ -613,6 +623,7 @@
 
 <script>
     // ==================== CONFIG ====================
+    // Use the correct backend server
     const API_BASE = '';
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
     let nextId = { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
@@ -718,17 +729,17 @@
     async function loadAllData() {
         try {
             const response = await fetch(`${API_BASE}/api/data`);
-            const record = await response.json();
-            if (record) {
-                homeImages = record.images || [];
-                newsItems = record.news || [];
-                digitalServices = record.digital || [];
-                localServices = record.local || [];
-                phoneServices = record.phone || [];
-                products = record.products || [];
-                socialLinks = record.social || [];
-                supportMessages = record.support || [];
-                nextId = record.nextId || { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
+            const data = await response.json();
+            if (data) {
+                homeImages = data.images || [];
+                newsItems = data.news || [];
+                digitalServices = data.digital || [];
+                localServices = data.local || [];
+                phoneServices = data.phone || [];
+                products = data.products || [];
+                socialLinks = data.social || [];
+                supportMessages = data.support || [];
+                nextId = data.nextId || { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
             }
             renderAll();
             updateSupportStats();
