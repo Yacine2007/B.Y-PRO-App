@@ -48,18 +48,6 @@
             font-size: 14px;
             line-height: 1.4;
         }
-        /* Shimmer loading */
-        .shimmer {
-            background: linear-gradient(90deg, var(--shimmer-bg) 25%, var(--shimmer-highlight) 50%, var(--shimmer-bg) 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 8px;
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        /* Loading spinner */
         .spinner {
             display: inline-block;
             width: 20px;
@@ -72,14 +60,6 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        .wallet-loading {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-        /* Menu Trigger (left side) */
         .menu-trigger {
             position: fixed; left: 0; top: 50%; transform: translateY(-50%);
             width: 44px; height: 70px; background: rgba(255,255,255,0.96);
@@ -96,7 +76,6 @@
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
-        /* Sidebar (left) */
         .sidebar {
             width: 260px; background: var(--surface); border-right: 1px solid var(--border);
             position: fixed; left: 0; top: 0; bottom: 0; z-index: 100;
@@ -126,7 +105,6 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
-        /* Main Content */
         .main-content { flex: 1; margin-left: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
@@ -150,7 +128,6 @@
         .wallet-badge { color: var(--success); }
         .bell-icon { color: var(--text-muted); }
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
-        /* Carousel */
         .carousel-container {
             position: relative; width: 100%; border-radius: 14px; overflow: hidden;
             margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9;
@@ -172,7 +149,6 @@
             cursor: pointer;
         }
         .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
-        /* Section Headers */
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
@@ -182,7 +158,6 @@
             background: var(--primary); color: white; padding: 2px 8px;
             border-radius: 30px; font-size: 0.6rem; font-weight: 600;
         }
-        /* Cards Grid */
         .cards-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 12px; margin-bottom: 20px;
@@ -200,7 +175,6 @@
             display: flex; align-items: center; gap: 6px;
         }
         .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
-        /* Notifications */
         .notification-card-wrapper {
             position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px;
         }
@@ -228,7 +202,6 @@
         .notification-actions button:hover {
             background: var(--primary); color: white; border-color: var(--primary);
         }
-        /* Support Form */
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 10px; }
         .form-group input, .form-group select, .form-group textarea {
@@ -252,7 +225,6 @@
             border-radius: 40px; display: inline-flex; align-items: center;
             gap: 6px; font-size: 0.65rem; margin-bottom: 12px;
         }
-        /* Wallet Page */
         .card-info-row {
             display: flex; align-items: center; justify-content: space-between;
             background: var(--surface); border-radius: 50px; padding: 6px 12px;
@@ -309,7 +281,6 @@
         }
         .empty-icon { font-size: 1.5rem; margin-bottom: 4px; opacity: 0.5; }
         .empty-text { font-size: 0.65rem; }
-        /* Toast - removed animation, only appears when needed */
         .toast-notification {
             position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%);
             background: var(--surface); border-radius: 40px; padding: 8px 16px;
@@ -319,7 +290,6 @@
         .toast-notification.show { display: flex; }
         .toast-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: #d1fae5; color: var(--success); }
         .toast-message { font-size: 0.7rem; font-weight: 500; }
-        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
@@ -349,30 +319,23 @@
             .menu-trigger { width: 38px; height: 60px; font-size: 1.1rem; }
             .carousel-container { aspect-ratio: 4 / 3; }
         }
-        .payment-modal {
-            max-width: 350px;
-        }
+        .payment-modal { max-width: 350px; }
         .payment-input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--bg);
-            color: var(--text);
+            width: 100%; padding: 10px; margin: 10px 0;
+            border: 1px solid var(--border); border-radius: 12px;
+            background: var(--bg); color: var(--text);
         }
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 40px;
-            width: 100%;
-            margin-top: 10px;
-            cursor: pointer;
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-danger { background: var(--danger); }
+        .shimmer {
+            background: linear-gradient(90deg, var(--shimmer-bg) 25%, var(--shimmer-highlight) 50%, var(--shimmer-bg) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
         }
-        .btn-danger {
-            background: var(--danger);
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
     </style>
 </head>
@@ -450,56 +413,9 @@
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
     let eventSource = null;
+    let sseReconnectAttempts = 0;
+    let lastSSEMessage = null;
     let toastTimeout = null;
-
-    // ==================== SSE CONNECTION FOR REAL-TIME UPDATES ====================
-    function connectToSSE() {
-        if (eventSource) eventSource.close();
-        
-        eventSource = new EventSource(`${API_BASE}/api/events`);
-        
-        eventSource.onopen = () => {
-            console.log('SSE Connected');
-        };
-        
-        eventSource.onmessage = (e) => {
-            try {
-                const data = JSON.parse(e.data);
-                console.log('SSE Received:', data);
-                
-                if (data.type === 'support_new') {
-                    showToast(`New support message from ${data.data?.sender || 'user'}`);
-                    addNotification('New Support Message', `From: ${data.data?.sender || 'User'} - ${data.data?.subject || 'No subject'}`, 'fas fa-headset', '#ef4444');
-                }
-                else if (data.type === 'notification_new') {
-                    showToast(`${data.data?.title || 'New notification'}`);
-                    addNotification(data.data?.title || 'Notification', data.data?.message || '', data.data?.icon || 'fas fa-bell', data.data?.color || '#3b82f6');
-                }
-                else if (data.type === 'support_reply') {
-                    showToast(`Reply received for your support message`);
-                    addNotification('Support Reply', data.data?.message || 'You have a new reply to your support request', 'fas fa-reply', '#10b981');
-                }
-                else if (data.type === 'data_update') {
-                    loadAllContent();
-                }
-                else if (data.type === 'wallet_update') {
-                    if (data.data?.balance !== undefined) {
-                        userWalletData.balance = data.data.balance;
-                        updateWalletUI();
-                        showToast(`Balance updated: $${data.data.balance}`);
-                    }
-                }
-            } catch (err) {
-                console.error('SSE parse error:', err);
-            }
-        };
-        
-        eventSource.onerror = (err) => {
-            console.error('SSE error:', err);
-            eventSource.close();
-            setTimeout(connectToSSE, 5000);
-        };
-    }
 
     // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
@@ -522,6 +438,134 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
+    // ==================== SSE CONNECTION FOR REAL-TIME UPDATES ====================
+    function connectToSSE() {
+        if (eventSource) {
+            console.log('🔌 Closing existing SSE connection...');
+            eventSource.close();
+            eventSource = null;
+        }
+        
+        if (!currentUser) {
+            console.log('⚠️ No user logged in, skipping SSE connection');
+            return;
+        }
+        
+        console.log('🔄 Connecting to SSE at:', `${API_BASE}/api/events`);
+        
+        try {
+            eventSource = new EventSource(`${API_BASE}/api/events`);
+            
+            eventSource.onopen = () => {
+                console.log('✅ SSE Connected successfully');
+                sseReconnectAttempts = 0;
+                const statusMsg = document.createElement('div');
+                statusMsg.textContent = '🔔 Connected to real-time updates';
+                statusMsg.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#10b981;color:white;padding:4px 12px;border-radius:20px;font-size:10px;z-index:9999;opacity:0.8;';
+                document.body.appendChild(statusMsg);
+                setTimeout(() => statusMsg.remove(), 3000);
+            };
+            
+            eventSource.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    console.log('📨 SSE Message received:', data);
+                    lastSSEMessage = data;
+                    
+                    // Support reply from admin (received by user)
+                    if (data.type === 'support_reply') {
+                        console.log('📨 Support reply received:', data.data);
+                        const replyMessage = data.data?.message || 'You have a new reply from support';
+                        const subject = data.data?.subject || 'Support Reply';
+                        showToast(`📩 Reply: ${replyMessage.substring(0, 50)}...`);
+                        addNotification(`Reply: ${subject}`, replyMessage, 'fas fa-reply', '#10b981');
+                    }
+                    
+                    // New notification from admin (mass or individual)
+                    else if (data.type === 'notification_new') {
+                        console.log('🔔 New notification from admin:', data.data);
+                        const title = data.data?.title || 'New Notification';
+                        const message = data.data?.message || '';
+                        const icon = data.data?.icon || 'fas fa-bell';
+                        const color = data.data?.color || '#3b82f6';
+                        const recipient = data.data?.recipient;
+                        
+                        if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
+                            showToast(`🔔 ${title}`);
+                            addNotification(title, message, icon, color);
+                        }
+                    }
+                    
+                    // Data update (news, services, etc.)
+                    else if (data.type === 'data_update') {
+                        console.log('🔄 Data updated, refreshing content');
+                        loadAllContent();
+                    }
+                    
+                    // Wallet update
+                    else if (data.type === 'wallet_update') {
+                        console.log('💰 Wallet update:', data.data);
+                        if (data.data?.balance !== undefined && userWalletData) {
+                            userWalletData.balance = data.data.balance;
+                            updateWalletUI();
+                            showToast(`💰 Balance updated: $${data.data.balance}`);
+                        }
+                    }
+                    
+                    // Initial connection message
+                    else if (data.type === 'connected') {
+                        console.log('✅ Connected to server:', data.message);
+                    }
+                    
+                } catch (err) {
+                    console.error('❌ SSE parse error:', err, 'Raw data:', event.data);
+                }
+            };
+            
+            eventSource.onerror = (error) => {
+                console.error('❌ SSE Error:', error);
+                eventSource.close();
+                eventSource = null;
+                
+                if (currentUser) {
+                    const reconnectDelay = Math.min(30000, 5000 * (sseReconnectAttempts + 1));
+                    console.log(`🔄 Reconnecting to SSE in ${reconnectDelay/1000} seconds...`);
+                    setTimeout(() => {
+                        if (currentUser) {
+                            connectToSSE();
+                        }
+                    }, reconnectDelay);
+                    sseReconnectAttempts++;
+                }
+            };
+            
+        } catch (err) {
+            console.error('❌ Failed to create SSE connection:', err);
+        }
+    }
+    
+    function disconnectSSE() {
+        if (eventSource) {
+            console.log('🔌 Disconnecting SSE...');
+            eventSource.close();
+            eventSource = null;
+        }
+    }
+    
+    function testSSEConnection() {
+        console.log('🔍 Testing SSE connection...');
+        console.log('EventSource status:', eventSource ? 'Connected' : 'Disconnected');
+        console.log('Current user:', currentUser?.name || 'No user');
+        if (!eventSource) {
+            console.log('⚠️ SSE not connected, attempting to connect...');
+            connectToSSE();
+        } else {
+            console.log('✅ SSE is connected, ready to receive updates');
+        }
+        return { connected: !!eventSource, user: currentUser?.name };
+    }
+    window.testSSEConnection = testSSEConnection;
+
     // ==================== DATA API (JSONBin for content only) ====================
     async function fetchContentData() {
         try {
@@ -537,7 +581,6 @@
 
     // ==================== WALLET - DIRECT FROM FINANCIAL API ====================
     async function loadUserWallet() {
-        // Show loading state
         document.getElementById('walletBalanceContainer').style.display = 'flex';
         document.getElementById('walletBalanceValue').style.display = 'none';
         document.getElementById('userCardCode').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
@@ -545,11 +588,7 @@
         
         try {
             const response = await fetch(`${FINANCIAL_API}/api/financial/1`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const result = await response.json();
             
             if (result.success && result.data) {
@@ -581,8 +620,6 @@
 
     function updateWalletUI() {
         if (!userWalletData) return;
-        
-        // Hide loading, show values
         document.getElementById('walletBalanceContainer').style.display = 'none';
         document.getElementById('walletBalanceValue').style.display = 'block';
         document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
@@ -623,7 +660,6 @@
         try {
             const passwordValid = (password === '1234' || password === currentUser?.id);
             if (!passwordValid) { showToast('Incorrect password', true); return; }
-            
             userWalletData.balance += amount;
             if (!userWalletData.transactions) userWalletData.transactions = [];
             userWalletData.transactions.unshift({
@@ -693,10 +729,19 @@
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         
         loadUserWallet();
+        
+        if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+        }
         connectToSSE();
         
-        if (!welcomeShown) { welcomeShown = true; setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); }
+        if (!welcomeShown) { 
+            welcomeShown = true; 
+            setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); 
+        }
     }
+    
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
         onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadAllContent(); },
@@ -707,13 +752,11 @@
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
             document.getElementById('homeWalletAmount').innerHTML = '$0.00'; 
             welcomeShown = false; 
-            if (eventSource) {
-                eventSource.close();
-                eventSource = null;
-            }
+            disconnectSSE();
             auth.show(); 
         }
     });
+    
     setTimeout(() => {
         if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
             const u = auth.getCurrentUser();
