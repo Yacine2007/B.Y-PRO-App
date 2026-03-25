@@ -20,7 +20,6 @@
 
         .admin-container { display: flex; min-height: 100vh; }
 
-        /* Sidebar */
         .sidebar {
             width: 260px;
             background: #0f0f0f;
@@ -69,7 +68,6 @@
             margin-left: auto;
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: 260px;
@@ -78,7 +76,6 @@
             min-height: 100vh;
         }
 
-        /* Status Bar */
         .status-bar {
             position: fixed;
             bottom: 0;
@@ -102,30 +99,25 @@
         .status-bar.info { background: #3b82f6; }
         @media (max-width: 768px) { .status-bar { left: 0; } .main-content { margin-left: 0; padding: 16px; padding-bottom: 48px; } }
 
-        /* Sections */
         .section-page { display: none; animation: fadeIn 0.25s ease; }
         .section-page.active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards */
         .card { background: #121212; border-radius: 20px; border: 1px solid #2a2a2a; padding: 20px; margin-bottom: 20px; }
         .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
         .card-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #ffffff; }
 
-        /* Stats Cards */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
         .stat-card { background: #121212; border-radius: 16px; padding: 16px; border: 1px solid #2a2a2a; text-align: center; }
         .stat-card i { font-size: 1.6rem; color: #3b82f6; margin-bottom: 8px; }
         .stat-card h3 { font-size: 1.6rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
         .stat-card p { color: #9ca3af; font-size: 0.7rem; }
 
-        /* Form Elements */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 0.75rem; color: #9ca3af; }
         input, select, textarea { width: 100%; padding: 10px 14px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: #e5e5e5; transition: all 0.2s; }
         input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; }
 
-        /* Buttons */
         button {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
@@ -147,7 +139,6 @@
         .btn-success { background: linear-gradient(135deg, #10b981, #059669); }
         .action-buttons-row { display: flex; gap: 10px; margin-bottom: 16px; justify-content: flex-end; }
 
-        /* Items Grid */
         .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
         .item-card { background: #1a1a1a; border-radius: 16px; border: 1px solid #2a2a2a; padding: 16px; transition: all 0.2s; position: relative; }
         .item-card:hover { border-color: #3b82f6; }
@@ -156,7 +147,6 @@
         .item-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #2a2a2a; }
         .image-preview { width: 100%; max-height: 140px; object-fit: cover; border-radius: 12px; border: 1px solid #2a2a2a; }
 
-        /* Toggle Switch */
         .toggle-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #2a2a2a; transition: 0.2s; border-radius: 22px; }
@@ -164,7 +154,6 @@
         input:checked + .toggle-slider { background-color: #10b981; }
         input:checked + .toggle-slider:before { transform: translateX(22px); }
 
-        /* Support Cards */
         .support-card { background: #1a1a1a; border-radius: 16px; padding: 16px; margin-bottom: 12px; border: 1px solid #2a2a2a; transition: all 0.2s; }
         .support-card:hover { border-color: #3b82f6; }
         .support-card.unread { border-left: 3px solid #3b82f6; background: rgba(59, 130, 246, 0.05); }
@@ -176,11 +165,9 @@
         .empty-state { text-align: center; padding: 40px 20px; color: #6b7280; }
         .empty-state i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.5; }
 
-        /* Icon Picker */
         .icon-color-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .icon-preview { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; background: #1a1a1a; border-radius: 10px; border: 1px solid #2a2a2a; font-size: 1.2rem; }
 
-        /* Modal */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-content { background: #121212; border-radius: 24px; width: 90%; max-width: 650px; max-height: 80vh; overflow: auto; padding: 20px; border: 1px solid #2a2a2a; }
@@ -191,7 +178,6 @@
         .icon-item i { font-size: 1.4rem; color: #3b82f6; }
         .icon-item span { font-size: 0.6rem; color: #9ca3af; }
 
-        /* Toast */
         .toast-notification { position: fixed; bottom: 20px; right: 20px; background: #1a1a1a; border-radius: 40px; padding: 10px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4); border-left: 3px solid #10b981; z-index: 2000; transform: translateX(120%); transition: transform 0.3s ease; }
         .toast-notification.show { transform: translateX(0); }
         .toast-icon { width: 24px; height: 24px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #10b981; }
@@ -208,7 +194,7 @@
         <nav class="sidebar-nav">
             <div class="nav-item active" data-section="homeImages"><i class="fas fa-images"></i> Home Images</div>
             <div class="nav-item" data-section="news"><i class="fas fa-newspaper"></i> News</div>
-            <div class="nav-item" data-section="notifications"><i class="fas fa-bell"></i> Notifications <span id="notificationBadge" class="badge" style="display: none;"></span></div>
+            <div class="nav-item" data-section="notifications"><i class="fas fa-bell"></i> Notifications</div>
             <div class="nav-item" data-section="support"><i class="fas fa-headset"></i> Support <span id="supportBadge" class="badge" style="display: none;"></span></div>
             <div class="nav-item" data-section="digital"><i class="fas fa-code"></i> Digital Services</div>
             <div class="nav-item" data-section="local"><i class="fas fa-print"></i> Local Services</div>
@@ -219,7 +205,6 @@
     </aside>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
     <main class="main-content">
-        <!-- Home Images -->
         <div id="homeImagesSection" class="section-page active-page">
             <div class="card">
                 <div class="card-header"><h2 class="card-title"><i class="fas fa-images"></i> Home Images</h2><button onclick="addImage()"><i class="fas fa-plus"></i> Add Image</button></div>
@@ -228,7 +213,6 @@
             </div>
         </div>
 
-        <!-- News -->
         <div id="newsSection" class="section-page">
             <div class="card">
                 <div class="card-header"><h2 class="card-title"><i class="fas fa-newspaper"></i> News</h2><button onclick="addNews()"><i class="fas fa-plus"></i> Add News</button></div>
@@ -237,7 +221,6 @@
             </div>
         </div>
 
-        <!-- Notifications -->
         <div id="notificationsSection" class="section-page">
             <div class="card">
                 <div class="card-header"><h2 class="card-title"><i class="fas fa-globe"></i> Broadcast</h2></div>
@@ -264,7 +247,6 @@
             </div>
         </div>
 
-        <!-- Support with Stats -->
         <div id="supportSection" class="section-page">
             <div class="stats-grid">
                 <div class="stat-card"><i class="fas fa-envelope"></i><h3 id="totalSupportCount">0</h3><p>Total Messages</p></div>
@@ -277,7 +259,6 @@
             </div>
         </div>
 
-        <!-- Digital Services -->
         <div id="digitalSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-code"></i> Digital Services</h3><button onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshDigital()" class="btn-outline">Refresh</button><button onclick="saveDigital()" class="btn-success">Save All</button></div><div id="digitalServicesContainer" class="items-grid"></div></div></div>
         <div id="localSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-print"></i> Local Services</h3><button onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshLocal()" class="btn-outline">Refresh</button><button onclick="saveLocal()" class="btn-success">Save All</button></div><div id="localServicesContainer" class="items-grid"></div></div></div>
         <div id="phoneSection" class="section-page"><div class="card"><div class="card-header"><h3 class="card-title"><i class="fas fa-mobile-alt"></i> Phone Services</h3><button onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div><div class="action-buttons-row"><button onclick="refreshPhone()" class="btn-outline">Refresh</button><button onclick="savePhone()" class="btn-success">Save All</button></div><div id="phoneServicesContainer" class="items-grid"></div></div></div>
@@ -286,20 +267,14 @@
     </main>
 </div>
 
-<!-- Status Bar -->
 <div class="status-bar success" id="statusBar"><i class="fas fa-circle" style="font-size: 0.5rem;"></i><span id="statusText">Ready</span></div>
-
-<!-- Toast -->
 <div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
-
-<!-- Icon Modal -->
 <div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3>Select Icon</h3><button class="btn-outline" onclick="closeIconModal()">Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
 
 <script>
     // ==================== CONFIG ====================
     const API_BASE = '';
     
-    // Data stores
     let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [];
     let nextId = { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 };
     let broadcastIcon = 'fas fa-bell', broadcastColor = '#3b82f6', individualIcon = 'fas fa-envelope', individualColor = '#3b82f6';
@@ -307,7 +282,6 @@
     let eventSource = null;
     let hasVisitedSupport = false;
 
-    // Icon List
     const iconList = [
         'fab fa-facebook-f', 'fab fa-instagram', 'fab fa-twitter', 'fab fa-youtube', 'fab fa-tiktok',
         'fab fa-whatsapp', 'fab fa-telegram', 'fab fa-discord', 'fab fa-github', 'fab fa-linkedin-in',
@@ -324,8 +298,6 @@
         'fas fa-scale-balanced', 'fas fa-piggy-bank'
     ];
 
-    // ==================== Status Bar ====================
-    let statusTimeout = null;
     function setStatus(status, message) {
         const bar = document.getElementById('statusBar');
         const statusText = document.getElementById('statusText');
@@ -336,8 +308,7 @@
         else if (status === 'warning') bar.classList.add('warning');
         else if (status === 'info') bar.classList.add('info');
         if (statusText) statusText.textContent = message || (status === 'success' ? 'Ready' : status);
-        if (statusTimeout) clearTimeout(statusTimeout);
-        statusTimeout = setTimeout(() => { if (statusText && status !== 'error') statusText.textContent = 'Ready'; }, 4000);
+        setTimeout(() => { if (statusText && status !== 'error') statusText.textContent = 'Ready'; }, 3000);
     }
 
     function showToast(msg, isErr = false) {
@@ -360,56 +331,29 @@
 
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
-    // ==================== SSE Connection ====================
+    // ==================== SSE ====================
     function connectToStream() {
         if (eventSource) { eventSource.close(); eventSource = null; }
-        
         eventSource = new EventSource('/api/events');
-        
-        eventSource.onopen = () => {
-            console.log('✅ SSE Connected');
-            setStatus('success', 'Connected to server');
-        };
-        
+        eventSource.onopen = () => { console.log('✅ SSE Connected'); setStatus('success', 'Connected'); };
         eventSource.onmessage = (e) => {
             try {
                 const data = JSON.parse(e.data);
-                console.log('📨 SSE:', data);
-                
+                console.log('📨 SSE:', data.type);
                 if (data.type === 'support_new') {
-                    loadAllData();
-                    setStatus('info', `New support from ${data.data?.sender || 'user'}`);
+                    setStatus('info', 'New support message received');
                     if (!hasVisitedSupport) updateSupportBadge();
                     if (document.getElementById('supportSection').classList.contains('active-page')) {
-                        renderSupportMessages();
-                        clearSupportBadge();
+                        refreshSupport();
                     }
                 } else if (data.type === 'support_reply') {
-                    loadAllData();
-                    setStatus('success', `Reply sent successfully`);
+                    setStatus('success', 'Reply sent successfully');
                 } else if (data.type === 'notification_new') {
-                    loadAllData();
                     setStatus('info', `Notification: ${data.data?.title || 'New'}`);
-                    updateNotificationBadge();
-                } else if (data.type === 'data_update') {
-                    loadAllData();
                 }
-            } catch (err) { console.error('SSE parse error:', err); }
+            } catch (err) { console.error('SSE error:', err); }
         };
-        
-        eventSource.onerror = () => {
-            console.error('SSE error');
-            setStatus('error', 'Connection lost, reconnecting...');
-            eventSource.close();
-            setTimeout(connectToStream, 5000);
-        };
-    }
-
-    // ==================== Badge Updates ====================
-    function updateNotificationBadge() {
-        const unreadCount = 0; // يمكن تعديل حسب الحاجة
-        const badge = document.getElementById('notificationBadge');
-        if (badge) { badge.style.display = 'none'; }
+        eventSource.onerror = () => { console.error('SSE error'); setTimeout(connectToStream, 5000); };
     }
 
     function updateSupportBadge() {
@@ -425,8 +369,6 @@
     function clearSupportBadge() {
         const badge = document.getElementById('supportBadge');
         if (badge) badge.style.display = 'none';
-        supportMessages.forEach(msg => { msg.read = true; });
-        updateStatsCards();
     }
     
     function updateStatsCards() {
@@ -435,7 +377,6 @@
         document.getElementById('repliedSupportCount').textContent = supportMessages.filter(m => m.replied).length;
     }
 
-    // ==================== Upload ====================
     async function uploadToServer(file) {
         const formData = new FormData();
         formData.append('image', file);
@@ -445,13 +386,11 @@
             if (data.url) return data.url;
             throw new Error('Upload failed');
         } catch (err) {
-            console.error('Upload error:', err);
             setStatus('error', 'Upload failed');
             return null;
         }
     }
 
-    // ==================== Data Management ====================
     async function loadAllData() {
         try {
             const response = await fetch(`${API_BASE}/api/data`);
@@ -473,8 +412,7 @@
             if (!hasVisitedSupport) updateSupportBadge();
             setStatus('success', 'Data loaded');
         } catch (err) {
-            console.error('Load failed:', err);
-            setStatus('error', 'Failed to load data');
+            setStatus('error', 'Failed to load');
         }
     }
 
@@ -494,13 +432,11 @@
             setStatus('success', 'All changes saved');
             showToast('All changes saved successfully');
         } catch (err) {
-            console.error('Save failed:', err);
             setStatus('error', 'Save failed');
             showToast('Save failed', true);
         }
     }
 
-    // ==================== Notifications ====================
     async function sendNotification(type) {
         let title, message, icon, color, recipient;
         if (type === 'broadcast') {
@@ -518,11 +454,9 @@
             icon = individualIcon;
             if (!recipient || !title) { setStatus('warning', 'Enter recipient and title'); return; }
         }
-        
         try {
             const res = await fetch('/api/notifications', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, 
                 body: JSON.stringify({ title, message, icon, color, recipient }) 
             });
             if (res.ok) {
@@ -536,36 +470,21 @@
                     document.getElementById('individualTitle').value = '';
                     document.getElementById('individualDesc').value = '';
                 }
-            } else {
-                setStatus('error', 'Send failed');
-                showToast('Failed to send notification', true);
-            }
-        } catch (err) {
-            setStatus('error', 'Connection error');
-            showToast('Connection error', true);
-        }
+            } else { setStatus('error', 'Send failed'); }
+        } catch (err) { setStatus('error', 'Connection error'); }
     }
     
     function sendBroadcast() { sendNotification('broadcast'); }
     function sendIndividual() { sendNotification('individual'); }
 
-    // ==================== Support ====================
     async function replyToMessage(recipient, subject, messageId) {
         const replyText = prompt(`Reply to ${recipient} about "${subject}":`, '');
         if (!replyText) return;
-        
         try {
             const response = await fetch('/api/support/reply', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    messageId: messageId,
-                    recipient: recipient,
-                    subject: subject,
-                    replyMessage: replyText
-                })
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ messageId, recipient, subject, replyMessage: replyText })
             });
-            
             if (response.ok) {
                 setStatus('success', `Reply sent to ${recipient}`);
                 showToast(`Reply sent to ${recipient}`);
@@ -577,15 +496,8 @@
                 }
                 renderSupportMessages();
                 await saveAllData();
-            } else {
-                setStatus('error', 'Failed to send reply');
-                showToast('Failed to send reply', true);
-            }
-        } catch (err) {
-            console.error('Reply error:', err);
-            setStatus('error', 'Failed to send reply');
-            showToast('Failed to send reply', true);
-        }
+            } else { setStatus('error', 'Failed to send reply'); }
+        } catch (err) { setStatus('error', 'Failed to send reply'); }
     }
     
     function deleteSupportMessage(idx) { 
@@ -625,7 +537,6 @@
         clearSupportBadge();
     }
 
-    // ==================== Home Images ====================
     async function addImage() {
         const input = document.createElement('input');
         input.type = 'file';
@@ -639,7 +550,6 @@
                     homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
                     renderImages();
                     setStatus('success', 'Image uploaded');
-                    showToast('Image uploaded successfully');
                 }
             }
         };
@@ -652,14 +562,14 @@
         container.innerHTML = homeImages.map(img => `
             <div class="item-card">
                 <div class="item-info">
-                    <img src="${img.imageUrl}" class="image-preview" alt="preview">
+                    <img src="${img.imageUrl}" class="image-preview">
                     <input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImageLocally(${img.id}, 'alt', this.value)">
                     <button class="btn-outline" onclick="replaceImage(${img.id})"><i class="fas fa-sync-alt"></i> Replace</button>
                 </div>
                 <div class="item-actions"><button class="btn-danger" onclick="removeImageLocal(${img.id})"><i class="fas fa-trash"></i> Delete</button></div>
             </div>
         `).join('');
-        if (!homeImages.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No images. Click "Add Image"</p></div>';
+        if (!homeImages.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-images"></i><p>No images</p></div>';
     }
     
     async function replaceImage(id) {
@@ -669,9 +579,8 @@
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                setStatus('info', 'Uploading...');
                 const url = await uploadToServer(file);
-                if (url) { img.imageUrl = url; renderImages(); setStatus('success', 'Image replaced'); }
+                if (url) { img.imageUrl = url; renderImages(); }
             }
         };
         input.click();
@@ -680,7 +589,6 @@
     function updateImageLocally(id, field, val) { const img = homeImages.find(i => i.id === id); if (img) img[field] = val; renderImages(); }
     function removeImageLocal(id) { homeImages = homeImages.filter(i => i.id !== id); renderImages(); }
 
-    // ==================== News ====================
     function renderNews() {
         const container = document.getElementById('newsContainer');
         if (!container) return;
@@ -701,7 +609,7 @@
                 </div>
             </div>
         `).join('');
-        if (!newsItems.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-newspaper"></i><p>No news. Click "Add News"</p></div>';
+        if (!newsItems.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-newspaper"></i><p>No news</p></div>';
     }
     
     function addNews() { newsItems.push({ id: nextId.news++, title: "New News", description: "", enabled: true, icon: "fas fa-newspaper", color: "#3b82f6" }); renderNews(); }
@@ -710,7 +618,6 @@
     function toggleNewsLocally(id, val) { const i = newsItems.find(i => i.id === id); if (i) i.enabled = val; renderNews(); }
     function deleteNewsLocal(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); }
 
-    // ==================== Generic Services ====================
     function renderImageBased(containerId, items, updateFn, deleteFn, emptyMsg) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -744,9 +651,8 @@
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if (file) {
-                setStatus('info', 'Uploading...');
                 const url = await uploadToServer(file);
-                if (url) { item.imageUrl = url; renderAll(); setStatus('success', 'Image updated'); }
+                if (url) { item.imageUrl = url; renderAll(); }
             }
         };
         input.click();
@@ -779,7 +685,6 @@
     function updateProductLocal(id, f, v) { const i = products.find(i => i.id === id); if (i) i[f] = v; renderProducts(); }
     function deleteProductLocal(id) { products = products.filter(i => i.id !== id); products.forEach((p, idx) => p.order = idx); renderProducts(); }
 
-    // ==================== Social Media ====================
     function renderSocial() {
         const container = document.getElementById('socialContainer');
         if (!container) return;
@@ -825,7 +730,6 @@
         renderSocial();
     }
 
-    // ==================== Icon Library ====================
     function openIconLibrary(callback) {
         currentIconCallback = callback;
         const grid = document.getElementById('iconsGrid');
@@ -839,7 +743,6 @@
     function openIconLibraryForIndividual() { openIconLibrary((icon) => { individualIcon = icon; document.getElementById('individualIconPreview').innerHTML = `<i class="${icon}" style="color: ${individualColor}; font-size: 1.2rem;"></i>`; }); }
     function openIconLibraryForSocial(socialId) { openIconLibrary((icon) => { const item = socialLinks.find(s => s.id === socialId); if (item) { item.icon = icon; renderSocial(); } }); }
 
-    // ==================== Navigation ====================
     const sections = ['homeImages', 'news', 'notifications', 'support', 'digital', 'local', 'phone', 'products', 'social'];
     
     function showSection(s) {
@@ -861,7 +764,6 @@
     
     function renderAll() { renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages(); }
 
-    // ==================== Save Functions (Manual Save) ====================
     async function saveImages() { await saveAllData(); }
     async function saveNews() { await saveAllData(); }
     async function saveDigital() { await saveAllData(); }
@@ -879,13 +781,11 @@
     async function refreshSocial() { await loadAllData(); }
     async function refreshSupport() { await loadAllData(); }
 
-    // ==================== Event Listeners ====================
     document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
     document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
     document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}; font-size: 1.2rem;"></i>`; });
     document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}; font-size: 1.2rem;"></i>`; });
 
-    // ==================== Expose Globals ====================
     window.openIconLibrary = openIconLibrary; window.selectIcon = selectIcon; window.closeIconModal = closeIconModal;
     window.openIconLibraryForBroadcast = openIconLibraryForBroadcast; window.openIconLibraryForIndividual = openIconLibraryForIndividual;
     window.openIconLibraryForSocial = openIconLibraryForSocial;
@@ -904,9 +804,8 @@
     window.refreshSocial = refreshSocial; window.refreshSupport = refreshSupport;
     window.saveImages = saveImages; window.saveNews = saveNews; window.saveDigital = saveDigital;
     window.saveLocal = saveLocal; window.savePhone = savePhone; window.saveProducts = saveProducts; window.saveSocial = saveSocial;
-    window.showSection = showSection; window.setStatus = setStatus;
+    window.showSection = showSection;
 
-    // ==================== Initialize ====================
     loadAllData();
     connectToStream();
 </script>
