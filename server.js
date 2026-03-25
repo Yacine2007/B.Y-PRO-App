@@ -58,11 +58,10 @@ async function saveData(data) {
     }
 }
 
-// SSE Clients - تخزين العملاء المتصلين
+// SSE Clients
 let clients = [];
 
 app.get('/api/events', (req, res) => {
-    // إعدادات SSE
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -76,10 +75,8 @@ app.get('/api/events', (req, res) => {
     
     console.log(`✅ New SSE client connected: ${clientId}, Total clients: ${clients.length}`);
     
-    // إرسال رسالة ترحيب
     res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to server', clientId })}\n\n`);
     
-    // إرسال ping كل 30 ثانية للحفاظ على الاتصال
     const pingInterval = setInterval(() => {
         try {
             res.write(`: ping\n\n`);
@@ -95,7 +92,6 @@ app.get('/api/events', (req, res) => {
     });
 });
 
-// دالة لإرسال التحديثات لجميع العملاء
 function broadcastUpdate(type, data) {
     console.log(`📢 Broadcasting ${type} to ${clients.length} clients`);
     clients.forEach(client => {
@@ -132,13 +128,14 @@ app.put('/api/data', async (req, res) => {
     }
 });
 
-// Support message endpoint - مع إشعار فوري
+// Support message endpoint
 app.post('/api/support', async (req, res) => {
     try {
         const newMessage = req.body;
         newMessage.date = new Date().toISOString();
         newMessage.id = Date.now();
-        newMessage.read = false; // إضافة حالة القراءة
+        newMessage.read = false;
+        newMessage.replied = false;
         
         const currentData = await fetchData();
         const support = currentData.support || [];
@@ -147,7 +144,6 @@ app.post('/api/support', async (req, res) => {
         
         await saveData(currentData);
         
-        // إرسال إشعار فوري لجميع المشرفين المتصلين
         broadcastUpdate('support_new', newMessage);
         broadcastUpdate('support_unread_count', { count: support.filter(m => !m.read).length });
         
@@ -159,7 +155,67 @@ app.post('/api/support', async (req, res) => {
     }
 });
 
-// تحديث حالة قراءة رسالة الدعم
+// Reply to support message
+app.post('/api/support/reply', async (req, res) => {
+    try {
+        const { messageId, recipient, subject, replyMessage } = req.body;
+        
+        if (!messageId || !recipient || !replyMessage) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const currentData = await fetchData();
+        
+        // Create reply notification
+        const replyNotification = {
+            id: Date.now(),
+            title: `Reply to: ${subject}`,
+            message: replyMessage,
+            icon: 'fas fa-reply',
+            color: '#10b981',
+            date: new Date().toISOString(),
+            read: false,
+            recipient: recipient,
+            type: 'support_reply'
+        };
+        
+        // Add to notifications
+        const notifications = currentData.notifications || [];
+        notifications.unshift(replyNotification);
+        currentData.notifications = notifications;
+        
+        // Update original support message
+        const support = currentData.support || [];
+        const originalMessage = support.find(m => m.id === parseInt(messageId));
+        if (originalMessage) {
+            originalMessage.replied = true;
+            originalMessage.replyDate = new Date().toISOString();
+            originalMessage.replyMessage = replyMessage;
+        }
+        
+        await saveData(currentData);
+        
+        // Broadcast to all connected clients
+        broadcastUpdate('support_reply', {
+            id: replyNotification.id,
+            message: replyMessage,
+            subject: subject,
+            recipient: recipient,
+            sender: 'Admin'
+        });
+        
+        broadcastUpdate('notification_new', replyNotification);
+        
+        console.log(`📧 Reply sent to ${recipient} about: ${subject}`);
+        res.json({ success: true, message: 'Reply sent successfully', notification: replyNotification });
+        
+    } catch (error) {
+        console.error('Reply error:', error);
+        res.status(500).json({ error: 'Failed to send reply' });
+    }
+});
+
+// Mark support message as read
 app.post('/api/support/read/:id', async (req, res) => {
     try {
         const messageId = parseInt(req.params.id);
@@ -179,7 +235,7 @@ app.post('/api/support/read/:id', async (req, res) => {
     }
 });
 
-// Notification endpoint - إرسال إشعارات
+// Notification endpoint
 app.post('/api/notifications', async (req, res) => {
     try {
         const { title, message, icon, color, recipient } = req.body;
@@ -191,7 +247,7 @@ app.post('/api/notifications', async (req, res) => {
             color: color || '#3b82f6',
             date: new Date().toISOString(),
             read: false,
-            recipient: recipient || 'all' // 'all' أو اسم مستخدم محدد
+            recipient: recipient || 'all'
         };
         
         const currentData = await fetchData();
@@ -200,7 +256,6 @@ app.post('/api/notifications', async (req, res) => {
         currentData.notifications = notifications;
         await saveData(currentData);
         
-        // إرسال الإشعار لجميع المشرفين المتصلين
         broadcastUpdate('notification_new', newNotification);
         broadcastUpdate('notification_unread_count', { count: notifications.filter(n => !n.read).length });
         
@@ -212,7 +267,7 @@ app.post('/api/notifications', async (req, res) => {
     }
 });
 
-// تحديث حالة قراءة الإشعار
+// Mark notification as read
 app.post('/api/notifications/read/:id', async (req, res) => {
     try {
         const notifId = parseInt(req.params.id);
@@ -229,6 +284,23 @@ app.post('/api/notifications/read/:id', async (req, res) => {
     } catch (error) {
         console.error('Error marking notification as read:', error);
         res.status(500).json({ error: 'Failed to update notification' });
+    }
+});
+
+// Get unread counts
+app.get('/api/unread-counts', async (req, res) => {
+    try {
+        const currentData = await fetchData();
+        const support = currentData.support || [];
+        const notifications = currentData.notifications || [];
+        
+        res.json({
+            support_unread: support.filter(m => !m.read).length,
+            notifications_unread: notifications.filter(n => !n.read).length
+        });
+    } catch (error) {
+        console.error('Error getting unread counts:', error);
+        res.status(500).json({ error: 'Failed to get counts' });
     }
 });
 
@@ -267,16 +339,24 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', timestamp: new Date().toISOString(), clients: clients.length });
+    res.json({ 
+        status: 'ok', 
+        timestamp: new Date().toISOString(), 
+        clients: clients.length,
+        uptime: process.uptime()
+    });
 });
 
-// Serve static files
+// Serve static files - SPA fallback
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Start server
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
     console.log(`💾 JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`📡 SSE endpoint: /api/events`);
+    console.log(`📨 Support reply endpoint: /api/support/reply`);
 });
