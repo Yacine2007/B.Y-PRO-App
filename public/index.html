@@ -8,8 +8,9 @@
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-title" content="B.Y PRO">
-    <title>B.Y PRO</title>
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
+    <meta name="application-name" content="B.Y PRO App">
+    <title>B.Y PRO App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
@@ -130,8 +131,9 @@
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
         .carousel-container {
             position: relative; width: 100%; border-radius: 14px; overflow: hidden;
-            margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9;
-            max-height: 200px;
+            margin-bottom: 20px; background: var(--surface);
+            aspect-ratio: 16 / 9;
+            max-height: 300px;
         }
         .carousel-slides { position: relative; width: 100%; height: 100%; }
         .carousel-slide {
@@ -139,7 +141,12 @@
             opacity: 0; transition: opacity 0.5s ease;
         }
         .carousel-slide.active { opacity: 1; }
-        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-slide img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            object-position: center;
+        }
         .carousel-indicators {
             position: absolute; bottom: 8px; left: 0; right: 0; display: flex;
             justify-content: center; gap: 6px; z-index: 2;
@@ -159,22 +166,31 @@
             border-radius: 30px; font-size: 0.6rem; font-weight: 600;
         }
         .cards-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 12px; margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px; margin-bottom: 20px;
         }
         .slim-card {
             background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
             overflow: hidden; transition: all 0.2s;
         }
         .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-        .card-media { height: 110px; overflow: hidden; }
-        .card-media img { width: 100%; height: 100%; object-fit: cover; }
-        .card-content { padding: 10px; }
-        .card-title {
-            font-size: 0.85rem; font-weight: 700; margin-bottom: 4px;
-            display: flex; align-items: center; gap: 6px;
+        .card-media { 
+            height: 160px; 
+            overflow: hidden;
+            background: var(--bg);
         }
-        .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
+        .card-media img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover;
+            object-position: center;
+        }
+        .card-content { padding: 12px; }
+        .card-title {
+            font-size: 0.9rem; font-weight: 700; margin-bottom: 6px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .card-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.4; }
         .notification-card-wrapper {
             position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px;
         }
@@ -315,9 +331,14 @@
         #logoutBtn:hover { background: #dc2626; }
         @media (max-width: 768px) {
             .main-content { padding: 10px; }
-            .cards-grid { grid-template-columns: 1fr; }
+            .cards-grid { grid-template-columns: 1fr; gap: 12px; }
             .menu-trigger { width: 38px; height: 60px; font-size: 1.1rem; }
-            .carousel-container { aspect-ratio: 4 / 3; }
+            .carousel-container { aspect-ratio: 4 / 3; max-height: 200px; }
+            .card-media { height: 140px; }
+        }
+        @media (min-width: 1200px) {
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+            .card-media { height: 180px; }
         }
         .payment-modal { max-width: 350px; }
         .payment-input {
@@ -343,7 +364,7 @@
 <div class="app-wrapper">
     <div class="menu-trigger" id="menuTrigger"><span><i class="fas fa-chevron-right"></i></span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO</span></div>
+        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
         <nav class="sidebar-nav">
             <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
             <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
@@ -414,7 +435,6 @@
     let welcomeShown = false;
     let eventSource = null;
     let sseReconnectAttempts = 0;
-    let lastSSEMessage = null;
     let toastTimeout = null;
 
     // ==================== UTILITIES ====================
@@ -438,52 +458,34 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
 
-    // ==================== SSE CONNECTION FOR REAL-TIME UPDATES ====================
+    // ==================== SSE CONNECTION ====================
     function connectToSSE() {
         if (eventSource) {
-            console.log('🔌 Closing existing SSE connection...');
             eventSource.close();
             eventSource = null;
         }
         
-        if (!currentUser) {
-            console.log('⚠️ No user logged in, skipping SSE connection');
-            return;
-        }
-        
-        console.log('🔄 Connecting to SSE at:', `${API_BASE}/api/events`);
+        if (!currentUser) return;
         
         try {
             eventSource = new EventSource(`${API_BASE}/api/events`);
             
             eventSource.onopen = () => {
-                console.log('✅ SSE Connected successfully');
+                console.log('✅ SSE Connected');
                 sseReconnectAttempts = 0;
-                const statusMsg = document.createElement('div');
-                statusMsg.textContent = '🔔 Connected to real-time updates';
-                statusMsg.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#10b981;color:white;padding:4px 12px;border-radius:20px;font-size:10px;z-index:9999;opacity:0.8;';
-                document.body.appendChild(statusMsg);
-                setTimeout(() => statusMsg.remove(), 3000);
             };
             
             eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    console.log('📨 SSE Message received:', data);
-                    lastSSEMessage = data;
+                    console.log('📨 SSE:', data.type);
                     
-                    // Support reply from admin (received by user)
                     if (data.type === 'support_reply') {
-                        console.log('📨 Support reply received:', data.data);
                         const replyMessage = data.data?.message || 'You have a new reply from support';
-                        const subject = data.data?.subject || 'Support Reply';
-                        showToast(`📩 Reply: ${replyMessage.substring(0, 50)}...`);
-                        addNotification(`Reply: ${subject}`, replyMessage, 'fas fa-reply', '#10b981');
+                        showToast(`Reply: ${replyMessage.substring(0, 50)}...`);
+                        addNotification('Support Reply', replyMessage, 'fas fa-reply', '#10b981');
                     }
-                    
-                    // New notification from admin (mass or individual)
                     else if (data.type === 'notification_new') {
-                        console.log('🔔 New notification from admin:', data.data);
                         const title = data.data?.title || 'New Notification';
                         const message = data.data?.message || '';
                         const icon = data.data?.icon || 'fas fa-bell';
@@ -495,91 +497,53 @@
                             addNotification(title, message, icon, color);
                         }
                     }
-                    
-                    // Data update (news, services, etc.)
                     else if (data.type === 'data_update') {
-                        console.log('🔄 Data updated, refreshing content');
                         loadAllContent();
                     }
-                    
-                    // Wallet update
                     else if (data.type === 'wallet_update') {
-                        console.log('💰 Wallet update:', data.data);
                         if (data.data?.balance !== undefined && userWalletData) {
                             userWalletData.balance = data.data.balance;
                             updateWalletUI();
-                            showToast(`💰 Balance updated: $${data.data.balance}`);
+                            showToast(`💰 Balance: $${data.data.balance}`);
                         }
                     }
-                    
-                    // Initial connection message
-                    else if (data.type === 'connected') {
-                        console.log('✅ Connected to server:', data.message);
-                    }
-                    
                 } catch (err) {
-                    console.error('❌ SSE parse error:', err, 'Raw data:', event.data);
+                    console.error('SSE parse error:', err);
                 }
             };
             
-            eventSource.onerror = (error) => {
-                console.error('❌ SSE Error:', error);
+            eventSource.onerror = () => {
                 eventSource.close();
                 eventSource = null;
-                
                 if (currentUser) {
-                    const reconnectDelay = Math.min(30000, 5000 * (sseReconnectAttempts + 1));
-                    console.log(`🔄 Reconnecting to SSE in ${reconnectDelay/1000} seconds...`);
-                    setTimeout(() => {
-                        if (currentUser) {
-                            connectToSSE();
-                        }
-                    }, reconnectDelay);
-                    sseReconnectAttempts++;
+                    setTimeout(() => connectToSSE(), 5000);
                 }
             };
-            
         } catch (err) {
-            console.error('❌ Failed to create SSE connection:', err);
+            console.error('SSE error:', err);
         }
     }
     
     function disconnectSSE() {
         if (eventSource) {
-            console.log('🔌 Disconnecting SSE...');
             eventSource.close();
             eventSource = null;
         }
     }
-    
-    function testSSEConnection() {
-        console.log('🔍 Testing SSE connection...');
-        console.log('EventSource status:', eventSource ? 'Connected' : 'Disconnected');
-        console.log('Current user:', currentUser?.name || 'No user');
-        if (!eventSource) {
-            console.log('⚠️ SSE not connected, attempting to connect...');
-            connectToSSE();
-        } else {
-            console.log('✅ SSE is connected, ready to receive updates');
-        }
-        return { connected: !!eventSource, user: currentUser?.name };
-    }
-    window.testSSEConnection = testSSEConnection;
 
-    // ==================== DATA API (JSONBin for content only) ====================
+    // ==================== DATA API ====================
     async function fetchContentData() {
         try {
             const res = await fetch(`${API_BASE}/api/data`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const data = await res.json();
-            return data;
+            return await res.json();
         } catch (e) { 
             console.error('Fetch error:', e); 
             return { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; 
         }
     }
 
-    // ==================== WALLET - DIRECT FROM FINANCIAL API ====================
+    // ==================== WALLET ====================
     async function loadUserWallet() {
         document.getElementById('walletBalanceContainer').style.display = 'flex';
         document.getElementById('walletBalanceValue').style.display = 'none';
@@ -593,18 +557,16 @@
             
             if (result.success && result.data) {
                 userWalletData = result.data;
-                console.log('Wallet loaded:', userWalletData);
                 updateWalletUI();
             } else {
                 throw new Error('Invalid response');
             }
         } catch (error) {
-            console.error('Error loading wallet:', error);
-            showToast('Failed to load wallet data', true);
+            console.error('Wallet error:', error);
+            showToast('Failed to load wallet', true);
             userWalletData = {
                 id: "1",
                 name: currentUser?.name || "User",
-                email: currentUser?.email || "",
                 balance: 0,
                 cardCode: "byppcn-fallback",
                 transactions: []
@@ -669,13 +631,12 @@
                 date: new Date().toISOString()
             });
             updateWalletUI();
-            addNotification('Deposit Successful', `$${amount} added to your wallet`, 'fas fa-money-bill-wave', '#10b981');
-            showToast(`$${amount} deposited successfully`);
+            addNotification('Deposit Successful', `$${amount} added`, 'fas fa-money-bill-wave', '#10b981');
+            showToast(`$${amount} deposited`);
             paymentModal.classList.remove('active');
             depositAmount.value = '';
             depositPassword.value = '';
         } catch (error) {
-            console.error('Deposit error:', error);
             showToast('Deposit failed', true);
         }
     };
@@ -686,34 +647,56 @@
         supportForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const topic = document.getElementById('topicInput').value.trim();
-            if (!topic) { formMsg.innerHTML = '<span style="color:#ef4444;">Please enter a subject</span>'; return; }
+            const service = document.getElementById('serviceSelect').value;
+            const details = document.getElementById('detailsInput').value.trim();
+            
+            if (!topic) { 
+                formMsg.innerHTML = '<span style="color:#ef4444;">Enter a subject</span>'; 
+                return; 
+            }
+            
             const btn = supportForm.querySelector('button');
             btn.disabled = true;
             formMsg.innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
-            const sender = currentUser ? `${currentUser.name || 'User'} (ID: ${currentUser.id || '?'})` : 'App User';
+            
+            const senderName = currentUser ? (currentUser.name || currentUser.username || 'User') : 'App User';
+            const senderId = currentUser?.id || 'guest';
+            const senderEmail = currentUser?.email || '';
+            
             try {
                 const payload = {
-                    sender,
-                    field: document.getElementById('serviceSelect').value,
+                    sender: `${senderName} (ID: ${senderId})`,
+                    name: senderName,
+                    userId: senderId,
+                    email: senderEmail,
+                    field: service,
                     subject: topic,
-                    details: document.getElementById('detailsInput').value
+                    details: details || 'No details',
+                    date: new Date().toISOString()
                 };
+                
                 const res = await fetch(`${API_BASE}/api/support`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-                if (res.ok) {
-                    formMsg.innerHTML = '<span style="color:#10b981;">Sent! We will reply within 24h.</span>';
+                
+                const result = await res.json();
+                
+                if (res.ok && result.success) {
+                    formMsg.innerHTML = '<span style="color:#10b981;">✓ Sent! We will reply within 24h.</span>';
                     supportForm.reset();
-                    setTimeout(() => formMsg.innerHTML = '', 2500);
-                    addNotification('Support Request Sent', `Your request "${topic}" has been received.`, 'fas fa-headset', '#10b981');
-                } else throw new Error('Server error');
+                    setTimeout(() => formMsg.innerHTML = '', 3000);
+                    addNotification('Support Request Sent', `"${topic}" received`, 'fas fa-headset', '#10b981');
+                } else {
+                    throw new Error(result.error || 'Server error');
+                }
             } catch (err) {
-                console.error(err);
-                formMsg.innerHTML = '<span style="color:#ef4444;">Failed to send. Please try again.</span>';
-                setTimeout(() => formMsg.innerHTML = '', 2000);
-            } finally { btn.disabled = false; }
+                formMsg.innerHTML = '<span style="color:#ef4444;">Failed to send. Try again.</span>';
+                setTimeout(() => formMsg.innerHTML = '', 3000);
+            } finally { 
+                btn.disabled = false; 
+            }
         });
     }
 
@@ -729,11 +712,7 @@
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         
         loadUserWallet();
-        
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
-        }
+        disconnectSSE();
         connectToSSE();
         
         if (!welcomeShown) { 
@@ -824,7 +803,7 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // ==================== CONTENT (from JSONBin) ====================
+    // ==================== CONTENT ====================
     async function loadAllContent() {
         const data = await fetchContentData();
         contentData = {
@@ -838,9 +817,9 @@
         renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
         renderProducts(contentData.products); renderSocial(contentData.social);
     }
-    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
-    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
+    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No news</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.title)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color||'#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
+    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No services</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
+    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No products</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
     function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title">No social links</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card" style="text-decoration:none;"><div class="card-content" style="text-align:center;"><i class="${escapeHtml(i.icon)}" style="font-size:1.6rem; color:${i.color}; margin-bottom:4px;"></i><div class="card-title" style="justify-content:center;">${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.url)}</div></div></a>`).join(''); }
 
     let carouselImages = [], currentSlide = 0, slideInterval = null;
