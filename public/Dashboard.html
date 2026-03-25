@@ -125,26 +125,38 @@
             margin-left: auto;
         }
 
-        /* Main Content */
+        /* Main Content - مع مسافة للشريط السفلي */
         .main-content {
             flex: 1;
             margin-left: 260px;
             padding: 20px 24px;
+            padding-bottom: 32px;
             background: #0a0a0a;
             min-height: 100vh;
         }
 
-        /* Status Bar - Thin Fixed Bar */
+        /* Status Bar - شريط ثابت في الأسفل */
         .status-bar {
             position: fixed;
             bottom: 0;
             left: 260px;
             right: 0;
-            height: 3px;
+            height: 28px;
             background: #10b981;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
             z-index: 1000;
-            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+
+        .status-bar i {
+            font-size: 0.7rem;
         }
 
         .status-bar.success {
@@ -163,9 +175,18 @@
             background: #3b82f6;
         }
 
+        .status-bar .status-text {
+            margin-left: 6px;
+        }
+
         @media (max-width: 768px) {
             .status-bar {
                 left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+                padding-bottom: 48px;
             }
         }
 
@@ -184,7 +205,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Cards - Clean Design */
+        /* Cards */
         .card {
             background: #121212;
             border-radius: 20px;
@@ -585,46 +606,6 @@
             color: #9ca3af;
         }
 
-        /* Toast */
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1a1a1a;
-            border-radius: 40px;
-            padding: 10px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            border-left: 3px solid #10b981;
-            z-index: 2000;
-            transform: translateX(120%);
-            transition: transform 0.3s ease;
-        }
-
-        .toast-notification.show {
-            transform: translateX(0);
-        }
-
-        .toast-icon {
-            width: 24px;
-            height: 24px;
-            background: rgba(16, 185, 129, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            color: #10b981;
-        }
-
-        .toast-message {
-            color: #e5e5e5;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
         /* Menu Toggle */
         .menu-toggle {
             display: none;
@@ -652,7 +633,7 @@
             .main-content {
                 margin-left: 0;
                 padding: 16px;
-                padding-top: 60px;
+                padding-bottom: 56px;
             }
             .menu-toggle {
                 display: block;
@@ -767,11 +748,11 @@
     </main>
 </div>
 
-<!-- Status Bar -->
-<div class="status-bar success" id="statusBar"></div>
-
-<!-- Toast -->
-<div class="toast-notification" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
+<!-- Status Bar - ثابت في الأسفل -->
+<div class="status-bar success" id="statusBar">
+    <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+    <span id="statusText">Connected</span>
+</div>
 
 <!-- Icon Modal -->
 <div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3>Select Icon</h3><button class="btn-outline" onclick="closeIconModal()">Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
@@ -810,6 +791,7 @@
 
     function setStatus(status, message) {
         const bar = document.getElementById('statusBar');
+        const statusText = document.getElementById('statusText');
         if (!bar) return;
         
         bar.className = 'status-bar';
@@ -818,35 +800,12 @@
         else if (status === 'warning') bar.classList.add('warning');
         else if (status === 'info') bar.classList.add('info');
         
-        bar.style.opacity = '1';
+        if (statusText) statusText.textContent = message || (status === 'success' ? 'Connected' : status);
         
         if (statusTimeout) clearTimeout(statusTimeout);
         statusTimeout = setTimeout(() => {
-            bar.style.opacity = '0.4';
-        }, 3000);
-        
-        if (message) showToast(message, status === 'error');
-    }
-
-    // ==================== Toast ====================
-    function showToast(msg, isErr = false) {
-        const toast = document.getElementById('toast');
-        const toastMsg = document.getElementById('toastMessage');
-        const toastIcon = toast.querySelector('.toast-icon');
-        toastMsg.textContent = msg;
-        if (isErr) {
-            toastIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            toastIcon.style.background = 'rgba(239, 68, 68, 0.2)';
-            toastIcon.style.color = '#ef4444';
-            toast.style.borderLeftColor = '#ef4444';
-        } else {
-            toastIcon.innerHTML = '<i class="fas fa-check"></i>';
-            toastIcon.style.background = 'rgba(16, 185, 129, 0.2)';
-            toastIcon.style.color = '#10b981';
-            toast.style.borderLeftColor = '#10b981';
-        }
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+            if (statusText && status !== 'error') statusText.textContent = 'Ready';
+        }, 4000);
     }
 
     function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
@@ -944,7 +903,7 @@
             throw new Error('Upload failed');
         } catch (err) {
             console.error('Upload error:', err);
-            showToast('Image upload failed', true);
+            setStatus('error', 'Upload failed');
             return null;
         }
     }
@@ -1005,14 +964,14 @@
             color = document.getElementById('broadcastColor').value;
             icon = broadcastIcon;
             recipient = 'all';
-            if (!title) return showToast('Enter title', true);
+            if (!title) return setStatus('warning', 'Enter title');
         } else {
             recipient = document.getElementById('individualRecipient').value;
             title = document.getElementById('individualTitle').value;
             message = document.getElementById('individualDesc').value;
             color = document.getElementById('individualColor').value;
             icon = individualIcon;
-            if (!recipient || !title) return showToast('Enter recipient and title', true);
+            if (!recipient || !title) return setStatus('warning', 'Enter recipient and title');
         }
         
         try {
@@ -1022,7 +981,7 @@
                 body: JSON.stringify({ title, message, icon, color, recipient }) 
             });
             if (res.ok) {
-                setStatus('success', `Notification sent to ${recipient === 'all' ? 'all' : recipient}`);
+                setStatus('success', `Sent to ${recipient === 'all' ? 'all' : recipient}`);
                 if (type === 'broadcast') {
                     document.getElementById('broadcastTitle').value = '';
                     document.getElementById('broadcastDesc').value = '';
