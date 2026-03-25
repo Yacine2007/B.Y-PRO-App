@@ -63,31 +63,31 @@
             height: 120px;
             width: 100%;
         }
-        /* Menu Trigger (right side) */
+        /* Menu Trigger (left side) */
         .menu-trigger {
-            position: fixed; right: 0; top: 50%; transform: translateY(-50%);
+            position: fixed; left: 0; top: 50%; transform: translateY(-50%);
             width: 44px; height: 70px; background: rgba(255,255,255,0.96);
             backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center;
             cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12);
-            border-right: none; border-radius: 20px 0 0 20px; font-size: 1.3rem;
+            border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem;
             color: var(--primary); transition: all 0.2s;
         }
         .dark-theme .menu-trigger { background: rgba(30,30,40,0.85); }
         .menu-trigger.hidden { opacity: 0; visibility: hidden; }
         .menu-dot {
-            position: absolute; top: 6px; left: 8px; width: 8px; height: 8px;
+            position: absolute; top: 6px; right: 8px; width: 8px; height: 8px;
             background: var(--danger); border-radius: 50%; display: none;
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
-        /* Sidebar */
+        /* Sidebar (left) */
         .sidebar {
-            width: 260px; background: var(--surface); border-left: 1px solid var(--border);
-            position: fixed; right: 0; top: 0; bottom: 0; z-index: 100;
-            transform: translateX(100%); transition: transform 0.25s ease; overflow-y: auto;
+            width: 260px; background: var(--surface); border-right: 1px solid var(--border);
+            position: fixed; left: 0; top: 0; bottom: 0; z-index: 100;
+            transform: translateX(-100%); transition: transform 0.25s ease; overflow-y: auto;
         }
         .sidebar.mobile-open { transform: translateX(0); }
-        .sidebar-header { padding: 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+        .sidebar-header { padding: 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .sidebar-logo img { width: 36px; height: 36px; object-fit: contain; }
         .sidebar-title { font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
         .sidebar-nav { padding: 12px 10px; }
@@ -95,7 +95,6 @@
             display: flex; align-items: center; gap: 12px; padding: 8px 12px;
             margin-bottom: 4px; border-radius: 12px; color: var(--text-muted);
             cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s;
-            justify-content: flex-end;
         }
         .nav-item i { width: 24px; font-size: 1rem; }
         .nav-item img { width: 22px; height: 22px; object-fit: contain; }
@@ -112,7 +111,7 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
         /* Main Content */
-        .main-content { flex: 1; margin-right: 0; padding: 12px 16px; width: 100%; }
+        .main-content { flex: 1; margin-left: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
         .home-header {
@@ -135,6 +134,7 @@
         .wallet-badge { color: var(--success); }
         .bell-icon { color: var(--text-muted); }
         .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
+        /* Carousel */
         .carousel-container {
             position: relative; width: 100%; border-radius: 14px; overflow: hidden;
             margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9;
@@ -156,6 +156,7 @@
             cursor: pointer;
         }
         .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
+        /* Section Headers */
         .section-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
@@ -165,6 +166,7 @@
             background: var(--primary); color: white; padding: 2px 8px;
             border-radius: 30px; font-size: 0.6rem; font-weight: 600;
         }
+        /* Cards Grid */
         .cards-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 12px; margin-bottom: 20px;
@@ -182,6 +184,7 @@
             display: flex; align-items: center; gap: 6px;
         }
         .card-desc { color: var(--text-muted); font-size: 0.7rem; line-height: 1.3; }
+        /* Notifications */
         .notification-card-wrapper {
             position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px;
         }
@@ -189,9 +192,9 @@
             background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
             padding: 12px;
         }
-        .notification-card.unread { border-right: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
+        .notification-card.unread { border-left: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
         .notification-delete {
-            position: absolute; left: 0; top: 0; bottom: 0; width: 45px;
+            position: absolute; right: 0; top: 0; bottom: 0; width: 45px;
             background: var(--danger); color: white; display: flex; align-items: center;
             justify-content: center; font-size: 0.9rem; cursor: pointer; border-radius: 14px;
             opacity: 0; transition: opacity 0.2s;
@@ -199,7 +202,7 @@
         .notification-card-wrapper:hover .notification-delete { opacity: 1; }
         .notification-time { font-size: 0.55rem; color: var(--text-muted); margin-top: 6px; }
         .notification-actions {
-            display: flex; gap: 8px; margin-top: 8px; justify-content: flex-start;
+            display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end;
         }
         .notification-actions button {
             background: transparent; padding: 4px 12px; border: 1px solid var(--border);
@@ -209,6 +212,7 @@
         .notification-actions button:hover {
             background: var(--primary); color: white; border-color: var(--primary);
         }
+        /* Support Form */
         .support-form { margin-top: 12px; }
         .form-group { margin-bottom: 10px; }
         .form-group input, .form-group select, .form-group textarea {
@@ -232,6 +236,7 @@
             border-radius: 40px; display: inline-flex; align-items: center;
             gap: 6px; font-size: 0.65rem; margin-bottom: 12px;
         }
+        /* Wallet Page */
         .card-info-row {
             display: flex; align-items: center; justify-content: space-between;
             background: var(--surface); border-radius: 50px; padding: 6px 12px;
@@ -284,6 +289,7 @@
         }
         .empty-icon { font-size: 1.5rem; margin-bottom: 4px; opacity: 0.5; }
         .empty-text { font-size: 0.65rem; }
+        /* Toast */
         .toast-notification {
             position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%) translateY(100px);
             background: var(--surface); border-radius: 40px; padding: 8px 16px;
@@ -293,6 +299,7 @@
         .toast-notification.show { transform: translateX(-50%) translateY(0); }
         .toast-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: #d1fae5; color: var(--success); }
         .toast-message { font-size: 0.7rem; font-weight: 500; }
+        /* Modal */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
@@ -351,7 +358,7 @@
 </head>
 <body>
 <div class="app-wrapper">
-    <div class="menu-trigger" id="menuTrigger"><span>&lt;</span><div class="menu-dot" id="menuDot"></div></div>
+    <div class="menu-trigger" id="menuTrigger"><span>&gt;</span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO</span></div>
         <nav class="sidebar-nav">
@@ -362,7 +369,7 @@
             <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
             <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
             <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
-            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>Wallet</span></div>
+            <div class="nav-item" data-page="wallet"><img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 22px; height: 22px;"><span>Wallet</span></div>
             <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
             <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
@@ -385,7 +392,7 @@
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"><div class="slim-card"><div class="card-content"><div class="card-title shimmer" style="height: 20px; width: 70%;"></div><div class="card-desc shimmer" style="height: 12px; width: 100%;"></div></div></div></div></div>
         <div id="walletPage" class="section-page">
-            <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card"></i><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
+            <div class="card-info-row"><div class="card-info-left"><img src="https://b-y-pro-app.onrender.com/card.png" class="card-icon-small"><span class="card-code" id="userCardCode">—</span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
             <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div class="balance-amount">$<span id="walletBalance">0.00</span></div></div>
             <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
             <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
@@ -411,7 +418,6 @@
 <script>
     // ==================== SERVER CONFIGURATION ====================
     const API_BASE = "https://b-y-pro-app.onrender.com";
-    const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com";
 
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
@@ -462,90 +468,65 @@
         }
     }
 
-    // ==================== WALLET (Unified) ====================
+    // ==================== WALLET (Fixed - uses email to find existing wallet) ====================
     function generateCardCode() {
         const randomNum = Math.floor(Math.random() * 1000000000000000).toString().padStart(15, '0');
         return `byppcn-${randomNum}`;
     }
 
-    async function fetchFinancialData(userId, userEmail) {
-        try {
-            const response = await fetch(`${FINANCIAL_API}/api/financial/${userId}`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            if (response.ok) {
-                const result = await response.json();
-                if (result.success && result.data) {
-                    console.log('✅ Financial API data:', result.data);
-                    return result.data;
-                }
-            }
-            return null;
-        } catch (error) {
-            console.log('⚠️ Financial API unavailable, using JSONBin.');
-            return null;
-        }
-    }
-
     async function loadUserWallet(user) {
         try {
             const allData = await fetchAllData();
-            let userWallet = null;
-            let userId = null;
+            let existingWallet = null;
+            let walletKey = null;
 
-            // Try financial API first
-            const financialData = await fetchFinancialData(user.id, user.email);
-            if (financialData) {
-                userWallet = {
-                    id: financialData.id || user.id,
-                    name: financialData.name || user.name || user.username,
-                    email: financialData.email || user.email,
-                    balance: financialData.balance || 0,
-                    cardCode: financialData.cardCode || generateCardCode(),
-                    transactions: financialData.transactions || []
-                };
-                userId = user.id;
-                // Sync to JSONBin
-                allData.users[userId] = userWallet;
-                await saveAllData(allData);
-            } else {
-                // Search in JSONBin by email first
-                if (user.email) {
-                    for (const [id, wallet] of Object.entries(allData.users || {})) {
-                        if (wallet.email === user.email) {
-                            userWallet = wallet;
-                            userId = id;
-                            break;
-                        }
+            // Search by email first (most stable)
+            if (user.email) {
+                for (const [key, wallet] of Object.entries(allData.users || {})) {
+                    if (wallet.email === user.email) {
+                        existingWallet = wallet;
+                        walletKey = key;
+                        break;
                     }
                 }
-                if (!userWallet && user.id && allData.users[user.id]) {
-                    userWallet = allData.users[user.id];
-                    userId = user.id;
-                }
-                if (userWallet) {
-                    userWalletData = userWallet;
-                    console.log('✅ Wallet found in JSONBin:', userWallet);
-                } else {
-                    // Create new wallet
-                    const newCard = generateCardCode();
-                    const newId = user.email || user.id || Date.now().toString();
-                    userWallet = {
-                        id: newId,
-                        name: user.name || user.username || 'User',
-                        email: user.email || null,
-                        balance: 0,
-                        transactions: [],
-                        cardCode: newCard,
-                        createdAt: new Date().toISOString()
-                    };
-                    allData.users[newId] = userWallet;
-                    await saveAllData(allData);
-                    showToast(`New wallet created!`);
-                }
             }
-            userWalletData = userWallet;
+
+            // If not found, try by user id
+            if (!existingWallet && user.id && allData.users[user.id]) {
+                existingWallet = allData.users[user.id];
+                walletKey = user.id;
+            }
+
+            if (existingWallet) {
+                userWalletData = existingWallet;
+                // Update name if changed
+                if (userWalletData.name !== (user.name || user.username)) {
+                    userWalletData.name = user.name || user.username;
+                    allData.users[walletKey] = userWalletData;
+                    await saveAllData(allData);
+                }
+                console.log('✅ Wallet loaded:', userWalletData);
+            } else {
+                // Create new wallet
+                const newKey = user.email || user.id;
+                if (!newKey) {
+                    console.error('No identifier for wallet');
+                    return null;
+                }
+                const newCard = generateCardCode();
+                userWalletData = {
+                    id: newKey,
+                    name: user.name || user.username || 'User',
+                    email: user.email || null,
+                    balance: 0,
+                    transactions: [],
+                    cardCode: newCard,
+                    createdAt: new Date().toISOString()
+                };
+                allData.users[newKey] = userWalletData;
+                await saveAllData(allData);
+                showToast(`New wallet created!`);
+            }
             updateWalletUI();
             return userWalletData;
         } catch (error) {
@@ -622,19 +603,8 @@
         if (isNaN(amount) || amount <= 0) { showToast('Enter a valid amount', true); return; }
         if (!password) { showToast('Enter your password', true); return; }
         try {
-            // Verify password (simple fallback)
-            let passwordValid = false;
-            const verifyResponse = await fetch(`${FINANCIAL_API}/api/verify-password`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ accountId: currentUser.id, password })
-            });
-            if (verifyResponse.ok) {
-                const result = await verifyResponse.json();
-                passwordValid = result.success;
-            } else {
-                passwordValid = (password === '1234' || password === currentUser.id);
-            }
+            // Simple password check (replace with your real verification if needed)
+            const passwordValid = (password === '1234' || password === currentUser.id);
             if (!passwordValid) { showToast('Incorrect password', true); return; }
             // Process deposit
             userWalletData.balance += amount;
@@ -658,7 +628,7 @@
         }
     };
 
-    // ==================== SUPPORT FORM (with external message handling) ====================
+    // ==================== SUPPORT FORM ====================
     const supportForm = document.getElementById('supportRequestForm'), formMsg = document.getElementById('formMessage');
     if (supportForm) {
         supportForm.addEventListener('submit', async (e) => {
@@ -721,7 +691,7 @@
         } else auth.show();
     }, 500);
 
-    // ==================== NOTIFICATIONS (local + external polling) ====================
+    // ==================== NOTIFICATIONS ====================
     function loadNotificationsFromStorage() {
         const saved = localStorage.getItem('bypro_notifications');
         if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} }
@@ -760,21 +730,6 @@
     document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
     document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
-
-    // ==================== POLL FOR EXTERNAL MESSAGES ====================
-    async function pollExternalMessages() {
-        try {
-            const res = await fetch(`${API_BASE}/api/support/messages?userId=${currentUser?.id}`);
-            if (res.ok) {
-                const messages = await res.json();
-                // Process new messages (you can implement your own logic)
-                console.log('External messages:', messages);
-            }
-        } catch (e) { /* silent fail */ }
-    }
-    setInterval(() => {
-        if (currentUser) pollExternalMessages();
-    }, 30000); // poll every 30 seconds
 
     // ==================== NAVIGATION ====================
     const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
