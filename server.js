@@ -30,6 +30,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configure multer for memory storage
 const upload = multer({ storage: multer.memoryStorage() });
 
+// ==================== DEFAULT DATA STRUCTURE ====================
+const DEFAULT_DATA = {
+    users: {},
+    images: [],
+    news: [],
+    digital: [],
+    local: [],
+    phone: [],
+    products: [],
+    social: [],
+    support: [],
+    notifications: [],
+    nextId: { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 }
+};
+
 // ==================== LOCAL CACHE (for JSONBin) ====================
 let cachedData = null;
 let lastFetch = 0;
@@ -42,12 +57,27 @@ async function fetchLocalData() {
         const response = await axios.get(JSON_BIN_URL, {
             headers: { 'X-Master-Key': process.env.JSON_BIN_MASTER_KEY }
         });
-        cachedData = response.data.record;
+        const rawData = response.data.record;
+        // Merge with defaults to ensure all fields exist
+        cachedData = { ...DEFAULT_DATA, ...rawData };
+        // Ensure nested objects exist
+        if (!cachedData.images) cachedData.images = [];
+        if (!cachedData.news) cachedData.news = [];
+        if (!cachedData.digital) cachedData.digital = [];
+        if (!cachedData.local) cachedData.local = [];
+        if (!cachedData.phone) cachedData.phone = [];
+        if (!cachedData.products) cachedData.products = [];
+        if (!cachedData.social) cachedData.social = [];
+        if (!cachedData.support) cachedData.support = [];
+        if (!cachedData.notifications) cachedData.notifications = [];
+        if (!cachedData.nextId) cachedData.nextId = DEFAULT_DATA.nextId;
+        
         lastFetch = now;
         return cachedData;
     } catch (error) {
         console.error('Error fetching local data:', error.message);
-        throw error;
+        // Return default data if fetch fails
+        return DEFAULT_DATA;
     }
 }
 
@@ -581,7 +611,87 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 });
 
-// Health check
+// ==================== ADD DEFAULT DATA IF EMPTY ====================
+async function initializeDefaultData() {
+    try {
+        const currentData = await fetchLocalData();
+        let needsSave = false;
+        
+        // Add default carousel images if empty
+        if (!currentData.images || currentData.images.length === 0) {
+            currentData.images = [
+                { id: 1, imageUrl: 'https://by-pro.kesug.com/banner1.png', alt: 'B.Y PRO Services' },
+                { id: 2, imageUrl: 'https://by-pro.kesug.com/banner2.png', alt: 'Digital Solutions' },
+                { id: 3, imageUrl: 'https://by-pro.kesug.com/banner3.png', alt: 'Payment System' }
+            ];
+            needsSave = true;
+        }
+        
+        // Add default news if empty
+        if (!currentData.news || currentData.news.length === 0) {
+            currentData.news = [
+                { id: 1, title: 'Welcome to B.Y PRO App', description: 'Your all-in-one digital services platform', enabled: true, icon: 'fas fa-star', color: '#3b82f6' },
+                { id: 2, title: 'New Payment System', description: 'B.Y PRO Pay is now available for seamless transactions', enabled: true, icon: 'fas fa-credit-card', color: '#10b981' }
+            ];
+            needsSave = true;
+        }
+        
+        // Add default digital services if empty
+        if (!currentData.digital || currentData.digital.length === 0) {
+            currentData.digital = [
+                { id: 1, name: 'Web Development', description: 'Professional website development services', imageUrl: 'https://placehold.co/400x200/0066cc/white?text=Web+Dev', enabled: true },
+                { id: 2, name: 'Mobile Apps', description: 'iOS and Android app development', imageUrl: 'https://placehold.co/400x200/0066cc/white?text=Mobile+Apps', enabled: true }
+            ];
+            needsSave = true;
+        }
+        
+        // Add default local services if empty
+        if (!currentData.local || currentData.local.length === 0) {
+            currentData.local = [
+                { id: 1, name: 'Document Translation', description: 'Official document translation services', imageUrl: 'https://placehold.co/400x200/10b981/white?text=Translation', enabled: true },
+                { id: 2, name: 'Legal Consulting', description: 'Professional legal advice', imageUrl: 'https://placehold.co/400x200/10b981/white?text=Legal', enabled: true }
+            ];
+            needsSave = true;
+        }
+        
+        // Add default phone services if empty
+        if (!currentData.phone || currentData.phone.length === 0) {
+            currentData.phone = [
+                { id: 1, name: 'Mobile Recharge', description: 'Quick mobile credit top-up', imageUrl: 'https://placehold.co/400x200/f59e0b/white?text=Recharge', enabled: true },
+                { id: 2, name: 'Internet Packages', description: 'Data packages for all operators', imageUrl: 'https://placehold.co/400x200/f59e0b/white?text=Internet', enabled: true }
+            ];
+            needsSave = true;
+        }
+        
+        // Add default products if empty
+        if (!currentData.products || currentData.products.length === 0) {
+            currentData.products = [
+                { id: 1, name: 'B.Y PRO Card', description: 'Digital payment card with exclusive benefits', imageUrl: 'https://placehold.co/400x200/ef4444/white?text=BYPRO+Card', enabled: true },
+                { id: 2, name: 'Premium Subscription', description: 'Access all premium features', imageUrl: 'https://placehold.co/400x200/ef4444/white?text=Premium', enabled: true }
+            ];
+            needsSave = true;
+        }
+        
+        // Add default social links if empty
+        if (!currentData.social || currentData.social.length === 0) {
+            currentData.social = [
+                { id: 1, name: 'Facebook', icon: 'fab fa-facebook-f', color: '#1877f2', url: 'https://facebook.com/bypro', order: 0 },
+                { id: 2, name: 'Instagram', icon: 'fab fa-instagram', color: '#e4405f', url: 'https://instagram.com/bypro', order: 1 },
+                { id: 3, name: 'Twitter', icon: 'fab fa-twitter', color: '#1da1f2', url: 'https://twitter.com/bypro', order: 2 }
+            ];
+            needsSave = true;
+        }
+        
+        if (needsSave) {
+            await saveLocalData(currentData);
+            console.log('✅ Default data initialized in JSONBin');
+        }
+    } catch (error) {
+        console.error('Error initializing default data:', error);
+    }
+}
+
+// ==================== HEALTH CHECK ====================
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'ok', 
@@ -593,13 +703,13 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Serve static files - SPA fallback
+// ==================== SERVE STATIC FILES - SPA FALLBACK ====================
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ==================== START SERVER ====================
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
     console.log(`💾 Local JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
@@ -607,4 +717,7 @@ app.listen(PORT, () => {
     console.log(`📡 SSE endpoint: /api/events`);
     console.log(`💰 Financial endpoints: /api/financial/*`);
     console.log(`⏱️  Broadcast cooldown: ${BROADCAST_COOLDOWN}ms`);
+    
+    // Initialize default data if needed
+    await initializeDefaultData();
 });
