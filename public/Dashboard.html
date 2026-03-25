@@ -154,7 +154,7 @@
             right: 0;
             height: 3px;
             background: #10b981;
-            transition: background 0.2s ease, width 0.3s;
+            transition: background 0.2s ease;
             z-index: 1000;
         }
         .status-bar.success { background: #10b981; }
@@ -164,7 +164,7 @@
 
         @media (max-width: 768px) {
             .status-bar { left: 0; }
-            .main-content { margin-left: 0; padding: 20px; padding-bottom: 20px; }
+            .main-content { margin-left: 0; padding: 20px; }
         }
 
         /* Sections */
@@ -458,6 +458,14 @@
             padding: 24px;
             border: 1px solid #2a2a2a;
         }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #2a2a2a;
+        }
         .icons-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -563,7 +571,7 @@
             <div id="newsContainer" class="items-grid"></div>
         </div>
 
-        <!-- Broadcast Section (جماعي) -->
+        <!-- Broadcast Section -->
         <div id="broadcastSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-bullhorn"></i> Broadcast</h1><p class="page-subtitle">Send notifications to all users</p></div></div>
             <div class="card">
@@ -575,7 +583,7 @@
             </div>
         </div>
 
-        <!-- Individual Section (فردي + ردود) -->
+        <!-- Individual Section -->
         <div id="individualSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-user"></i> Individual & Replies</h1><p class="page-subtitle">Send direct notifications or reply to support messages</p></div></div>
             <div class="stats-grid" style="margin-bottom: 24px;">
@@ -600,9 +608,17 @@
 
         <!-- Digital Services -->
         <div id="digitalSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Digital Services</h1><p class="page-subtitle">Manage digital service listings</p></div><button class="btn btn-primary" onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshDigital()">Refresh</button><button class="btn btn-success" onclick="saveDigital()">Save Changes</button></div><div id="digitalServicesContainer" class="items-grid"></div></div>
+        
+        <!-- Local Services -->
         <div id="localSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Local Services</h1><p class="page-subtitle">Manage local service listings</p></div><button class="btn btn-primary" onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshLocal()">Refresh</button><button class="btn btn-success" onclick="saveLocal()">Save Changes</button></div><div id="localServicesContainer" class="items-grid"></div></div>
+        
+        <!-- Phone Services -->
         <div id="phoneSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Phone Services</h1><p class="page-subtitle">Manage phone service listings</p></div><button class="btn btn-primary" onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshPhone()">Refresh</button><button class="btn btn-success" onclick="savePhone()">Save Changes</button></div><div id="phoneServicesContainer" class="items-grid"></div></div>
+        
+        <!-- Products -->
         <div id="productsSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Products</h1><p class="page-subtitle">Manage product listings</p></div><button class="btn btn-primary" onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshProducts()">Refresh</button><button class="btn btn-success" onclick="saveProducts()">Save Changes</button></div><div id="productsContainer" class="items-grid"></div></div>
+        
+        <!-- Social Media -->
         <div id="socialSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Social Media</h1><p class="page-subtitle">Manage social media links</p></div><div><button class="btn btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icon Library</button><button class="btn btn-primary" onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button></div></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshSocial()">Refresh</button><button class="btn btn-success" onclick="saveSocial()">Save Changes</button></div><div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div></div>
     </main>
 </div>
@@ -684,7 +700,6 @@
         document.getElementById('totalSupportCount').textContent = supportMessages.length;
         document.getElementById('unreadSupportCount').textContent = supportMessages.filter(m => !m.read).length;
         document.getElementById('repliedSupportCount').textContent = supportMessages.filter(m => m.replied).length;
-        const today = new Date().toDateString();
         const sentToday = JSON.parse(localStorage.getItem('sentCount') || '0');
         document.getElementById('sentCount').textContent = sentToday;
     }
@@ -937,12 +952,17 @@
     // Navigation
     const sections = ['homeImages', 'news', 'broadcast', 'individual', 'support', 'digital', 'local', 'phone', 'products', 'social'];
     function showSection(s) {
-        sections.forEach(sec => document.getElementById(sec + 'Section').classList.remove('active-page'));
-        document.getElementById(s + 'Section').classList.add('active-page');
+        sections.forEach(sec => {
+            const el = document.getElementById(sec + 'Section');
+            if (el) el.classList.remove('active-page');
+        });
+        const activeEl = document.getElementById(s + 'Section');
+        if (activeEl) activeEl.classList.add('active-page');
         document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        document.querySelector(`.nav-item[data-section="${s}"]`).classList.add('active');
+        const activeNav = document.querySelector(`.nav-item[data-section="${s}"]`);
+        if (activeNav) activeNav.classList.add('active');
         if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        if (s === 'support') { hasVisitedSupport = true; renderSupportMessages(); document.getElementById('supportBadge').style.display = 'none'; }
+        if (s === 'support') { hasVisitedSupport = true; renderSupportMessages(); const badge = document.getElementById('supportBadge'); if (badge) badge.style.display = 'none'; }
         if (s === 'homeImages') renderImages();
         if (s === 'news') renderNews();
         if (s === 'digital') renderDigital();
@@ -975,6 +995,7 @@
     document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}; font-size: 1.2rem;"></i>`; });
     document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}; font-size: 1.2rem;"></i>`; });
 
+    // Expose globals
     window.openIconLibrary = openIconLibrary; window.selectIcon = selectIcon; window.closeIconModal = closeIconModal;
     window.openIconLibraryForBroadcast = openIconLibraryForBroadcast; window.openIconLibraryForIndividual = openIconLibraryForIndividual;
     window.openIconLibraryForSocial = openIconLibraryForSocial;
@@ -995,6 +1016,7 @@
     window.saveLocal = saveLocal; window.savePhone = savePhone; window.saveProducts = saveProducts; window.saveSocial = saveSocial;
     window.showSection = showSection;
 
+    // Initialize
     loadAllData();
     connectToStream();
 </script>
