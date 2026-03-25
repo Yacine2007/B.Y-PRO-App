@@ -4,8 +4,11 @@
   "description": "Your all-in-one digital services platform",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
   "icons": [
     {
       "src": "https://by-pro.kesug.com/App.png?v=3",
@@ -19,5 +22,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [],
+  "categories": ["productivity", "business"]
 }
