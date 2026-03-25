@@ -434,7 +434,6 @@
     let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let welcomeShown = false;
     let eventSource = null;
-    let sseReconnectAttempts = 0;
     let toastTimeout = null;
 
     // ==================== UTILITIES ====================
@@ -464,72 +463,43 @@
             eventSource.close();
             eventSource = null;
         }
-        
         if (!currentUser) return;
-        
         try {
             eventSource = new EventSource(`${API_BASE}/api/events`);
-            
-            eventSource.onopen = () => {
-                console.log('✅ SSE Connected');
-                sseReconnectAttempts = 0;
-            };
-            
+            eventSource.onopen = () => { console.log('SSE connected'); };
             eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    console.log('📨 SSE:', data.type);
-                    
                     if (data.type === 'support_reply') {
-                        const replyMessage = data.data?.message || 'You have a new reply from support';
-                        showToast(`Reply: ${replyMessage.substring(0, 50)}...`);
-                        addNotification('Support Reply', replyMessage, 'fas fa-reply', '#10b981');
+                        showToast(`Reply: ${(data.data?.message || 'Support reply').substring(0, 50)}...`);
+                        addNotification('Support Reply', data.data?.message || 'You have a new reply', 'fas fa-reply', '#10b981');
                     }
                     else if (data.type === 'notification_new') {
                         const title = data.data?.title || 'New Notification';
                         const message = data.data?.message || '';
-                        const icon = data.data?.icon || 'fas fa-bell';
-                        const color = data.data?.color || '#3b82f6';
                         const recipient = data.data?.recipient;
-                        
                         if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id) {
-                            showToast(`🔔 ${title}`);
-                            addNotification(title, message, icon, color);
+                            showToast(title);
+                            addNotification(title, message, data.data?.icon || 'fas fa-bell', data.data?.color || '#3b82f6');
                         }
                     }
-                    else if (data.type === 'data_update') {
-                        loadAllContent();
-                    }
+                    else if (data.type === 'data_update') { loadAllContent(); }
                     else if (data.type === 'wallet_update') {
                         if (data.data?.balance !== undefined && userWalletData) {
                             userWalletData.balance = data.data.balance;
                             updateWalletUI();
-                            showToast(`💰 Balance: $${data.data.balance}`);
                         }
                     }
-                } catch (err) {
-                    console.error('SSE parse error:', err);
-                }
+                } catch (err) { console.error('SSE parse error:', err); }
             };
-            
             eventSource.onerror = () => {
                 eventSource.close();
                 eventSource = null;
-                if (currentUser) {
-                    setTimeout(() => connectToSSE(), 5000);
-                }
+                if (currentUser) setTimeout(() => connectToSSE(), 5000);
             };
-        } catch (err) {
-            console.error('SSE error:', err);
-        }
+        } catch (err) { console.error('SSE error:', err); }
     }
-    
-    function disconnectSSE() {
-        if (eventSource) {
-            eventSource.close();
-            eventSource = null;
-        }
-    }
+    function disconnectSSE() { if (eventSource) { eventSource.close(); eventSource = null; } }
 
     // ==================== DATA API ====================
     async function fetchContentData() {
@@ -549,37 +519,21 @@
         document.getElementById('walletBalanceValue').style.display = 'none';
         document.getElementById('userCardCode').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
         document.getElementById('homeWalletAmount').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
-        
         try {
             const response = await fetch(`${FINANCIAL_API}/api/financial/1`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const result = await response.json();
-            
             if (result.success && result.data) {
                 userWalletData = result.data;
                 updateWalletUI();
-            } else {
-                throw new Error('Invalid response');
-            }
+            } else throw new Error('Invalid response');
         } catch (error) {
             console.error('Wallet error:', error);
-            showToast('Failed to load wallet', true);
-            userWalletData = {
-                id: "1",
-                name: currentUser?.name || "User",
-                balance: 0,
-                cardCode: "byppcn-fallback",
-                transactions: []
-            };
+            userWalletData = { id: "1", name: currentUser?.name || "User", balance: 0, cardCode: "byppcn-fallback", transactions: [] };
             updateWalletUI();
         }
     }
-
-    async function refreshWallet() {
-        if (!currentUser) return;
-        await loadUserWallet();
-    }
-
+    async function refreshWallet() { if (currentUser) await loadUserWallet(); }
     function updateWalletUI() {
         if (!userWalletData) return;
         document.getElementById('walletBalanceContainer').style.display = 'none';
@@ -587,16 +541,13 @@
         document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
         document.getElementById('homeWalletAmount').innerHTML = `$${userWalletData.balance.toFixed(2)}`;
         document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
-        
         const tx = userWalletData.transactions || [];
         document.getElementById('walletTransactionsCount').textContent = tx.length;
         const container = document.getElementById('walletTransactionsContainer');
-        
         if (!tx.length) {
             container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`;
             return;
         }
-        
         container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
@@ -607,13 +558,8 @@
     const confirmDepositBtn = document.getElementById('confirmDepositBtn');
     const depositAmount = document.getElementById('depositAmount');
     const depositPassword = document.getElementById('depositPassword');
-
     depositBtn.onclick = () => paymentModal.classList.add('active');
-    closePaymentModal.onclick = () => {
-        paymentModal.classList.remove('active');
-        depositAmount.value = '';
-        depositPassword.value = '';
-    };
+    closePaymentModal.onclick = () => { paymentModal.classList.remove('active'); depositAmount.value = ''; depositPassword.value = ''; };
     confirmDepositBtn.onclick = async () => {
         const amount = parseFloat(depositAmount.value);
         const password = depositPassword.value;
@@ -624,21 +570,14 @@
             if (!passwordValid) { showToast('Incorrect password', true); return; }
             userWalletData.balance += amount;
             if (!userWalletData.transactions) userWalletData.transactions = [];
-            userWalletData.transactions.unshift({
-                type: 'deposit',
-                amount: amount,
-                description: `Deposit $${amount}`,
-                date: new Date().toISOString()
-            });
+            userWalletData.transactions.unshift({ type: 'deposit', amount: amount, description: `Deposit $${amount}`, date: new Date().toISOString() });
             updateWalletUI();
             addNotification('Deposit Successful', `$${amount} added`, 'fas fa-money-bill-wave', '#10b981');
             showToast(`$${amount} deposited`);
             paymentModal.classList.remove('active');
             depositAmount.value = '';
             depositPassword.value = '';
-        } catch (error) {
-            showToast('Deposit failed', true);
-        }
+        } catch (error) { showToast('Deposit failed', true); }
     };
 
     // ==================== SUPPORT FORM ====================
@@ -649,54 +588,27 @@
             const topic = document.getElementById('topicInput').value.trim();
             const service = document.getElementById('serviceSelect').value;
             const details = document.getElementById('detailsInput').value.trim();
-            
-            if (!topic) { 
-                formMsg.innerHTML = '<span style="color:#ef4444;">Enter a subject</span>'; 
-                return; 
-            }
-            
+            if (!topic) { formMsg.innerHTML = '<span style="color:#ef4444;">Enter a subject</span>'; return; }
             const btn = supportForm.querySelector('button');
             btn.disabled = true;
             formMsg.innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
-            
             const senderName = currentUser ? (currentUser.name || currentUser.username || 'User') : 'App User';
             const senderId = currentUser?.id || 'guest';
             const senderEmail = currentUser?.email || '';
-            
             try {
-                const payload = {
-                    sender: `${senderName} (ID: ${senderId})`,
-                    name: senderName,
-                    userId: senderId,
-                    email: senderEmail,
-                    field: service,
-                    subject: topic,
-                    details: details || 'No details',
-                    date: new Date().toISOString()
-                };
-                
-                const res = await fetch(`${API_BASE}/api/support`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
+                const payload = { sender: `${senderName} (ID: ${senderId})`, name: senderName, userId: senderId, email: senderEmail, field: service, subject: topic, details: details || 'No details', date: new Date().toISOString() };
+                const res = await fetch(`${API_BASE}/api/support`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const result = await res.json();
-                
                 if (res.ok && result.success) {
                     formMsg.innerHTML = '<span style="color:#10b981;">✓ Sent! We will reply within 24h.</span>';
                     supportForm.reset();
                     setTimeout(() => formMsg.innerHTML = '', 3000);
                     addNotification('Support Request Sent', `"${topic}" received`, 'fas fa-headset', '#10b981');
-                } else {
-                    throw new Error(result.error || 'Server error');
-                }
+                } else throw new Error(result.error || 'Server error');
             } catch (err) {
                 formMsg.innerHTML = '<span style="color:#ef4444;">Failed to send. Try again.</span>';
                 setTimeout(() => formMsg.innerHTML = '', 3000);
-            } finally { 
-                btn.disabled = false; 
-            }
+            } finally { btn.disabled = false; }
         });
     }
 
@@ -710,32 +622,22 @@
         const avatarDiv = document.getElementById('avatarIcon');
         if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
         else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
-        
         loadUserWallet();
         disconnectSSE();
         connectToSSE();
-        
-        if (!welcomeShown) { 
-            welcomeShown = true; 
-            setTimeout(() => showToast(`Welcome, ${user.name || user.username || 'User'}!`), 400); 
-        }
+        if (!welcomeShown) { welcomeShown = true; }
     }
-    
     auth = new BYPROAuth({
         loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
         onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); loadAllContent(); },
         onLogout: () => { 
-            currentUser = null; 
-            userWalletData = null; 
+            currentUser = null; userWalletData = null; 
             document.getElementById('userName').textContent = 'User'; 
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
             document.getElementById('homeWalletAmount').innerHTML = '$0.00'; 
-            welcomeShown = false; 
-            disconnectSSE();
-            auth.show(); 
+            welcomeShown = false; disconnectSSE(); auth.show(); 
         }
     });
-    
     setTimeout(() => {
         if (auth && auth.isAuthenticated && auth.isAuthenticated()) {
             const u = auth.getCurrentUser();
@@ -763,7 +665,6 @@
         userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false });
         saveNotificationsToStorage();
         showToast(title);
-        if (Notification.permission === 'granted') new Notification(title, { body: msg, icon: 'https://by-pro.kesug.com/App.png?v=3' });
     }
     function updateNotificationUI() {
         const container = document.getElementById('notificationsContainer'), countSpan = document.getElementById('notificationsCount'), pageBadge = document.getElementById('notificationsPageBadge'), homeBellCount = document.getElementById('homeBellCount'), menuDot = document.getElementById('menuDot');
@@ -847,8 +748,11 @@
 
     setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
     
+    // ==================== PWA INSTALLATION ====================
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW registered:', reg.scope))
+            .catch(err => console.error('SW failed:', err));
     }
     
     loadAllContent();
