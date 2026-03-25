@@ -9,6 +9,18 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ==================== CONFIGURATION ====================
+// B.Y PRO Central Server
+const BYPRO_API = 'https://b-y-pro-acounts-login.onrender.com/api';
+const BYPRO_API_KEY = process.env.BYPRO_INTERNAL_KEY || 'bypro-internal-key-2025';
+
+// Local JSONBin (for support messages, notifications, etc.)
+const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
+const JSON_BIN_HEADERS = {
+    'Content-Type': 'application/json',
+    'X-Master-Key': process.env.JSON_BIN_MASTER_KEY,
+};
+
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -18,19 +30,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Configure multer for memory storage
 const upload = multer({ storage: multer.memoryStorage() });
 
-// JSON Bin configuration
-const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
-const JSON_BIN_HEADERS = {
-    'Content-Type': 'application/json',
-    'X-Master-Key': process.env.JSON_BIN_MASTER_KEY,
-};
-
-// Cache
+// ==================== LOCAL CACHE (for JSONBin) ====================
 let cachedData = null;
 let lastFetch = 0;
 const CACHE_TTL = 30000; // 30 seconds
 
-async function fetchData() {
+async function fetchLocalData() {
     const now = Date.now();
     if (cachedData && (now - lastFetch) < CACHE_TTL) return cachedData;
     try {
@@ -41,32 +46,132 @@ async function fetchData() {
         lastFetch = now;
         return cachedData;
     } catch (error) {
-        console.error('Error fetching data:', error.message);
+        console.error('Error fetching local data:', error.message);
         throw error;
     }
 }
 
-async function saveData(data) {
+async function saveLocalData(data) {
     try {
         const response = await axios.put(JSON_BIN_URL, data, { headers: JSON_BIN_HEADERS });
         cachedData = data;
         lastFetch = Date.now();
         return response.data;
     } catch (error) {
-        console.error('Error saving data:', error.message);
+        console.error('Error saving local data:', error.message);
         throw error;
     }
 }
 
-// SSE Clients
-let clients = [];
+// ==================== B.Y PRO FINANCIAL API HELPERS ====================
+async function getFinancialData(userId) {
+    try {
+        const response = await axios.get(`${BYPRO_API}/financial/${userId}`, {
+            timeout: 10000
+        });
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching financial data for ${userId}:`, error.message);
+        if (error.response?.status === 404) {
+            return { success: false, error: 'User not found' };
+        }
+        return { success: false, error: error.message };
+    }
+}
 
-// منع التحديثات المفرطة
+async function syncUserFinancialData(userId, name, email) {
+    try {
+        const response = await axios.post(`${BYPRO_API}/financial/sync`, 
+            { userId, name, email },
+            {
+                headers: { 'x-api-key': BYPRO_API_KEY },
+                timeout: 10000
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Error syncing financial data for ${userId}:`, error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+async function addBalanceToUser(userId, amount, description) {
+    try {
+        const response = await axios.post(`${BYPRO_API}/financial/add-balance`,
+            { userId, amount, description },
+            {
+                headers: { 'x-api-key': BYPRO_API_KEY },
+                timeout: 10000
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Error adding balance to ${userId}:`, error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+async function verifyUserPassword(accountId, password) {
+    try {
+        const response = await axios.post(`${BYPRO_API}/verify-password`,
+            { accountId, password },
+            { timeout: 10000 }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Error verifying password for ${accountId}:`, error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+async function findCardByCode(cardCode) {
+    try {
+        const response = await axios.post(`${BYPRO_API}/find-card`,
+            { cardCode },
+            { timeout: 10000 }
+        );
+        return response.data;
+    } catch (error) {
+        console.error(`Error finding card ${cardCode}:`, error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+async function processPayment(paymentData) {
+    try {
+        const response = await axios.post(`${BYPRO_API}/process-payment`,
+            paymentData,
+            {
+                headers: { 'Content-Type': 'application/json' },
+                timeout: 15000
+            }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error processing payment:', error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+async function createPaymentRequest(appName, amount, callbackUrl, description) {
+    try {
+        const response = await axios.post(`${BYPRO_API}/create-payment`,
+            { appName, amount, callbackUrl, description },
+            { timeout: 10000 }
+        );
+        return response.data;
+    } catch (error) {
+        console.error('Error creating payment:', error.message);
+        return { success: false, error: error.message };
+    }
+}
+
+// ==================== SSE Clients ====================
+let clients = [];
 let lastBroadcastTime = 0;
-const BROADCAST_COOLDOWN = 2000; // 2 ثانية بين التحديثات
+const BROADCAST_COOLDOWN = 2000;
 
 function broadcastUpdate(type, data) {
-    // منع التحديثات المتكررة جداً - فقط لـ data_update
     if (type === 'data_update') {
         const now = Date.now();
         if ((now - lastBroadcastTime) < BROADCAST_COOLDOWN) {
@@ -86,8 +191,8 @@ function broadcastUpdate(type, data) {
     });
 }
 
+// ==================== SSE Endpoint ====================
 app.get('/api/events', (req, res) => {
-    // إعدادات SSE
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -101,10 +206,8 @@ app.get('/api/events', (req, res) => {
     
     console.log(`✅ New SSE client connected: ${clientId}, Total clients: ${clients.length}`);
     
-    // إرسال رسالة ترحيب
     res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to server', clientId })}\n\n`);
     
-    // إرسال ping كل 30 ثانية للحفاظ على الاتصال
     const pingInterval = setInterval(() => {
         try {
             res.write(`: ping\n\n`);
@@ -120,28 +223,137 @@ app.get('/api/events', (req, res) => {
     });
 });
 
-// ==================== API Routes ====================
+// ==================== FINANCIAL ENDPOINTS (Using B.Y PRO Server) ====================
 
-// Get all data
+// جلب بيانات المستخدم المالية
+app.get('/api/financial/:userId', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const result = await getFinancialData(userId);
+        
+        if (result.success) {
+            res.json(result);
+        } else {
+            res.status(404).json({ success: false, error: result.error || 'User not found' });
+        }
+    } catch (error) {
+        console.error('Error in /api/financial/:userId:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// مزامنة بيانات المستخدم المالية
+app.post('/api/financial/sync', async (req, res) => {
+    try {
+        const { userId, name, email } = req.body;
+        const result = await syncUserFinancialData(userId, name, email);
+        res.json(result);
+    } catch (error) {
+        console.error('Error in /api/financial/sync:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// إضافة رصيد للمستخدم
+app.post('/api/financial/add-balance', async (req, res) => {
+    try {
+        const { userId, amount, description } = req.body;
+        const apiKey = req.headers['x-api-key'];
+        
+        if (apiKey !== BYPRO_API_KEY) {
+            return res.status(403).json({ success: false, error: 'Access denied' });
+        }
+        
+        const result = await addBalanceToUser(userId, amount, description);
+        res.json(result);
+    } catch (error) {
+        console.error('Error in /api/financial/add-balance:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// التحقق من كلمة المرور
+app.post('/api/verify-password', async (req, res) => {
+    try {
+        const { accountId, password } = req.body;
+        const result = await verifyUserPassword(accountId, password);
+        res.json(result);
+    } catch (error) {
+        console.error('Error in /api/verify-password:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// البحث عن بطاقة
+app.post('/api/find-card', async (req, res) => {
+    try {
+        const { cardCode } = req.body;
+        const result = await findCardByCode(cardCode);
+        res.json(result);
+    } catch (error) {
+        console.error('Error in /api/find-card:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// إنشاء طلب دفع
+app.post('/api/create-payment', async (req, res) => {
+    try {
+        const { appName, amount, callbackUrl, description } = req.body;
+        const result = await createPaymentRequest(appName, amount, callbackUrl, description);
+        res.json(result);
+    } catch (error) {
+        console.error('Error in /api/create-payment:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// تنفيذ الدفع
+app.post('/api/process-payment', async (req, res) => {
+    try {
+        const paymentData = req.body;
+        const result = await processPayment(paymentData);
+        
+        // إذا نجح الدفع، نرسل إشعاراً للتطبيقات المتصلة
+        if (result.success) {
+            broadcastUpdate('payment_completed', {
+                accountId: paymentData.accountId,
+                amount: paymentData.amount,
+                newBalance: result.newBalance,
+                description: paymentData.description,
+                transactionId: result.transactionId,
+                timestamp: new Date().toISOString()
+            });
+        }
+        
+        res.json(result);
+    } catch (error) {
+        console.error('Error in /api/process-payment:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ==================== LOCAL DATA ENDPOINTS (Support, Notifications, etc.) ====================
+
+// Get all local data
 app.get('/api/data', async (req, res) => {
     try {
-        const data = await fetchData();
+        const data = await fetchLocalData();
         res.json(data);
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching local data:', error);
         res.status(500).json({ error: 'Failed to fetch data' });
     }
 });
 
-// Save all data
+// Save all local data
 app.put('/api/data', async (req, res) => {
     try {
-        await saveData(req.body);
-        // فقط إرسال إشعار بأن البيانات تغيرت، لكن لا نرسل البيانات الكاملة لتجنب الـ flood
+        await saveLocalData(req.body);
         broadcastUpdate('data_update', { timestamp: Date.now(), message: 'Data updated' });
         res.json({ success: true });
     } catch (error) {
-        console.error('Error saving data:', error);
+        console.error('Error saving local data:', error);
         res.status(500).json({ error: 'Failed to save data' });
     }
 });
@@ -155,14 +367,13 @@ app.post('/api/support', async (req, res) => {
         newMessage.read = false;
         newMessage.replied = false;
         
-        const currentData = await fetchData();
+        const currentData = await fetchLocalData();
         const support = currentData.support || [];
         support.unshift(newMessage);
         currentData.support = support;
         
-        await saveData(currentData);
+        await saveLocalData(currentData);
         
-        // إرسال إشعار برسالة الدعم الجديدة
         broadcastUpdate('support_new', {
             id: newMessage.id,
             sender: newMessage.sender,
@@ -188,9 +399,8 @@ app.post('/api/support/reply', async (req, res) => {
             return res.status(400).json({ error: 'Missing required fields' });
         }
         
-        const currentData = await fetchData();
+        const currentData = await fetchLocalData();
         
-        // إنشاء إشعار الرد
         const replyNotification = {
             id: Date.now(),
             title: `Reply to: ${subject}`,
@@ -203,12 +413,10 @@ app.post('/api/support/reply', async (req, res) => {
             type: 'support_reply'
         };
         
-        // إضافة الإشعار لقاعدة البيانات
         const notifications = currentData.notifications || [];
         notifications.unshift(replyNotification);
         currentData.notifications = notifications;
         
-        // تحديث رسالة الدعم الأصلية
         const support = currentData.support || [];
         const originalMessage = support.find(m => m.id === parseInt(messageId));
         if (originalMessage) {
@@ -217,9 +425,8 @@ app.post('/api/support/reply', async (req, res) => {
             originalMessage.replyMessage = replyMessage;
         }
         
-        await saveData(currentData);
+        await saveLocalData(currentData);
         
-        // إرسال إشعار الرد للمستخدم
         broadcastUpdate('support_reply', {
             id: replyNotification.id,
             message: replyMessage,
@@ -229,7 +436,6 @@ app.post('/api/support/reply', async (req, res) => {
             date: new Date().toISOString()
         });
         
-        // إرسال إشعار عادي أيضاً
         broadcastUpdate('notification_new', {
             id: replyNotification.id,
             title: replyNotification.title,
@@ -252,12 +458,12 @@ app.post('/api/support/reply', async (req, res) => {
 app.post('/api/support/read/:id', async (req, res) => {
     try {
         const messageId = parseInt(req.params.id);
-        const currentData = await fetchData();
+        const currentData = await fetchLocalData();
         const support = currentData.support || [];
         const message = support.find(m => m.id === messageId);
         if (message) {
             message.read = true;
-            await saveData(currentData);
+            await saveLocalData(currentData);
             broadcastUpdate('support_read', { id: messageId });
         }
         res.json({ success: true });
@@ -282,13 +488,12 @@ app.post('/api/notifications', async (req, res) => {
             recipient: recipient || 'all'
         };
         
-        const currentData = await fetchData();
+        const currentData = await fetchLocalData();
         const notifications = currentData.notifications || [];
         notifications.unshift(newNotification);
         currentData.notifications = notifications;
-        await saveData(currentData);
+        await saveLocalData(currentData);
         
-        // إرسال الإشعار لجميع العملاء المتصلين
         broadcastUpdate('notification_new', {
             id: newNotification.id,
             title: newNotification.title,
@@ -311,12 +516,12 @@ app.post('/api/notifications', async (req, res) => {
 app.post('/api/notifications/read/:id', async (req, res) => {
     try {
         const notifId = parseInt(req.params.id);
-        const currentData = await fetchData();
+        const currentData = await fetchLocalData();
         const notifications = currentData.notifications || [];
         const notification = notifications.find(n => n.id === notifId);
         if (notification) {
             notification.read = true;
-            await saveData(currentData);
+            await saveLocalData(currentData);
             broadcastUpdate('notification_read', { id: notifId });
         }
         res.json({ success: true });
@@ -329,7 +534,7 @@ app.post('/api/notifications/read/:id', async (req, res) => {
 // Get unread counts
 app.get('/api/unread-counts', async (req, res) => {
     try {
-        const currentData = await fetchData();
+        const currentData = await fetchLocalData();
         const support = currentData.support || [];
         const notifications = currentData.notifications || [];
         
@@ -343,7 +548,7 @@ app.get('/api/unread-counts', async (req, res) => {
     }
 });
 
-// ==================== IMAGE UPLOAD USING IMGBB ====================
+// ==================== IMAGE UPLOAD ====================
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
@@ -382,7 +587,9 @@ app.get('/api/health', (req, res) => {
         status: 'ok', 
         timestamp: new Date().toISOString(), 
         clients: clients.length,
-        uptime: process.uptime()
+        uptime: process.uptime(),
+        bypro_server: BYPRO_API,
+        financial_integration: 'active'
     });
 });
 
@@ -391,12 +598,13 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start server
+// ==================== START SERVER ====================
 app.listen(PORT, () => {
     console.log(`✅ Server running on port ${PORT}`);
     console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
-    console.log(`💾 JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`💾 Local JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`🔗 B.Y PRO Server: ${BYPRO_API}`);
     console.log(`📡 SSE endpoint: /api/events`);
-    console.log(`📨 Support reply endpoint: /api/support/reply`);
+    console.log(`💰 Financial endpoints: /api/financial/*`);
     console.log(`⏱️  Broadcast cooldown: ${BROADCAST_COOLDOWN}ms`);
 });
