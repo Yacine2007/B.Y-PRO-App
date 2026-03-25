@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
 const path = require('path');
+const FormData = require('form-data');
 require('dotenv').config();
 
 const app = express();
@@ -14,13 +14,6 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Configure Cloudinary
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // Configure multer for memory storage
 const upload = multer({ storage: multer.memoryStorage() });
@@ -94,22 +87,27 @@ function broadcastUpdate(type, data) {
     });
 }
 
-// API Routes
+// ==================== API Routes ====================
+
+// Get all data
 app.get('/api/data', async (req, res) => {
     try {
         const data = await fetchData();
         res.json(data);
     } catch (error) {
+        console.error('Error fetching data:', error);
         res.status(500).json({ error: 'Failed to fetch data' });
     }
 });
 
+// Save all data
 app.put('/api/data', async (req, res) => {
     try {
         await saveData(req.body);
         broadcastUpdate('data_update', req.body);
         res.json({ success: true });
     } catch (error) {
+        console.error('Error saving data:', error);
         res.status(500).json({ error: 'Failed to save data' });
     }
 });
@@ -161,26 +159,54 @@ app.post('/api/notifications', async (req, res) => {
     }
 });
 
-// Image upload to Cloudinary
+// ==================== IMAGE UPLOAD USING IMGBB ====================
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: 'No file uploaded' });
         }
         
-        // Convert buffer to base64 for Cloudinary upload
-        const base64 = req.file.buffer.toString('base64');
-        const dataURI = `data:${req.file.mimetype};base64,${base64}`;
+        // تحويل الصورة إلى base64
+        const base64Image = req.file.buffer.toString('base64');
         
-        const result = await cloudinary.uploader.upload(dataURI, {
-            folder: process.env.CLOUDINARY_FOLDER || 'B.Y PRO App',
-            resource_type: 'auto'
+        // إنشاء FormData للطلب إلى ImgBB
+        const formData = new FormData();
+        formData.append('key', process.env.IMGBB_API_KEY);
+        formData.append('image', base64Image);
+        
+        // إرسال الصورة إلى ImgBB
+        const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
+            headers: {
+                ...formData.getHeaders(),
+                'Accept': 'application/json'
+            },
+            timeout: 30000 // 30 seconds timeout
         });
         
-        res.json({ url: result.secure_url });
+        if (response.data && response.data.success && response.data.data && response.data.data.url) {
+            console.log('Image uploaded successfully:', response.data.data.url);
+            res.json({ url: response.data.data.url });
+        } else {
+            console.error('ImgBB upload failed:', response.data);
+            res.status(500).json({ error: 'Upload failed: Invalid response from ImgBB' });
+        }
+        
     } catch (error) {
-        console.error('Upload error:', error);
-        res.status(500).json({ error: 'Upload failed' });
+        console.error('Upload error details:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
+        
+        // رسالة خطأ مفيدة
+        let errorMessage = 'Upload failed';
+        if (error.response?.data?.error?.message) {
+            errorMessage = error.response.data.error.message;
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+        
+        res.status(500).json({ error: errorMessage });
     }
 });
 
@@ -194,6 +220,10 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`JSON Bin ID: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
 });
