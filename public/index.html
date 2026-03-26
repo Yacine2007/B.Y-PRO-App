@@ -174,7 +174,6 @@
         .slim-card {
             background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
             overflow: hidden; transition: all 0.2s;
-            cursor: pointer;
         }
         .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .card-media { 
@@ -318,17 +317,24 @@
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card {
             background: var(--surface); border-radius: 24px; padding: 20px;
-            width: 85%; max-width: 320px; text-align: center;
+            width: 85%; max-width: 300px; text-align: center;
         }
         .info-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.75rem;
-            gap: 12px;
+            display: flex; justify-content: space-between; padding: 8px 0;
+            border-bottom: 1px solid var(--border); font-size: 0.75rem;
         }
-        .info-row .info-label { font-weight: 600; color: var(--text-muted); }
-        .info-row .info-value { text-align: right; word-break: break-all; flex: 1; }
+        .avatar-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .modal-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
         .close-modal {
             margin-top: 12px; background: var(--primary); color: white;
             border: none; padding: 8px; border-radius: 40px; width: 100%;
@@ -337,15 +343,6 @@
         .close-modal:hover { background: var(--primary-dark); }
         #logoutBtn { background: var(--danger); margin-top: 8px; }
         #logoutBtn:hover { background: #dc2626; }
-        .account-avatar-large {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--primary);
-            margin: 0 auto 16px;
-            display: block;
-        }
         @media (max-width: 768px) {
             .main-content { padding: 10px; }
             .cards-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -375,22 +372,22 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
-        /* Social cards - clean style without URL display */
+        /* Social cards: no underline, icon color follows theme */
         .social-card {
-            text-align: center;
-            padding: 20px;
+            text-decoration: none;
+            display: block;
         }
-        .social-card i {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            display: inline-block;
+        .social-card .card-content {
+            text-align: center;
         }
         .social-card .card-title {
             justify-content: center;
-            font-size: 0.85rem;
+            color: var(--text);
         }
-        .social-card .card-desc {
-            display: none;
+        .social-card i {
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+            color: var(--text);
         }
     </style>
 </head>
@@ -456,11 +453,12 @@
 <div class="modal-overlay" id="accountModal">
     <div class="modal-card">
         <h3><i class="fas fa-user-circle"></i> Account Details</h3>
-        <img id="modalAvatar" class="account-avatar-large" src="https://i.ibb.co/SDxkt40s/user.png" alt="Avatar">
-        <div class="info-row"><span class="info-label">Name:</span><span id="modalUserName" class="info-value">User</span></div>
-        <div class="info-row"><span class="info-label">ID:</span><span id="modalUserId" class="info-value">—</span></div>
-        <div class="info-row"><span class="info-label">Email:</span><span id="modalUserEmail" class="info-value">—</span></div>
-        <div class="info-row"><span class="info-label">Status:</span><span id="modalUserStatus" class="info-value">Active</span></div>
+        <div class="avatar-row">
+            <img id="modalAvatar" class="modal-avatar" src="https://i.ibb.co/SDxkt40s/user.png" alt="Avatar">
+        </div>
+        <div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div>
+        <div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div>
+        <div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div>
         <button class="close-modal" id="closeModalBtn">Close</button>
         <button class="close-modal" id="logoutBtn" style="margin-top: 8px; background: #ef4444;">Logout</button>
     </div>
@@ -481,47 +479,7 @@
     let welcomeShown = false;
     let eventSource = null;
     let toastTimeout = null;
-
-    // ==================== CHECK ACCOUNT STATUS ====================
-    async function checkAccountStatus(userId) {
-        try {
-            const response = await fetch(`${ACCOUNTS_API}/accounts/${userId}`, {
-                headers: { 'x-api-key': 'bypro-internal-key-2025' }
-            });
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success && data.account) {
-                    if (data.account.blocked === true) {
-                        showToast('Your account has been blocked. You will be logged out.', true);
-                        setTimeout(() => {
-                            if (auth) auth.logout();
-                        }, 2000);
-                        return false;
-                    }
-                    // Update avatar if changed
-                    if (data.account.avatar && data.account.avatar !== currentUser?.avatar) {
-                        if (currentUser) currentUser.avatar = data.account.avatar;
-                        document.getElementById('avatarIcon').innerHTML = `<img src="${data.account.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
-                        document.getElementById('modalAvatar').src = data.account.avatar;
-                    }
-                    return true;
-                }
-            }
-            return true;
-        } catch (error) {
-            console.error('Error checking account status:', error);
-            return true;
-        }
-    }
-
-    // ==================== PERIODIC ACCOUNT STATUS CHECK ====================
-    function startAccountStatusCheck() {
-        setInterval(async () => {
-            if (currentUser && currentUser.id) {
-                await checkAccountStatus(currentUser.id);
-            }
-        }, 30000); // Check every 30 seconds
-    }
+    let accountBlockCheckInterval = null;
 
     // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
@@ -543,6 +501,39 @@
         toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])) : ''; }
+
+    // ==================== ACCOUNT BLOCK CHECK ====================
+    async function checkAccountBlocked() {
+        if (!currentUser || !currentUser.id) return false;
+        try {
+            const response = await fetch(`${ACCOUNTS_API}/accounts/${currentUser.id}`);
+            if (!response.ok) return false;
+            const data = await response.json();
+            if (data.success && data.account && data.account.blocked === true) {
+                showToast('Your account has been blocked. Please contact support.', true);
+                if (auth) auth.logout();
+                return true;
+            }
+            return false;
+        } catch (err) {
+            console.warn('Account check failed:', err);
+            return false;
+        }
+    }
+
+    function startAccountBlockChecker() {
+        if (accountBlockCheckInterval) clearInterval(accountBlockCheckInterval);
+        accountBlockCheckInterval = setInterval(() => {
+            if (currentUser) checkAccountBlocked();
+        }, 30000); // every 30 seconds
+    }
+
+    function stopAccountBlockChecker() {
+        if (accountBlockCheckInterval) {
+            clearInterval(accountBlockCheckInterval);
+            accountBlockCheckInterval = null;
+        }
+    }
 
     // ==================== DATA API ====================
     async function fetchContentData() {
@@ -700,33 +691,27 @@
     }
 
     // ==================== AUTHENTICATION ====================
-    async function updateUIForUser(user) {
+    function updateUIForUser(user) {
         currentUser = user;
         document.getElementById('userName').textContent = user.name || user.username || 'User';
         document.getElementById('modalUserName').textContent = user.name || user.username || 'User';
         document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
         document.getElementById('modalUserEmail').textContent = user.email || 'No email';
-        document.getElementById('modalUserStatus').textContent = 'Active';
         
-        // Load avatar
+        // Set avatar in modal
+        const avatarUrl = user.avatar || 'https://i.ibb.co/SDxkt40s/user.png';
+        document.getElementById('modalAvatar').src = avatarUrl;
+        
         const avatarDiv = document.getElementById('avatarIcon');
-        const modalAvatar = document.getElementById('modalAvatar');
-        if (user.avatar) {
-            avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
-            modalAvatar.src = user.avatar;
-        } else {
-            avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
-            modalAvatar.src = 'https://i.ibb.co/SDxkt40s/user.png';
-        }
-        
-        // Check if account is blocked
-        const isActive = await checkAccountStatus(user.id);
-        if (!isActive) return;
+        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
+        else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
         
         loadUserWallet();
         connectToSSE();
         loadAllContent();
-        startAccountStatusCheck();
+        
+        // Start periodic account block check
+        startAccountBlockChecker();
         
         if (!welcomeShown) { welcomeShown = true; }
     }
@@ -739,10 +724,10 @@
             userWalletData = null; 
             document.getElementById('userName').textContent = 'User'; 
             document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; 
-            document.getElementById('modalAvatar').src = 'https://i.ibb.co/SDxkt40s/user.png';
             document.getElementById('homeWalletAmount').innerHTML = '$0.00'; 
             welcomeShown = false; 
             disconnectSSE();
+            stopAccountBlockChecker();
             auth.show(); 
         }
     });
@@ -776,22 +761,15 @@
                     console.log('📨 SSE:', data.type, data);
                     
                     if (data.type === 'support_reply') {
-                        // Extract reply content correctly
-                        let replyMessage = '';
-                        let replySubject = 'Support Reply';
+                        // Extract full reply message
+                        const replyMessage = data.message || data.data?.message || data.replyMessage || '';
+                        const replySubject = data.subject || data.data?.subject || 'Support Reply';
+                        const fullReply = data.replyMessage || data.data?.replyMessage || replyMessage;
                         
-                        if (data.message) replyMessage = data.message;
-                        else if (data.data?.message) replyMessage = data.data.message;
-                        else if (data.replyMessage) replyMessage = data.replyMessage;
-                        else if (data.data?.replyMessage) replyMessage = data.data.replyMessage;
+                        console.log('📨 Support reply received:', { replySubject, fullReply });
                         
-                        if (data.subject) replySubject = data.subject;
-                        else if (data.data?.subject) replySubject = data.data.subject;
-                        
-                        console.log('📨 Support reply content:', replyMessage);
-                        
-                        showToast(`Reply: ${replyMessage.substring(0, 60)}...`);
-                        addNotification(`Reply: ${replySubject}`, replyMessage, 'fas fa-reply', '#10b981');
+                        showToast(`Reply: ${fullReply.substring(0, 50)}...`);
+                        addNotification(`Reply: ${replySubject}`, fullReply, 'fas fa-reply', '#10b981');
                     }
                     else if (data.type === 'notification_new') {
                         const title = data.title || data.data?.title || 'New Notification';
@@ -889,7 +867,7 @@
             c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No News</div><div class="card-desc">Check back later for updates</div></div></div>'; 
             return; 
         } 
-        c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.title)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); 
+        c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); 
     }
     
     function renderServices(cid, services, icon) { 
@@ -921,8 +899,7 @@
             c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; 
             return; 
         } 
-        // Social cards: show only icon and name, hide URL, clickable
-        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" rel="noopener noreferrer" class="slim-card" style="text-decoration:none; display:block;"><div class="card-content social-card"><i class="${escapeHtml(i.icon)}" style="font-size:2rem; color:${i.color}; margin-bottom:8px; display:inline-block;"></i><div class="card-title" style="justify-content:center; margin-top:8px;">${escapeHtml(i.name)}</div></div></a>`).join(''); 
+        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card social-card"><div class="card-content"><i class="${escapeHtml(i.icon)}"></i><div class="card-title">${escapeHtml(i.name)}</div></div></a>`).join(''); 
     }
 
     // ==================== CAROUSEL ====================
@@ -998,18 +975,7 @@
     navItems.forEach(i => { if (!i.hasAttribute('href')) i.addEventListener('click', () => { const p = i.getAttribute('data-page'); if (p && pages[p]) navigateTo(p); }); });
 
     const gAvatar = document.getElementById('greetingAvatar'), accModal = document.getElementById('accountModal'), closeModal = document.getElementById('closeModalBtn'), logout = document.getElementById('logoutBtn');
-    if (gAvatar) gAvatar.addEventListener('click', () => {
-        // Update modal with latest user data before showing
-        if (currentUser) {
-            document.getElementById('modalUserName').textContent = currentUser.name || currentUser.username || 'User';
-            document.getElementById('modalUserId').textContent = currentUser.id || currentUser.userId || 'Unknown';
-            document.getElementById('modalUserEmail').textContent = currentUser.email || 'No email';
-            if (currentUser.avatar) {
-                document.getElementById('modalAvatar').src = currentUser.avatar;
-            }
-        }
-        accModal.classList.add('active');
-    });
+    if (gAvatar) gAvatar.addEventListener('click', () => accModal.classList.add('active'));
     closeModal.addEventListener('click', () => accModal.classList.remove('active'));
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
@@ -1024,7 +990,7 @@
 
     setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
     
-    // ==================== SERVICE WORKER ====================
+    // ==================== PWA INSTALLATION (no install button) ====================
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(registrations => {
             for(let registration of registrations) {
@@ -1063,7 +1029,39 @@
             .catch(err => console.error('❌ API Error:', err));
     }
     
+    function testImageUrls() {
+        console.log('🖼️ === TESTING IMAGE URLs ===');
+        
+        if (contentData.images && contentData.images.length) {
+            contentData.images.forEach((img, idx) => {
+                console.log(`Image ${idx + 1}:`, img.imageUrl);
+                const testImg = new Image();
+                testImg.onload = () => console.log(`  ✅ Image ${idx + 1} loads successfully`);
+                testImg.onerror = () => console.log(`  ❌ Image ${idx + 1} failed to load`);
+                testImg.src = img.imageUrl;
+            });
+        } else {
+            console.log('No images in contentData');
+        }
+        
+        const services = ['digital', 'local', 'phone', 'products'];
+        services.forEach(service => {
+            if (contentData[service] && contentData[service].length) {
+                contentData[service].forEach((item, idx) => {
+                    console.log(`${service} ${idx + 1} image:`, item.imageUrl);
+                    if (item.imageUrl) {
+                        const testImg = new Image();
+                        testImg.onload = () => console.log(`  ✅ ${service} ${idx + 1} loads`);
+                        testImg.onerror = () => console.log(`  ❌ ${service} ${idx + 1} failed`);
+                        testImg.src = item.imageUrl;
+                    }
+                });
+            }
+        });
+    }
+    
     window.debugData = debugData;
+    window.testImageUrls = testImageUrls;
     
     // Initial load
     loadAllContent();
