@@ -171,9 +171,88 @@
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 16px; margin-bottom: 20px;
         }
+        /* Promotion Cards */
+        .promo-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            transition: all 0.2s;
+        }
+        .promo-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--success);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .promo-content {
+            flex: 2;
+        }
+        .promo-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .promo-content p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .promo-image {
+            flex: 0 0 80px;
+            text-align: center;
+        }
+        .promo-image img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+        .facebook-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1877f2;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            transition: 0.2s;
+        }
+        .facebook-btn:hover {
+            background: #0e63b3;
+            transform: translateY(-2px);
+        }
+        .barmejli-btn {
+            background: #10b981;
+        }
+        .barmejli-btn:hover {
+            background: #059669;
+        }
+        @media (max-width: 768px) {
+            .promo-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            .promo-image {
+                order: -1;
+            }
+        }
         .slim-card {
-            background: var(--surface); border-radius: 14px; border: 1px solid var(--border);
-            overflow: hidden; transition: all 0.2s;
+            background: var(--surface);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.2s;
         }
         .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
         .card-media { 
@@ -372,7 +451,7 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
-        /* Social cards: no underline, icon color follows theme */
+        /* Social cards - preserve colors from admin panel */
         .social-card {
             text-decoration: none;
             display: block;
@@ -387,7 +466,6 @@
         .social-card i {
             font-size: 1.6rem;
             margin-bottom: 4px;
-            color: var(--text);
         }
     </style>
 </head>
@@ -422,7 +500,32 @@
             <div id="newsContainer" class="cards-grid"></div>
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
-        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div><div id="digitalContainer" class="cards-grid"></div></div>
+        <div id="digitalPage" class="section-page">
+            <!-- PROMO: BarmejLi -->
+            <div class="promo-card">
+                <div class="promo-content">
+                    <h3><i class="fas fa-code"></i> Need development or digital services?</h3>
+                    <p>Submit your requests on the <strong>BarmejLi (برمجلي)</strong> platform. Our team will handle your project with professional care. Fast, reliable, and affordable services.</p>
+                    <a href="https://barmejli.com" target="_blank" class="facebook-btn barmejli-btn"><i class="fas fa-external-link-alt"></i> Visit BarmejLi Platform</a>
+                </div>
+                <div class="promo-image">
+                    <i class="fas fa-laptop-code" style="font-size: 3rem; color: var(--primary);"></i>
+                </div>
+            </div>
+            <!-- PROMO: Marketing Agent -->
+            <div class="promo-card">
+                <div class="promo-content">
+                    <h3><i class="fab fa-facebook-messenger"></i> Need direct assistance?</h3>
+                    <p>Contact our commercial agent on Facebook for immediate support. Fast response, full support 24/7.</p>
+                    <a href="https://www.facebook.com/profile.php?id=61561793138138" target="_blank" class="facebook-btn"><i class="fab fa-facebook-f"></i> Message on Facebook</a>
+                </div>
+                <div class="promo-image">
+                    <img src="https://i.ibb.co/6BfJpPf/MA.jpg" alt="Agent" onerror="this.src='https://via.placeholder.com/70?text=Agent'">
+                </div>
+            </div>
+            <div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div>
+            <div id="digitalContainer" class="cards-grid"></div>
+        </div>
         <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
         <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
@@ -525,7 +628,7 @@
         if (accountBlockCheckInterval) clearInterval(accountBlockCheckInterval);
         accountBlockCheckInterval = setInterval(() => {
             if (currentUser) checkAccountBlocked();
-        }, 30000); // every 30 seconds
+        }, 30000);
     }
 
     function stopAccountBlockChecker() {
@@ -698,7 +801,6 @@
         document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
         document.getElementById('modalUserEmail').textContent = user.email || 'No email';
         
-        // Set avatar in modal
         const avatarUrl = user.avatar || 'https://i.ibb.co/SDxkt40s/user.png';
         document.getElementById('modalAvatar').src = avatarUrl;
         
@@ -710,7 +812,6 @@
         connectToSSE();
         loadAllContent();
         
-        // Start periodic account block check
         startAccountBlockChecker();
         
         if (!welcomeShown) { welcomeShown = true; }
@@ -761,7 +862,6 @@
                     console.log('📨 SSE:', data.type, data);
                     
                     if (data.type === 'support_reply') {
-                        // Extract full reply message
                         const replyMessage = data.message || data.data?.message || data.replyMessage || '';
                         const replySubject = data.subject || data.data?.subject || 'Support Reply';
                         const fullReply = data.replyMessage || data.data?.replyMessage || replyMessage;
@@ -899,7 +999,7 @@
             c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; 
             return; 
         } 
-        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card social-card"><div class="card-content"><i class="${escapeHtml(i.icon)}"></i><div class="card-title">${escapeHtml(i.name)}</div></div></a>`).join(''); 
+        c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card social-card"><div class="card-content"><i class="${escapeHtml(i.icon)}" style="color: ${i.color};"></i><div class="card-title">${escapeHtml(i.name)}</div></div></a>`).join(''); 
     }
 
     // ==================== CAROUSEL ====================
