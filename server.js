@@ -10,11 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==================== CONFIGURATION ====================
-// B.Y PRO Central Server
 const BYPRO_API = 'https://b-y-pro-acounts-login.onrender.com/api';
 const BYPRO_API_KEY = process.env.BYPRO_INTERNAL_KEY || 'bypro-internal-key-2025';
 
-// Local JSONBin (for support messages, notifications, etc.)
 const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
 const JSON_BIN_HEADERS = {
     'Content-Type': 'application/json',
@@ -27,10 +25,9 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Configure multer for memory storage
 const upload = multer({ storage: multer.memoryStorage() });
 
-// ==================== DEFAULT DATA STRUCTURE ====================
+// ==================== DEFAULT DATA STRUCTURE (شامل squareGroups) ====================
 const DEFAULT_DATA = {
     users: {},
     images: [],
@@ -42,10 +39,11 @@ const DEFAULT_DATA = {
     social: [],
     support: [],
     notifications: [],
-    nextId: { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1 }
+    squareGroups: [],      // [{ id, cards: [{ id, imageUrl, name, link, active }] }]
+    nextId: { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1, squareCard: 1, squareGroup: 1 }
 };
 
-// ==================== LOCAL CACHE (for JSONBin) ====================
+// ==================== LOCAL CACHE (JSONBin) ====================
 let cachedData = null;
 let lastFetch = 0;
 const CACHE_TTL = 30000; // 30 seconds
@@ -58,26 +56,28 @@ async function fetchLocalData() {
             headers: { 'X-Master-Key': process.env.JSON_BIN_MASTER_KEY }
         });
         const rawData = response.data.record;
-        // Merge with defaults to ensure all fields exist
+        // دمج مع القيم الافتراضية لضمان وجود جميع الحقول
         cachedData = { ...DEFAULT_DATA, ...rawData };
-        // Ensure nested objects exist
-        if (!cachedData.images) cachedData.images = [];
-        if (!cachedData.news) cachedData.news = [];
-        if (!cachedData.digital) cachedData.digital = [];
-        if (!cachedData.local) cachedData.local = [];
-        if (!cachedData.phone) cachedData.phone = [];
-        if (!cachedData.products) cachedData.products = [];
-        if (!cachedData.social) cachedData.social = [];
-        if (!cachedData.support) cachedData.support = [];
-        if (!cachedData.notifications) cachedData.notifications = [];
+        if (!cachedData.squareGroups) cachedData.squareGroups = [];
+        if (!cachedData.nextId.squareCard) cachedData.nextId.squareCard = 1;
+        if (!cachedData.nextId.squareGroup) cachedData.nextId.squareGroup = 1;
+        // التأكد من وجود المصفوفات الأخرى
+        cachedData.images = cachedData.images || [];
+        cachedData.news = cachedData.news || [];
+        cachedData.digital = cachedData.digital || [];
+        cachedData.local = cachedData.local || [];
+        cachedData.phone = cachedData.phone || [];
+        cachedData.products = cachedData.products || [];
+        cachedData.social = cachedData.social || [];
+        cachedData.support = cachedData.support || [];
+        cachedData.notifications = cachedData.notifications || [];
         if (!cachedData.nextId) cachedData.nextId = DEFAULT_DATA.nextId;
         
         lastFetch = now;
         return cachedData;
     } catch (error) {
         console.error('Error fetching local data:', error.message);
-        // Return default data if fetch fails
-        return DEFAULT_DATA;
+        return { ...DEFAULT_DATA };
     }
 }
 
@@ -96,28 +96,19 @@ async function saveLocalData(data) {
 // ==================== B.Y PRO FINANCIAL API HELPERS ====================
 async function getFinancialData(userId) {
     try {
-        const response = await axios.get(`${BYPRO_API}/financial/${userId}`, {
-            timeout: 10000
-        });
+        const response = await axios.get(`${BYPRO_API}/financial/${userId}`, { timeout: 10000 });
         return response.data;
     } catch (error) {
         console.error(`Error fetching financial data for ${userId}:`, error.message);
-        if (error.response?.status === 404) {
-            return { success: false, error: 'User not found' };
-        }
+        if (error.response?.status === 404) return { success: false, error: 'User not found' };
         return { success: false, error: error.message };
     }
 }
 
 async function syncUserFinancialData(userId, name, email) {
     try {
-        const response = await axios.post(`${BYPRO_API}/financial/sync`, 
-            { userId, name, email },
-            {
-                headers: { 'x-api-key': BYPRO_API_KEY },
-                timeout: 10000
-            }
-        );
+        const response = await axios.post(`${BYPRO_API}/financial/sync`, { userId, name, email },
+            { headers: { 'x-api-key': BYPRO_API_KEY }, timeout: 10000 });
         return response.data;
     } catch (error) {
         console.error(`Error syncing financial data for ${userId}:`, error.message);
@@ -127,13 +118,8 @@ async function syncUserFinancialData(userId, name, email) {
 
 async function addBalanceToUser(userId, amount, description) {
     try {
-        const response = await axios.post(`${BYPRO_API}/financial/add-balance`,
-            { userId, amount, description },
-            {
-                headers: { 'x-api-key': BYPRO_API_KEY },
-                timeout: 10000
-            }
-        );
+        const response = await axios.post(`${BYPRO_API}/financial/add-balance`, { userId, amount, description },
+            { headers: { 'x-api-key': BYPRO_API_KEY }, timeout: 10000 });
         return response.data;
     } catch (error) {
         console.error(`Error adding balance to ${userId}:`, error.message);
@@ -143,10 +129,7 @@ async function addBalanceToUser(userId, amount, description) {
 
 async function verifyUserPassword(accountId, password) {
     try {
-        const response = await axios.post(`${BYPRO_API}/verify-password`,
-            { accountId, password },
-            { timeout: 10000 }
-        );
+        const response = await axios.post(`${BYPRO_API}/verify-password`, { accountId, password }, { timeout: 10000 });
         return response.data;
     } catch (error) {
         console.error(`Error verifying password for ${accountId}:`, error.message);
@@ -156,10 +139,7 @@ async function verifyUserPassword(accountId, password) {
 
 async function findCardByCode(cardCode) {
     try {
-        const response = await axios.post(`${BYPRO_API}/find-card`,
-            { cardCode },
-            { timeout: 10000 }
-        );
+        const response = await axios.post(`${BYPRO_API}/find-card`, { cardCode }, { timeout: 10000 });
         return response.data;
     } catch (error) {
         console.error(`Error finding card ${cardCode}:`, error.message);
@@ -169,13 +149,8 @@ async function findCardByCode(cardCode) {
 
 async function processPayment(paymentData) {
     try {
-        const response = await axios.post(`${BYPRO_API}/process-payment`,
-            paymentData,
-            {
-                headers: { 'Content-Type': 'application/json' },
-                timeout: 15000
-            }
-        );
+        const response = await axios.post(`${BYPRO_API}/process-payment`, paymentData,
+            { headers: { 'Content-Type': 'application/json' }, timeout: 15000 });
         return response.data;
     } catch (error) {
         console.error('Error processing payment:', error.message);
@@ -185,10 +160,7 @@ async function processPayment(paymentData) {
 
 async function createPaymentRequest(appName, amount, callbackUrl, description) {
     try {
-        const response = await axios.post(`${BYPRO_API}/create-payment`,
-            { appName, amount, callbackUrl, description },
-            { timeout: 10000 }
-        );
+        const response = await axios.post(`${BYPRO_API}/create-payment`, { appName, amount, callbackUrl, description }, { timeout: 10000 });
         return response.data;
     } catch (error) {
         console.error('Error creating payment:', error.message);
@@ -235,7 +207,6 @@ app.get('/api/events', (req, res) => {
     clients.push(newClient);
     
     console.log(`✅ New SSE client connected: ${clientId}, Total clients: ${clients.length}`);
-    
     res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to server', clientId })}\n\n`);
     
     const pingInterval = setInterval(() => {
@@ -253,26 +224,19 @@ app.get('/api/events', (req, res) => {
     });
 });
 
-// ==================== FINANCIAL ENDPOINTS (Using B.Y PRO Server) ====================
-
-// جلب بيانات المستخدم المالية
+// ==================== FINANCIAL ENDPOINTS ====================
 app.get('/api/financial/:userId', async (req, res) => {
     try {
         const { userId } = req.params;
         const result = await getFinancialData(userId);
-        
-        if (result.success) {
-            res.json(result);
-        } else {
-            res.status(404).json({ success: false, error: result.error || 'User not found' });
-        }
+        if (result.success) res.json(result);
+        else res.status(404).json({ success: false, error: result.error || 'User not found' });
     } catch (error) {
         console.error('Error in /api/financial/:userId:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// مزامنة بيانات المستخدم المالية
 app.post('/api/financial/sync', async (req, res) => {
     try {
         const { userId, name, email } = req.body;
@@ -284,16 +248,11 @@ app.post('/api/financial/sync', async (req, res) => {
     }
 });
 
-// إضافة رصيد للمستخدم
 app.post('/api/financial/add-balance', async (req, res) => {
     try {
         const { userId, amount, description } = req.body;
         const apiKey = req.headers['x-api-key'];
-        
-        if (apiKey !== BYPRO_API_KEY) {
-            return res.status(403).json({ success: false, error: 'Access denied' });
-        }
-        
+        if (apiKey !== BYPRO_API_KEY) return res.status(403).json({ success: false, error: 'Access denied' });
         const result = await addBalanceToUser(userId, amount, description);
         res.json(result);
     } catch (error) {
@@ -302,7 +261,6 @@ app.post('/api/financial/add-balance', async (req, res) => {
     }
 });
 
-// التحقق من كلمة المرور
 app.post('/api/verify-password', async (req, res) => {
     try {
         const { accountId, password } = req.body;
@@ -314,7 +272,6 @@ app.post('/api/verify-password', async (req, res) => {
     }
 });
 
-// البحث عن بطاقة
 app.post('/api/find-card', async (req, res) => {
     try {
         const { cardCode } = req.body;
@@ -326,7 +283,6 @@ app.post('/api/find-card', async (req, res) => {
     }
 });
 
-// إنشاء طلب دفع
 app.post('/api/create-payment', async (req, res) => {
     try {
         const { appName, amount, callbackUrl, description } = req.body;
@@ -338,13 +294,10 @@ app.post('/api/create-payment', async (req, res) => {
     }
 });
 
-// تنفيذ الدفع
 app.post('/api/process-payment', async (req, res) => {
     try {
         const paymentData = req.body;
         const result = await processPayment(paymentData);
-        
-        // إذا نجح الدفع، نرسل إشعاراً للتطبيقات المتصلة
         if (result.success) {
             broadcastUpdate('payment_completed', {
                 accountId: paymentData.accountId,
@@ -355,7 +308,6 @@ app.post('/api/process-payment', async (req, res) => {
                 timestamp: new Date().toISOString()
             });
         }
-        
         res.json(result);
     } catch (error) {
         console.error('Error in /api/process-payment:', error);
@@ -363,9 +315,9 @@ app.post('/api/process-payment', async (req, res) => {
     }
 });
 
-// ==================== LOCAL DATA ENDPOINTS (Support, Notifications, etc.) ====================
+// ==================== LOCAL DATA ENDPOINTS (بما في ذلك squareGroups) ====================
 
-// Get all local data
+// جلب جميع البيانات (بما فيها squareGroups)
 app.get('/api/data', async (req, res) => {
     try {
         const data = await fetchLocalData();
@@ -376,7 +328,7 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-// Save all local data
+// حفظ جميع البيانات (بما فيها squareGroups)
 app.put('/api/data', async (req, res) => {
     try {
         await saveLocalData(req.body);
@@ -388,7 +340,33 @@ app.put('/api/data', async (req, res) => {
     }
 });
 
-// Support message endpoint
+// جلب المجموعات والبطاقات المربعة فقط
+app.get('/api/square-groups', async (req, res) => {
+    try {
+        const data = await fetchLocalData();
+        res.json(data.squareGroups || []);
+    } catch (error) {
+        console.error('Error fetching square groups:', error);
+        res.status(500).json({ error: 'Failed to fetch square groups' });
+    }
+});
+
+// حفظ المجموعات والبطاقات المربعة (يمكن استخدامه بدلاً من PUT /api/data كامل)
+app.put('/api/square-groups', async (req, res) => {
+    try {
+        const newGroups = req.body;
+        const currentData = await fetchLocalData();
+        currentData.squareGroups = newGroups;
+        await saveLocalData(currentData);
+        broadcastUpdate('data_update', { type: 'square_groups', timestamp: Date.now() });
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error saving square groups:', error);
+        res.status(500).json({ error: 'Failed to save square groups' });
+    }
+});
+
+// ==================== SUPPORT & NOTIFICATIONS ====================
 app.post('/api/support', async (req, res) => {
     try {
         const newMessage = req.body;
@@ -401,7 +379,6 @@ app.post('/api/support', async (req, res) => {
         const support = currentData.support || [];
         support.unshift(newMessage);
         currentData.support = support;
-        
         await saveLocalData(currentData);
         
         broadcastUpdate('support_new', {
@@ -420,17 +397,14 @@ app.post('/api/support', async (req, res) => {
     }
 });
 
-// Reply to support message
 app.post('/api/support/reply', async (req, res) => {
     try {
         const { messageId, recipient, subject, replyMessage } = req.body;
-        
         if (!messageId || !recipient || !replyMessage) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
         
         const currentData = await fetchLocalData();
-        
         const replyNotification = {
             id: Date.now(),
             title: `Reply to: ${subject}`,
@@ -477,14 +451,12 @@ app.post('/api/support/reply', async (req, res) => {
         
         console.log(`📧 Reply sent to ${recipient} about: ${subject}`);
         res.json({ success: true, message: 'Reply sent successfully', notification: replyNotification });
-        
     } catch (error) {
         console.error('Reply error:', error);
         res.status(500).json({ error: 'Failed to send reply' });
     }
 });
 
-// Mark support message as read
 app.post('/api/support/read/:id', async (req, res) => {
     try {
         const messageId = parseInt(req.params.id);
@@ -503,7 +475,6 @@ app.post('/api/support/read/:id', async (req, res) => {
     }
 });
 
-// Notification endpoint
 app.post('/api/notifications', async (req, res) => {
     try {
         const { title, message, icon, color, recipient } = req.body;
@@ -542,7 +513,6 @@ app.post('/api/notifications', async (req, res) => {
     }
 });
 
-// Mark notification as read
 app.post('/api/notifications/read/:id', async (req, res) => {
     try {
         const notifId = parseInt(req.params.id);
@@ -561,13 +531,11 @@ app.post('/api/notifications/read/:id', async (req, res) => {
     }
 });
 
-// Get unread counts
 app.get('/api/unread-counts', async (req, res) => {
     try {
         const currentData = await fetchLocalData();
         const support = currentData.support || [];
         const notifications = currentData.notifications || [];
-        
         res.json({
             support_unread: support.filter(m => !m.read).length,
             notifications_unread: notifications.filter(n => !n.read).length
@@ -581,10 +549,7 @@ app.get('/api/unread-counts', async (req, res) => {
 // ==================== IMAGE UPLOAD ====================
 app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
-        }
-        
+        if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         console.log('Uploading image:', req.file.originalname, 'Size:', req.file.size);
         
         const base64Image = req.file.buffer.toString('base64');
@@ -604,20 +569,19 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
             console.error('ImgBB upload failed:', response.data);
             res.status(500).json({ error: 'Upload failed: Invalid response from ImgBB' });
         }
-        
     } catch (error) {
         console.error('Upload error:', error.message);
         res.status(500).json({ error: 'Upload failed: ' + error.message });
     }
 });
 
-// ==================== ADD DEFAULT DATA IF EMPTY ====================
+// ==================== INITIALIZE DEFAULT DATA (مع بطاقات مربعة افتراضية) ====================
 async function initializeDefaultData() {
     try {
         const currentData = await fetchLocalData();
         let needsSave = false;
         
-        // Add default carousel images if empty
+        // الصور الدائرية (carousel)
         if (!currentData.images || currentData.images.length === 0) {
             currentData.images = [
                 { id: 1, imageUrl: 'https://by-pro.kesug.com/banner1.png', alt: 'B.Y PRO Services' },
@@ -627,7 +591,7 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
-        // Add default news if empty
+        // الأخبار
         if (!currentData.news || currentData.news.length === 0) {
             currentData.news = [
                 { id: 1, title: 'Welcome to B.Y PRO App', description: 'Your all-in-one digital services platform', enabled: true, icon: 'fas fa-star', color: '#3b82f6' },
@@ -636,7 +600,7 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
-        // Add default digital services if empty
+        // الخدمات الرقمية
         if (!currentData.digital || currentData.digital.length === 0) {
             currentData.digital = [
                 { id: 1, name: 'Web Development', description: 'Professional website development services', imageUrl: 'https://placehold.co/400x200/0066cc/white?text=Web+Dev', enabled: true },
@@ -645,7 +609,7 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
-        // Add default local services if empty
+        // الخدمات المحلية
         if (!currentData.local || currentData.local.length === 0) {
             currentData.local = [
                 { id: 1, name: 'Document Translation', description: 'Official document translation services', imageUrl: 'https://placehold.co/400x200/10b981/white?text=Translation', enabled: true },
@@ -654,7 +618,7 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
-        // Add default phone services if empty
+        // خدمات الهاتف
         if (!currentData.phone || currentData.phone.length === 0) {
             currentData.phone = [
                 { id: 1, name: 'Mobile Recharge', description: 'Quick mobile credit top-up', imageUrl: 'https://placehold.co/400x200/f59e0b/white?text=Recharge', enabled: true },
@@ -663,7 +627,7 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
-        // Add default products if empty
+        // المنتجات
         if (!currentData.products || currentData.products.length === 0) {
             currentData.products = [
                 { id: 1, name: 'B.Y PRO Card', description: 'Digital payment card with exclusive benefits', imageUrl: 'https://placehold.co/400x200/ef4444/white?text=BYPRO+Card', enabled: true },
@@ -672,7 +636,7 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
-        // Add default social links if empty
+        // روابط التواصل الاجتماعي
         if (!currentData.social || currentData.social.length === 0) {
             currentData.social = [
                 { id: 1, name: 'Facebook', icon: 'fab fa-facebook-f', color: '#1877f2', url: 'https://facebook.com/bypro', order: 0 },
@@ -682,9 +646,38 @@ async function initializeDefaultData() {
             needsSave = true;
         }
         
+        // المجموعات والبطاقات المربعة (Square Cards) - مجموعة افتراضية واحدة تحتوي على بطاقتين
+        if (!currentData.squareGroups || currentData.squareGroups.length === 0) {
+            currentData.squareGroups = [
+                {
+                    id: (currentData.nextId?.squareGroup || 1),
+                    cards: [
+                        {
+                            id: (currentData.nextId?.squareCard || 1),
+                            name: 'Example Service 1',
+                            link: 'https://example.com/service1',
+                            imageUrl: 'https://placehold.co/400x200/3b82f6/white?text=Service+1',
+                            active: true
+                        },
+                        {
+                            id: (currentData.nextId?.squareCard || 1) + 1,
+                            name: 'Example Service 2',
+                            link: 'https://example.com/service2',
+                            imageUrl: 'https://placehold.co/400x200/10b981/white?text=Service+2',
+                            active: true
+                        }
+                    ]
+                }
+            ];
+            if (!currentData.nextId) currentData.nextId = DEFAULT_DATA.nextId;
+            currentData.nextId.squareGroup = (currentData.nextId.squareGroup || 1) + 1;
+            currentData.nextId.squareCard = (currentData.nextId.squareCard || 1) + 2;
+            needsSave = true;
+        }
+        
         if (needsSave) {
             await saveLocalData(currentData);
-            console.log('✅ Default data initialized in JSONBin');
+            console.log('✅ Default data (including square groups) initialized in JSONBin');
         }
     } catch (error) {
         console.error('Error initializing default data:', error);
@@ -693,9 +686,9 @@ async function initializeDefaultData() {
 
 // ==================== HEALTH CHECK ====================
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
-        timestamp: new Date().toISOString(), 
+    res.json({
+        status: 'ok',
+        timestamp: new Date().toISOString(),
         clients: clients.length,
         uptime: process.uptime(),
         bypro_server: BYPRO_API,
@@ -716,8 +709,8 @@ app.listen(PORT, async () => {
     console.log(`🔗 B.Y PRO Server: ${BYPRO_API}`);
     console.log(`📡 SSE endpoint: /api/events`);
     console.log(`💰 Financial endpoints: /api/financial/*`);
+    console.log(`📦 Square groups endpoint: /api/square-groups`);
     console.log(`⏱️  Broadcast cooldown: ${BROADCAST_COOLDOWN}ms`);
     
-    // Initialize default data if needed
     await initializeDefaultData();
 });
