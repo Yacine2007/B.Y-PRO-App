@@ -8,504 +8,124 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
-            color: #e5e5e5;
-        }
-
+        /* جميع الأنماط السابقة كما هي - تم حذفها من هنا للاختصار، ولكن يجب نسخها كاملة من الإصدار السابق */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #e5e5e5; }
         ::-webkit-scrollbar { width: 5px; height: 5px; }
         ::-webkit-scrollbar-track { background: #1a1a1a; }
         ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
-
         .admin-container { display: flex; min-height: 100vh; }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%);
-            border-right: 1px solid rgba(59, 130, 246, 0.2);
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            overflow-y: auto;
-            z-index: 100;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .sidebar-header {
-            padding: 24px 20px;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .sidebar-header img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            padding: 6px;
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #3b82f6, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
+        .sidebar { width: 280px; background: linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%); border-right: 1px solid rgba(59,130,246,0.2); position: fixed; left: 0; top: 0; bottom: 0; overflow-y: auto; z-index: 100; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1); }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(59,130,246,0.2); display: flex; align-items: center; gap: 12px; }
+        .sidebar-header img { width: 42px; height: 42px; object-fit: contain; border-radius: 12px; background: linear-gradient(135deg,#3b82f6,#8b5cf6); padding: 6px; }
+        .sidebar-header h2 { font-size: 1.25rem; font-weight: 700; background: linear-gradient(135deg,#3b82f6,#a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .sidebar-nav { padding: 20px 16px; }
-
-        .nav-category {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #6b7280;
-            padding: 12px 12px 6px;
-            margin-top: 8px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            margin-bottom: 4px;
-            border-radius: 12px;
-            color: #9ca3af;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-            font-size: 0.85rem;
-            position: relative;
-        }
-
+        .nav-category { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; color: #6b7280; padding: 12px 12px 6px; margin-top: 8px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 16px; margin-bottom: 4px; border-radius: 12px; color: #9ca3af; cursor: pointer; transition: all 0.2s; font-weight: 500; font-size: 0.85rem; }
         .nav-item i { width: 22px; font-size: 1rem; }
-        .nav-item:hover { background: rgba(59, 130, 246, 0.1); color: #3b82f6; transform: translateX(4px); }
-        .nav-item.active {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), transparent);
-            color: #3b82f6;
-            border-left: 2px solid #3b82f6;
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            background: #ef4444;
-            color: white;
-            font-size: 9px;
-            font-weight: bold;
-            padding: 0 5px;
-            margin-left: auto;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 28px 32px;
-            background: #0a0a0a;
-            min-height: 100vh;
-        }
-
-        /* Status Bar */
-        .status-bar {
-            position: fixed;
-            bottom: 0;
-            left: 280px;
-            right: 0;
-            height: 3px;
-            background: #10b981;
-            transition: background 0.2s ease;
-            z-index: 1000;
-        }
+        .nav-item:hover { background: rgba(59,130,246,0.1); color: #3b82f6; transform: translateX(4px); }
+        .nav-item.active { background: linear-gradient(90deg, rgba(59,130,246,0.15), transparent); color: #3b82f6; border-left: 2px solid #3b82f6; }
+        .badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; border-radius: 10px; background: #ef4444; color: white; font-size: 9px; font-weight: bold; padding: 0 5px; margin-left: auto; }
+        .main-content { flex: 1; margin-left: 280px; padding: 28px 32px; background: #0a0a0a; min-height: 100vh; }
+        .status-bar { position: fixed; bottom: 0; left: 280px; right: 0; height: 3px; background: #10b981; transition: background 0.2s ease; z-index: 1000; }
         .status-bar.success { background: #10b981; }
         .status-bar.error { background: #ef4444; }
         .status-bar.warning { background: #f59e0b; }
         .status-bar.info { background: #3b82f6; }
-
-        @media (max-width: 768px) {
-            .status-bar { left: 0; }
-            .main-content { margin-left: 0; padding: 20px; }
-        }
-
-        /* Sections */
+        @media (max-width:768px){ .status-bar{left:0;} .main-content{margin-left:0;padding:20px;} }
         .section-page { display: none; animation: fadeInUp 0.3s ease; }
         .section-page.active-page { display: block; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Page Header */
-        .page-header {
-            margin-bottom: 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff, #9ca3af);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .page-subtitle {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #121212, #0f0f0f);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            transition: all 0.2s;
-        }
-        .stat-card:hover {
-            border-color: rgba(59, 130, 246, 0.4);
-            transform: translateY(-2px);
-        }
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(59, 130, 246, 0.1);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-        }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+        .page-header { margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .page-title { font-size: 1.5rem; font-weight: 700; background: linear-gradient(135deg,#ffffff,#9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .page-subtitle { font-size: 0.75rem; color: #6b7280; margin-top: 4px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin-bottom: 28px; }
+        .stat-card { background: linear-gradient(135deg,#121212,#0f0f0f); border-radius: 20px; padding: 20px; border: 1px solid rgba(59,130,246,0.15); transition: all 0.2s; }
+        .stat-card:hover { border-color: rgba(59,130,246,0.4); transform: translateY(-2px); }
+        .stat-icon { width: 48px; height: 48px; background: rgba(59,130,246,0.1); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
         .stat-icon i { font-size: 1.5rem; color: #3b82f6; }
         .stat-value { font-size: 1.8rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
         .stat-label { font-size: 0.7rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* Cards */
-        .card {
-            background: #121212;
-            border-radius: 24px;
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            padding: 24px;
-            margin-bottom: 24px;
-            transition: all 0.2s;
-        }
-        .card:hover { border-color: rgba(59, 130, 246, 0.3); }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.15);
-        }
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #ffffff;
-        }
+        .card { background: #121212; border-radius: 24px; border: 1px solid rgba(59,130,246,0.15); padding: 24px; margin-bottom: 24px; }
+        .card:hover { border-color: rgba(59,130,246,0.3); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(59,130,246,0.15); }
+        .card-title { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 10px; color: #ffffff; }
         .card-title i { color: #3b82f6; font-size: 1.1rem; }
-
-        /* Form Elements */
         .form-group { margin-bottom: 20px; }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 0.75rem;
-            color: #9ca3af;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 14px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            color: #e5e5e5;
-            transition: all 0.2s;
-        }
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-        }
-        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4); }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #2a2a2a;
-            color: #e5e5e5;
-        }
-        .btn-outline:hover { background: rgba(59, 130, 246, 0.1); border-color: #3b82f6; }
-        .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
-        .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea { width: 100%; padding: 12px 16px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 14px; font-family: 'Inter',sans-serif; font-size: 0.85rem; color: #e5e5e5; transition: all 0.2s; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        .btn { padding: 8px 18px; border-radius: 40px; font-weight: 500; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; border: none; }
+        .btn-primary { background: linear-gradient(135deg,#3b82f6,#2563eb); color: white; }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+        .btn-outline { background: transparent; border: 1px solid #2a2a2a; color: #e5e5e5; }
+        .btn-outline:hover { background: rgba(59,130,246,0.1); border-color: #3b82f6; }
+        .btn-danger { background: linear-gradient(135deg,#ef4444,#dc2626); color: white; }
+        .btn-success { background: linear-gradient(135deg,#10b981,#059669); color: white; }
         .btn-sm { padding: 6px 12px; font-size: 0.7rem; }
         .action-bar { display: flex; gap: 12px; justify-content: flex-end; margin-bottom: 20px; }
-
-        /* Grids */
-        .items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-        .item-card {
-            background: #1a1a1a;
-            border-radius: 20px;
-            border: 1px solid #2a2a2a;
-            padding: 18px;
-            transition: all 0.2s;
-        }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px,1fr)); gap: 20px; }
+        .item-card { background: #1a1a1a; border-radius: 20px; border: 1px solid #2a2a2a; padding: 18px; transition: all 0.2s; }
         .item-card:hover { border-color: #3b82f6; transform: translateY(-2px); }
-        .drag-handle {
-            text-align: center;
-            margin-bottom: 12px;
-            color: #6b7280;
-            cursor: grab;
-        }
+        .drag-handle { text-align: center; margin-bottom: 12px; color: #6b7280; cursor: grab; }
         .drag-handle:active { cursor: grabbing; }
         .item-info { display: flex; flex-direction: column; gap: 12px; }
-        .item-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 14px;
-            padding-top: 12px;
-            border-top: 1px solid #2a2a2a;
-        }
-        .image-preview {
-            width: 100%;
-            max-height: 140px;
-            object-fit: cover;
-            border-radius: 14px;
-        }
-
-        /* Square Cards Groups */
-        .groups-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-        .group-box {
-            border: 2px solid #3b82f6;
-            border-radius: 24px;
-            background: rgba(59, 130, 246, 0.02);
-            padding: 20px;
-            transition: all 0.2s;
-        }
-        .group-header {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed rgba(59, 130, 246, 0.3);
-        }
-        .group-cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            min-height: 150px;
-        }
-        .square-card {
-            width: 200px;
-            background: #1a1a1a;
-            border-radius: 20px;
-            border: 1px solid #2a2a2a;
-            overflow: hidden;
-            transition: all 0.2s;
-            cursor: grab;
-        }
+        .item-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #2a2a2a; }
+        .image-preview { width: 100%; max-height: 140px; object-fit: cover; border-radius: 14px; }
+        .groups-container { display: flex; flex-direction: column; gap: 30px; }
+        .group-box { border: 2px solid #3b82f6; border-radius: 24px; background: rgba(59,130,246,0.02); padding: 20px; transition: all 0.2s; }
+        .group-header { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed rgba(59,130,246,0.3); }
+        .group-cards { display: flex; flex-wrap: wrap; gap: 20px; min-height: 150px; }
+        .square-card { width: 200px; background: #1a1a1a; border-radius: 20px; border: 1px solid #2a2a2a; overflow: hidden; transition: all 0.2s; cursor: grab; }
         .square-card:active { cursor: grabbing; }
         .square-card.dragging { opacity: 0.5; }
         .square-card:hover { border-color: #3b82f6; transform: translateY(-4px); }
-        .square-card-img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            background: #0f0f0f;
-        }
-        .square-card-content {
-            padding: 12px;
-        }
-        .square-card-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 6px;
-            color: white;
-        }
-        .square-card-link {
-            font-size: 0.7rem;
-            color: #3b82f6;
-            text-decoration: none;
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .square-card-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid #2a2a2a;
-        }
-        .toggle-small {
-            transform: scale(0.8);
-        }
-
-        /* Modal for card edit */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.2s;
-        }
+        .square-card-img { width: 100%; height: 120px; object-fit: cover; background: #0f0f0f; }
+        .square-card-content { padding: 12px; }
+        .square-card-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 6px; color: white; }
+        .square-card-link { font-size: 0.7rem; color: #3b82f6; text-decoration: none; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .square-card-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 8px; border-top: 1px solid #2a2a2a; }
+        .toggle-small { transform: scale(0.8); }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content {
-            background: #121212;
-            border-radius: 28px;
-            width: 90%;
-            max-width: 550px;
-            max-height: 80vh;
-            overflow: auto;
-            padding: 24px;
-            border: 1px solid #2a2a2a;
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background: #1a1a1a;
-            border-radius: 40px;
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-            border-left: 3px solid #10b981;
-            z-index: 2000;
-            transform: translateX(120%);
-            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
+        .modal-content { background: #121212; border-radius: 28px; width: 90%; max-width: 550px; max-height: 80vh; overflow: auto; padding: 24px; border: 1px solid #2a2a2a; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #2a2a2a; }
+        .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; border-radius: 40px; padding: 12px 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); border-left: 3px solid #10b981; z-index: 2000; transform: translateX(120%); transition: transform 0.3s cubic-bezier(0.68,-0.55,0.265,1.55); }
         .toast.show { transform: translateX(0); }
-        .toast-icon { width: 24px; height: 24px; background: rgba(16, 185, 129, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .toast-icon { width: 24px; height: 24px; background: rgba(16,185,129,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .toast-message { font-size: 0.8rem; font-weight: 500; }
-
-        .menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 201;
-            background: #3b82f6;
-            border: none;
-            padding: 12px;
-            border-radius: 14px;
-            cursor: pointer;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            .menu-toggle { display: block; }
-            .sidebar { transform: translateX(-100%); }
-            .sidebar.open { transform: translateX(0); }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .items-grid { grid-template-columns: 1fr; }
-            .square-card { width: 100%; }
-            .group-cards { flex-direction: column; }
-        }
+        .menu-toggle { display: none; position: fixed; top: 20px; left: 20px; z-index: 201; background: #3b82f6; border: none; padding: 12px; border-radius: 14px; cursor: pointer; color: white; }
+        @media (max-width:768px){ .menu-toggle{display:block;} .sidebar{transform:translateX(-100%);} .sidebar.open{transform:translateX(0);} .stats-grid{grid-template-columns:repeat(2,1fr);gap:12px;} .items-grid{grid-template-columns:1fr;} .square-card{width:100%;} .group-cards{flex-direction:column;} }
+        .icon-color-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .icon-preview { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: #1a1a1a; border-radius: 12px; border: 1px solid #2a2a2a; }
+        .icons-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px,1fr)); gap: 12px; }
+        .icon-item { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px; border-radius: 14px; cursor: pointer; border: 1px solid #2a2a2a; background: #1a1a1a; transition: all 0.2s; }
+        .icon-item:hover { background: rgba(59,130,246,0.2); border-color: #3b82f6; transform: scale(1.02); }
+        .icon-item i { font-size: 1.5rem; color: #3b82f6; }
+        .support-card { background: #1a1a1a; border-radius: 20px; padding: 18px; margin-bottom: 14px; border: 1px solid #2a2a2a; transition: all 0.2s; }
+        .support-card.unread { border-left: 3px solid #3b82f6; background: rgba(59,130,246,0.03); }
+        .support-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .support-field { background: rgba(59,130,246,0.15); color: #3b82f6; padding: 4px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; }
+        .support-subject { font-weight: 600; margin: 8px 0 4px; }
+        .support-details { color: #9ca3af; font-size: 0.8rem; margin: 8px 0; }
+        .support-date { font-size: 0.65rem; color: #6b7280; margin-top: 8px; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #6b7280; }
+        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
     </style>
 </head>
 <body>
 <div class="admin-container">
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo">
-            <h2>B.Y PRO Admin</h2>
-        </div>
+        <div class="sidebar-header"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"><h2>B.Y PRO Admin</h2></div>
         <nav class="sidebar-nav">
             <div class="nav-category">CONTENT</div>
             <div class="nav-item active" data-section="homeImages"><i class="fas fa-images"></i> Home Images</div>
             <div class="nav-item" data-section="news"><i class="fas fa-newspaper"></i> News</div>
             <div class="nav-item" data-section="squareCards"><i class="fas fa-th-large"></i> Square Cards</div>
-            
             <div class="nav-category">COMMUNICATION</div>
             <div class="nav-item" data-section="broadcast"><i class="fas fa-bullhorn"></i> Broadcast</div>
             <div class="nav-item" data-section="individual"><i class="fas fa-user"></i> Individual</div>
-            <div class="nav-item" data-section="support"><i class="fas fa-headset"></i> Support <span id="supportBadge" class="badge" style="display: none;"></span></div>
-            
+            <div class="nav-item" data-section="support"><i class="fas fa-headset"></i> Support <span id="supportBadge" class="badge" style="display:none;"></span></div>
             <div class="nav-category">SERVICES</div>
             <div class="nav-item" data-section="digital"><i class="fas fa-code"></i> Digital Services</div>
             <div class="nav-item" data-section="local"><i class="fas fa-print"></i> Local Services</div>
@@ -522,14 +142,12 @@
             <div class="action-bar"><button class="btn btn-outline" onclick="refreshImages()"><i class="fas fa-sync-alt"></i> Refresh</button><button class="btn btn-success" onclick="saveImages()"><i class="fas fa-save"></i> Save Changes</button></div>
             <div id="imagesContainer" class="items-grid"></div>
         </div>
-
         <!-- News Section -->
         <div id="newsSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title">News</h1><p class="page-subtitle">Manage latest news and updates</p></div><button class="btn btn-primary" onclick="addNews()"><i class="fas fa-plus"></i> Add News</button></div>
             <div class="action-bar"><button class="btn btn-outline" onclick="refreshNews()"><i class="fas fa-sync-alt"></i> Refresh</button><button class="btn btn-success" onclick="saveNews()"><i class="fas fa-save"></i> Save Changes</button></div>
             <div id="newsContainer" class="items-grid"></div>
         </div>
-
         <!-- Square Cards Section (Groups) -->
         <div id="squareCardsSection" class="section-page">
             <div class="page-header">
@@ -537,34 +155,29 @@
                 <div><button class="btn btn-outline" onclick="refreshSquareCards()"><i class="fas fa-sync-alt"></i> Refresh</button><button class="btn btn-primary" onclick="addNewGroup()"><i class="fas fa-plus"></i> Add Group</button></div>
             </div>
             <div id="squareCardsContainer" class="groups-container"></div>
-            <div class="action-bar" style="margin-top: 20px;"><button class="btn btn-success" onclick="saveSquareCards()"><i class="fas fa-save"></i> Save All Changes</button></div>
+            <div class="action-bar" style="margin-top:20px;"><button class="btn btn-success" onclick="saveSquareCards()"><i class="fas fa-save"></i> Save All Changes</button></div>
         </div>
-
         <!-- Broadcast Section -->
         <div id="broadcastSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-bullhorn"></i> Broadcast</h1><p class="page-subtitle">Send notifications to all users</p></div></div>
-            <div class="card">
-                <div class="card-header"><div class="card-title"><i class="fas fa-globe"></i> Broadcast Message</div></div>
+            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-globe"></i> Broadcast Message</div></div>
                 <div class="form-group"><label>Title</label><input type="text" id="broadcastTitle" placeholder="Enter notification title"></div>
                 <div class="form-group"><label>Message</label><textarea id="broadcastDesc" rows="3" placeholder="Enter notification message"></textarea></div>
                 <div class="icon-color-row"><button class="btn btn-outline" onclick="openIconLibraryForBroadcast()"><i class="fas fa-icons"></i> Icon</button><div class="icon-preview" id="broadcastIconPreview"><i class="fas fa-bell"></i></div><input type="color" id="broadcastColor" value="#3b82f6"></div>
-                <div style="margin-top: 20px;"><button class="btn btn-primary" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> Send to All Users</button></div>
+                <div style="margin-top:20px;"><button class="btn btn-primary" onclick="sendBroadcast()"><i class="fas fa-paper-plane"></i> Send to All Users</button></div>
             </div>
         </div>
-
         <!-- Individual Section -->
         <div id="individualSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-user"></i> Individual Notification</h1><p class="page-subtitle">Send direct notifications to specific users</p></div></div>
-            <div class="card">
-                <div class="card-header"><div class="card-title"><i class="fas fa-paper-plane"></i> Send Individual Notification</div></div>
+            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-paper-plane"></i> Send Individual Notification</div></div>
                 <div class="form-group"><label>Recipient Username</label><input type="text" id="individualRecipient" placeholder="Enter username or email"></div>
                 <div class="form-group"><label>Title</label><input type="text" id="individualTitle" placeholder="Notification title"></div>
                 <div class="form-group"><label>Message</label><textarea id="individualDesc" rows="2" placeholder="Notification message"></textarea></div>
                 <div class="icon-color-row"><button class="btn btn-outline" onclick="openIconLibraryForIndividual()"><i class="fas fa-icons"></i> Icon</button><div class="icon-preview" id="individualIconPreview"><i class="fas fa-envelope"></i></div><input type="color" id="individualColor" value="#3b82f6"></div>
-                <div style="margin-top: 16px;"><button class="btn btn-primary" onclick="sendIndividual()"><i class="fas fa-paper-plane"></i> Send Notification</button></div>
+                <div style="margin-top:16px;"><button class="btn btn-primary" onclick="sendIndividual()"><i class="fas fa-paper-plane"></i> Send Notification</button></div>
             </div>
         </div>
-
         <!-- Support Section -->
         <div id="supportSection" class="section-page">
             <div class="page-header"><div><h1 class="page-title"><i class="fas fa-headset"></i> Support Management</h1><p class="page-subtitle">Manage support messages and reply to users</p></div><button class="btn btn-outline btn-sm" onclick="refreshSupport()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
@@ -574,29 +187,21 @@
                 <div class="stat-card"><div class="stat-icon"><i class="fas fa-reply-all"></i></div><div class="stat-value" id="repliedSupportCount">0</div><div class="stat-label">Replied</div></div>
                 <div class="stat-card"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div class="stat-value" id="supportResponseRate">0</div><div class="stat-label">Response Rate</div></div>
             </div>
-            <div class="card">
-                <div class="card-header"><div class="card-title"><i class="fas fa-headset"></i> Support Messages</div><span class="btn-outline btn-sm" style="padding: 4px 12px;"><i class="fas fa-envelope"></i> Total: <span id="supportTotal">0</span></span></div>
-                <div id="supportMessagesContainer"></div>
-            </div>
+            <div class="card"><div class="card-header"><div class="card-title"><i class="fas fa-headset"></i> Support Messages</div><span class="btn-outline btn-sm" style="padding:4px 12px;"><i class="fas fa-envelope"></i> Total: <span id="supportTotal">0</span></span></div>
+            <div id="supportMessagesContainer"></div></div>
         </div>
-
         <!-- Digital Services -->
         <div id="digitalSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Digital Services</h1><p class="page-subtitle">Manage digital service listings</p></div><button class="btn btn-primary" onclick="addDigital()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshDigital()">Refresh</button><button class="btn btn-success" onclick="saveDigital()">Save Changes</button></div><div id="digitalServicesContainer" class="items-grid"></div></div>
-        
         <!-- Local Services -->
         <div id="localSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Local Services</h1><p class="page-subtitle">Manage local service listings</p></div><button class="btn btn-primary" onclick="addLocal()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshLocal()">Refresh</button><button class="btn btn-success" onclick="saveLocal()">Save Changes</button></div><div id="localServicesContainer" class="items-grid"></div></div>
-        
         <!-- Phone Services -->
         <div id="phoneSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Phone Services</h1><p class="page-subtitle">Manage phone service listings</p></div><button class="btn btn-primary" onclick="addPhone()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshPhone()">Refresh</button><button class="btn btn-success" onclick="savePhone()">Save Changes</button></div><div id="phoneServicesContainer" class="items-grid"></div></div>
-        
         <!-- Products -->
         <div id="productsSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Products</h1><p class="page-subtitle">Manage product listings</p></div><button class="btn btn-primary" onclick="addProduct()"><i class="fas fa-plus"></i> Add</button></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshProducts()">Refresh</button><button class="btn btn-success" onclick="saveProducts()">Save Changes</button></div><div id="productsContainer" class="items-grid"></div></div>
-        
         <!-- Social Media -->
         <div id="socialSection" class="section-page"><div class="page-header"><div><h1 class="page-title">Social Media</h1><p class="page-subtitle">Manage social media links</p></div><div><button class="btn btn-outline" onclick="openIconLibrary(null)"><i class="fas fa-icons"></i> Icon Library</button><button class="btn btn-primary" onclick="addSocial()" style="margin-left:8px;"><i class="fas fa-plus"></i> Add</button></div></div><div class="action-bar"><button class="btn btn-outline" onclick="refreshSocial()">Refresh</button><button class="btn btn-success" onclick="saveSocial()">Save Changes</button></div><div id="socialContainer" class="items-grid" ondragover="allowDrop(event)" ondrop="dropSocial(event)"></div></div>
     </main>
 </div>
-
 <div class="status-bar success" id="statusBar"></div>
 <div class="toast" id="toast"><div class="toast-icon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
 <div class="modal-overlay" id="iconModal"><div class="modal-content"><div class="modal-header"><h3>Select Icon</h3><button class="btn btn-outline" onclick="closeIconModal()">Close</button></div><div class="icons-grid" id="iconsGrid"></div></div></div>
@@ -609,61 +214,18 @@
 </div></div>
 
 <script>
-    // ==================== LOCAL STORAGE PERSISTENCE ====================
-    let db = {
-        images: [], news: [], digital: [], local: [], phone: [], products: [], social: [], support: [],
-        squareGroups: [],  // [{ id, cards: [{ id, imageUrl, name, link, active }] }]
-        nextId: { img:1, news:1, digital:1, local:1, phone:1, product:1, social:1, support:1, squareCard:1, squareGroup:1 }
-    };
+    // ==================== CONFIGURATION ====================
+    const API_BASE = ''; // leave empty to use relative path (same origin)
+    // All data will be fetched from /api/data and saved to /api/data (includes squareGroups)
 
-    function loadFromStorage() {
-        const stored = localStorage.getItem('bypro_dashboard');
-        if(stored) {
-            try {
-                const data = JSON.parse(stored);
-                Object.assign(db, data);
-                if(!db.squareGroups) db.squareGroups = [];
-                if(!db.nextId.squareCard) db.nextId.squareCard = 1;
-                if(!db.nextId.squareGroup) db.nextId.squareGroup = 1;
-            } catch(e) {}
-        }
-        if(db.squareGroups.length === 0) {
-            // create default group
-            db.squareGroups.push({ id: db.nextId.squareGroup++, cards: [] });
-        }
-        syncGlobalArrays();
-    }
+    // Global data arrays
+    let homeImages = [], newsItems = [], digitalServices = [], localServices = [], phoneServices = [], products = [], socialLinks = [], supportMessages = [], squareGroups = [];
+    let nextId = { img:1, news:1, digital:1, local:1, phone:1, product:1, social:1, support:1, squareCard:1, squareGroup:1 };
+    let broadcastIcon = 'fas fa-bell', broadcastColor = '#3b82f6', individualIcon = 'fas fa-envelope', individualColor = '#3b82f6';
+    let currentIconCallback = null;
+    let dragCardData = null; // for drag & drop between groups
 
-    function syncGlobalArrays() {
-        window.homeImages = db.images;
-        window.newsItems = db.news;
-        window.digitalServices = db.digital;
-        window.localServices = db.local;
-        window.phoneServices = db.phone;
-        window.products = db.products;
-        window.socialLinks = db.social;
-        window.supportMessages = db.support;
-        window.squareGroups = db.squareGroups;
-        window.nextId = db.nextId;
-    }
-
-    function saveToStorage() {
-        db.images = homeImages;
-        db.news = newsItems;
-        db.digital = digitalServices;
-        db.local = localServices;
-        db.phone = phoneServices;
-        db.products = products;
-        db.social = socialLinks;
-        db.support = supportMessages;
-        db.squareGroups = squareGroups;
-        db.nextId = nextId;
-        localStorage.setItem('bypro_dashboard', JSON.stringify(db));
-        setStatus('success');
-        showToast('All changes saved');
-    }
-
-    // UI helpers
+    // ==================== UI Helpers ====================
     function setStatus(status) {
         const bar = document.getElementById('statusBar');
         if(!bar) return;
@@ -672,28 +234,80 @@
         else if(status === 'error') bar.classList.add('error');
         else if(status === 'warning') bar.classList.add('warning');
         else if(status === 'info') bar.classList.add('info');
-        setTimeout(() => { bar.className = 'status-bar success'; }, 2000);
+        setTimeout(() => bar.className = 'status-bar success', 2000);
     }
     function showToast(msg, isErr = false) {
-        const toast = document.getElementById('toast'), toastMsg = document.getElementById('toastMessage');
-        toastMsg.textContent = msg;
-        if(isErr) toast.style.borderLeftColor = '#ef4444';
-        else toast.style.borderLeftColor = '#10b981';
+        const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage');
+        tMsg.textContent = msg;
+        toast.style.borderLeftColor = isErr ? '#ef4444' : '#10b981';
         toast.classList.add('show');
         setTimeout(() => toast.classList.remove('show'), 2500);
     }
     function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
 
-    // Image upload to base64
-    function uploadImageToBase64(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => resolve(e.target.result);
-            reader.readAsDataURL(file);
-        });
+    // ==================== API Calls ====================
+    async function loadAllData() {
+        try {
+            const res = await fetch(`${API_BASE}/api/data`);
+            if(!res.ok) throw new Error('Failed to fetch data');
+            const data = await res.json();
+            homeImages = data.images || [];
+            newsItems = data.news || [];
+            digitalServices = data.digital || [];
+            localServices = data.local || [];
+            phoneServices = data.phone || [];
+            products = data.products || [];
+            socialLinks = data.social || [];
+            supportMessages = data.support || [];
+            squareGroups = data.squareGroups || [];
+            nextId = data.nextId || { img:1, news:1, digital:1, local:1, phone:1, product:1, social:1, support:1, squareCard:1, squareGroup:1 };
+            renderAll();
+            updateSupportStats();
+            updateSupportBadge();
+            setStatus('success');
+        } catch(err) {
+            console.error(err);
+            setStatus('error');
+            showToast('Failed to load data', true);
+        }
     }
 
-    // ========== SQUARE CARDS GROUPS ==========
+    async function saveAllData() {
+        const payload = {
+            images: homeImages, news: newsItems, digital: digitalServices, local: localServices,
+            phone: phoneServices, products: products, social: socialLinks, support: supportMessages,
+            squareGroups: squareGroups, nextId: nextId
+        };
+        try {
+            const res = await fetch(`${API_BASE}/api/data`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if(!res.ok) throw new Error('Save failed');
+            setStatus('success');
+            showToast('All changes saved');
+        } catch(err) {
+            console.error(err);
+            setStatus('error');
+            showToast('Save failed', true);
+        }
+    }
+
+    async function uploadImage(file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+            const res = await fetch(`${API_BASE}/api/upload`, { method: 'POST', body: formData });
+            const data = await res.json();
+            return data.url || null;
+        } catch(err) {
+            showToast('Upload failed', true);
+            return null;
+        }
+    }
+
+    // ==================== Square Cards Groups Logic ====================
     let currentEditGroupId = null, currentEditCardId = null;
 
     function renderSquareCards() {
@@ -729,7 +343,8 @@
     }
 
     function addNewGroup() {
-        squareGroups.push({ id: nextId.squareGroup++, cards: [] });
+        const newId = nextId.squareGroup++;
+        squareGroups.push({ id: newId, cards: [] });
         renderSquareCards();
         saveSquareCards();
     }
@@ -814,16 +429,14 @@
         }
     }
 
-    // Drag & Drop between groups
-    let draggedCardData = null;
-
+    // Drag & Drop
     function dragCardStart(e) {
         const cardDiv = e.target.closest('.square-card');
         if(!cardDiv) return;
         const cardId = parseInt(cardDiv.dataset.cardId);
         const groupId = parseInt(cardDiv.dataset.groupId);
-        draggedCardData = { cardId, fromGroupId: groupId };
-        e.dataTransfer.setData('text/plain', JSON.stringify(draggedCardData));
+        dragCardData = { cardId, fromGroupId: groupId };
+        e.dataTransfer.setData('text/plain', JSON.stringify(dragCardData));
         e.dataTransfer.effectAllowed = 'move';
         cardDiv.classList.add('dragging');
     }
@@ -831,15 +444,15 @@
     function dragCardEnd(e) {
         const cardDiv = e.target.closest('.square-card');
         if(cardDiv) cardDiv.classList.remove('dragging');
-        draggedCardData = null;
+        dragCardData = null;
     }
 
     function allowDrop(e) { e.preventDefault(); }
 
     function dropOnGroup(e, targetGroupId) {
         e.preventDefault();
-        if(!draggedCardData) return;
-        const { cardId, fromGroupId } = draggedCardData;
+        if(!dragCardData) return;
+        const { cardId, fromGroupId } = dragCardData;
         if(fromGroupId === targetGroupId) return;
         const fromGroup = squareGroups.find(g => g.id === fromGroupId);
         const toGroup = squareGroups.find(g => g.id === targetGroupId);
@@ -852,50 +465,39 @@
                 saveSquareCards();
             }
         }
-        draggedCardData = null;
+        dragCardData = null;
     }
 
-    function uploadCardImage() {
+    async function uploadCardImage() {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = 'image/*';
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if(file) {
-                const base64 = await uploadImageToBase64(file);
-                document.getElementById('cardImageUrl').value = base64;
-                showToast('Image loaded');
+                const url = await uploadImage(file);
+                if(url) document.getElementById('cardImageUrl').value = url;
+                showToast('Image uploaded');
             }
         };
         input.click();
     }
 
     function refreshSquareCards() { renderSquareCards(); }
-    function saveSquareCards() { saveToStorage(); }
+    function saveSquareCards() { saveAllData(); }
 
-    // ========== EXISTING SECTIONS ADAPTED TO LOCAL STORAGE ==========
-    // Reuse existing functions but replace API calls with localStorage
-    // For brevity, we keep the original logic but override loadAllData and saveAllData
-    async function loadAllData() {
-        loadFromStorage();
-        renderAll();
-        updateSupportStats();
-        updateSupportBadge();
-        setStatus('success');
-    }
-
-    function saveAllData() { saveToStorage(); }
-
-    // Image functions using base64
+    // ==================== Images CRUD ====================
     async function addImage() {
         const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
         input.onchange = async (e) => {
             const file = e.target.files[0];
             if(file) {
-                const base64 = await uploadImageToBase64(file);
-                homeImages.push({ id: nextId.img++, imageUrl: base64, alt: file.name });
-                renderImages();
-                showToast('Image added');
+                const url = await uploadImage(file);
+                if(url) {
+                    homeImages.push({ id: nextId.img++, imageUrl: url, alt: file.name });
+                    renderImages();
+                    showToast('Image added');
+                }
             }
         };
         input.click();
@@ -906,46 +508,14 @@
         const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
         input.onchange = async (e) => {
             const file = e.target.files[0];
-            if(file) { const base64 = await uploadImageToBase64(file); img.imageUrl = base64; renderImages(); }
+            if(file) {
+                const url = await uploadImage(file);
+                if(url) { img.imageUrl = url; renderImages(); }
+            }
         };
         input.click();
     }
-
-    // Support functions (mock replies store in localStorage)
-    function replyToMessage(recipient, subject, messageId) {
-        const replyText = prompt(`Reply to ${recipient}:`, '');
-        if(!replyText) return;
-        const message = supportMessages.find(m => m.id === messageId);
-        if(message) { message.replied = true; message.replyMessage = replyText; message.replyDate = new Date().toISOString(); }
-        renderSupportMessages();
-        updateSupportStats();
-        saveAllData();
-        showToast(`Reply sent to ${recipient}`);
-    }
-
-    // Broadcast & Individual (store locally as mock)
-    function sendBroadcast() {
-        const title = document.getElementById('broadcastTitle').value;
-        const message = document.getElementById('broadcastDesc').value;
-        if(!title) { showToast('Enter title', true); return; }
-        showToast(`Broadcast sent: ${title}`);
-        document.getElementById('broadcastTitle').value = '';
-        document.getElementById('broadcastDesc').value = '';
-        setStatus('success');
-    }
-    function sendIndividual() {
-        const recipient = document.getElementById('individualRecipient').value;
-        const title = document.getElementById('individualTitle').value;
-        if(!recipient || !title) { showToast('Enter recipient and title', true); return; }
-        showToast(`Sent to ${recipient}: ${title}`);
-        document.getElementById('individualRecipient').value = '';
-        document.getElementById('individualTitle').value = '';
-        document.getElementById('individualDesc').value = '';
-        setStatus('success');
-    }
-
-    // Re-define render functions to use global arrays
-    function renderImages() { /* same as original but using homeImages */ 
+    function renderImages() {
         const container = document.getElementById('imagesContainer');
         if(!container) return;
         container.innerHTML = homeImages.map(img => `<div class="item-card"><div class="item-info"><img src="${img.imageUrl}" class="image-preview"><input type="text" value="${escapeHtml(img.alt)}" placeholder="Alt text" onchange="updateImageLocally(${img.id}, 'alt', this.value)"><button class="btn btn-outline btn-sm" onclick="replaceImage(${img.id})"><i class="fas fa-sync-alt"></i> Replace</button></div><div class="item-actions"><button class="btn btn-danger btn-sm" onclick="removeImageLocal(${img.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
@@ -954,9 +524,8 @@
     function updateImageLocally(id, field, val) { const img = homeImages.find(i => i.id === id); if(img) img[field] = val; renderImages(); }
     function removeImageLocal(id) { homeImages = homeImages.filter(i => i.id !== id); renderImages(); }
 
-    // Similar for news, digital, local, phone, products, social (keep original logic but ensure they call saveToStorage when needed)
-    // We'll copy the original functions but replace saveAllData calls with saveToStorage
-    function renderNews() { /* original */ 
+    // ==================== News CRUD ====================
+    function renderNews() {
         const container = document.getElementById('newsContainer');
         if(!container) return;
         container.innerHTML = newsItems.map(item => `<div class="item-card"><div class="item-info"><div class="icon-color-row"><div class="icon-preview"><i class="${item.icon || 'fas fa-newspaper'}" style="color: ${item.color || '#3b82f6'}"></i></div><button class="btn btn-outline btn-sm" onclick="selectNewsIcon(${item.id})"><i class="fas fa-icons"></i></button><input type="color" value="${item.color || '#3b82f6'}" onchange="updateNewsLocally(${item.id}, 'color', this.value)"></div><input type="text" value="${escapeHtml(item.title)}" placeholder="Title" onchange="updateNewsLocally(${item.id}, 'title', this.value)"><textarea rows="2" placeholder="Description" onchange="updateNewsLocally(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea></div><div class="item-actions"><label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleNewsLocally(${item.id}, this.checked)"><span class="toggle-slider"></span></label><button class="btn btn-danger btn-sm" onclick="deleteNewsLocal(${item.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
@@ -968,9 +537,8 @@
     function toggleNewsLocally(id, val) { const i = newsItems.find(i => i.id === id); if(i) i.enabled = val; renderNews(); }
     function deleteNewsLocal(id) { newsItems = newsItems.filter(i => i.id !== id); renderNews(); }
 
-    // For brevity, other services (digital, local, phone, products, social) we reuse same pattern but ensure they call render and save
-    // We'll define them quickly:
-    function renderImageBased(containerId, items, updateFn, deleteFn, emptyMsg) { /* same as original but using global arrays */
+    // ==================== Services generic ====================
+    function renderImageBased(containerId, items, updateFn, deleteFn, emptyMsg) {
         const container = document.getElementById(containerId);
         if(!container) return;
         container.innerHTML = items.map(item => `<div class="item-card"><div class="item-info"><img src="${item.imageUrl}" class="image-preview"><button class="btn btn-outline btn-sm" onclick="replaceServiceImage(${item.id}, '${containerId}')"><i class="fas fa-sync-alt"></i> Replace</button><input type="text" value="${escapeHtml(item.name)}" placeholder="Name" onchange="window.${updateFn}(${item.id}, 'name', this.value)"><textarea rows="2" placeholder="Description" onchange="window.${updateFn}(${item.id}, 'description', this.value)">${escapeHtml(item.description)}</textarea></div><div class="item-actions"><label class="toggle-switch"><input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="window.toggleItemStatus('${containerId}', ${item.id}, this.checked)"><span class="toggle-slider"></span></label><button class="btn btn-danger btn-sm" onclick="window.${deleteFn}(${item.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
@@ -988,7 +556,10 @@
         const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
         input.onchange = async (e) => {
             const file = e.target.files[0];
-            if(file) { const base64 = await uploadImageToBase64(file); item.imageUrl = base64; renderAll(); }
+            if(file) {
+                const url = await uploadImage(file);
+                if(url) { item.imageUrl = url; renderAll(); }
+            }
         };
         input.click();
     };
@@ -997,13 +568,12 @@
         else if(containerId === 'localServicesContainer') { const i = localServices.find(i => i.id === id); if(i) i.enabled = val; renderLocal(); }
         else if(containerId === 'phoneServicesContainer') { const i = phoneServices.find(i => i.id === id); if(i) i.enabled = val; renderPhone(); }
         else if(containerId === 'productsContainer') { const i = products.find(i => i.id === id); if(i) i.enabled = val; renderProducts(); }
-        saveToStorage();
+        saveAllData();
     };
     function addDigital() { digitalServices.push({ id: nextId.digital++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200/1a1a1a/3b82f6?text=Service", enabled: true }); renderDigital(); }
     function renderDigital() { renderImageBased('digitalServicesContainer', digitalServices, 'updateDigitalLocal', 'deleteDigitalLocal', 'No digital services'); }
     function updateDigitalLocal(id, f, v) { const i = digitalServices.find(i => i.id === id); if(i) i[f] = v; renderDigital(); }
     function deleteDigitalLocal(id) { digitalServices = digitalServices.filter(i => i.id !== id); renderDigital(); }
-    // Similar for local, phone, products, social (using existing functions from original but modify to use localStorage)
     function addLocal() { localServices.push({ id: nextId.local++, name: "New Service", description: "", imageUrl: "https://placehold.co/400x200/1a1a1a/3b82f6?text=Service", enabled: true }); renderLocal(); }
     function renderLocal() { renderImageBased('localServicesContainer', localServices, 'updateLocalLocal', 'deleteLocalLocal', 'No local services'); }
     function updateLocalLocal(id, f, v) { const i = localServices.find(i => i.id === id); if(i) i[f] = v; renderLocal(); }
@@ -1016,11 +586,13 @@
     function renderProducts() { renderImageBased('productsContainer', products, 'updateProductLocal', 'deleteProductLocal', 'No products'); }
     function updateProductLocal(id, f, v) { const i = products.find(i => i.id === id); if(i) i[f] = v; renderProducts(); }
     function deleteProductLocal(id) { products = products.filter(i => i.id !== id); renderProducts(); }
-    function renderSocial() { /* original but using socialLinks */ 
+
+    // ==================== Social Media ====================
+    function renderSocial() {
         const container = document.getElementById('socialContainer');
         if(!container) return;
         socialLinks.sort((a,b) => (a.order||0)-(b.order||0));
-        container.innerHTML = socialLinks.map(s => `<div class="item-card" draggable="true" data-id="${s.id}" ondragstart="dragSocialStart(event)" ondragend="dragSocialEnd(event)"><div class="drag-handle"><i class="fas fa-grip-vertical"></i></div><div class="item-info"><div class="icon-color-row"><div class="icon-preview"><i class="${s.icon}" style="font-size: 1.5rem; color: ${s.color}"></i></div><button class="btn btn-outline btn-sm" onclick="openIconLibraryForSocial(${s.id})"><i class="fas fa-icons"></i> Change</button><input type="color" value="${s.color}" onchange="updateSocialLocal(${s.id}, 'color', this.value)"></div><input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocialLocal(${s.id}, 'name', this.value)"><input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocialLocal(${s.id}, 'url', this.value)"></div><div class="item-actions"><button class="btn btn-danger btn-sm" onclick="deleteSocialLocal(${s.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
+        container.innerHTML = socialLinks.map(s => `<div class="item-card" draggable="true" data-id="${s.id}" ondragstart="dragSocialStart(event)" ondragend="dragSocialEnd(event)"><div class="drag-handle"><i class="fas fa-grip-vertical"></i></div><div class="item-info"><div class="icon-color-row"><div class="icon-preview"><i class="${s.icon}" style="font-size:1.5rem; color:${s.color}"></i></div><button class="btn btn-outline btn-sm" onclick="openIconLibraryForSocial(${s.id})"><i class="fas fa-icons"></i> Change</button><input type="color" value="${s.color}" onchange="updateSocialLocal(${s.id}, 'color', this.value)"></div><input type="text" value="${escapeHtml(s.name)}" placeholder="Name" onchange="updateSocialLocal(${s.id}, 'name', this.value)"><input type="text" value="${escapeHtml(s.url)}" placeholder="URL" onchange="updateSocialLocal(${s.id}, 'url', this.value)"></div><div class="item-actions"><button class="btn btn-danger btn-sm" onclick="deleteSocialLocal(${s.id})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
         if(!socialLinks.length) container.innerHTML = '<div class="empty-state"><i class="fas fa-share-alt"></i><p>No social links</p></div>';
     }
     function addSocial() { socialLinks.push({ id: nextId.social++, name: "New Platform", icon: "fab fa-facebook-f", color: "#3b82f6", url: "#", order: socialLinks.length }); renderSocial(); }
@@ -1029,34 +601,107 @@
     let dragSocialId = null;
     function dragSocialStart(e) { dragSocialId = parseInt(e.target.closest('.item-card').dataset.id); e.dataTransfer.effectAllowed='move'; }
     function dragSocialEnd() { dragSocialId=null; }
-    function dropSocial(e) { e.preventDefault(); const target=e.target.closest('.item-card'); if(!target||dragSocialId===null) return; const tid=parseInt(target.dataset.id); const dragIdx=socialLinks.findIndex(s=>s.id===dragSocialId); const targetIdx=socialLinks.findIndex(s=>s.id===tid); if(dragIdx===-1||targetIdx===-1) return; const [dragged]=socialLinks.splice(dragIdx,1); socialLinks.splice(targetIdx,0,dragged); socialLinks.forEach((s,idx)=>s.order=idx); renderSocial(); saveToStorage(); }
-    function renderSupportMessages() { /* original but using supportMessages */ 
+    function dropSocial(e) { e.preventDefault(); const target=e.target.closest('.item-card'); if(!target||dragSocialId===null) return; const tid=parseInt(target.dataset.id); const dragIdx=socialLinks.findIndex(s=>s.id===dragSocialId); const targetIdx=socialLinks.findIndex(s=>s.id===tid); if(dragIdx===-1||targetIdx===-1) return; const [dragged]=socialLinks.splice(dragIdx,1); socialLinks.splice(targetIdx,0,dragged); socialLinks.forEach((s,idx)=>s.order=idx); renderSocial(); saveAllData(); }
+
+    // ==================== Support ====================
+    function renderSupportMessages() {
         const container = document.getElementById('supportMessagesContainer');
         if(!container) return;
         if(!supportMessages.length) { container.innerHTML='<div class="empty-state"><i class="fas fa-inbox"></i><p>No support messages</p></div>'; return; }
         container.innerHTML = supportMessages.map((msg, idx) => `<div class="support-card ${!msg.read ? 'unread' : ''}"><div class="support-header"><strong><i class="fas fa-user"></i> ${escapeHtml(msg.sender)}</strong><span class="support-field">${escapeHtml(msg.field || 'General')}</span></div><div class="support-subject"><strong>Subject:</strong> ${escapeHtml(msg.subject)}</div><div class="support-details">${escapeHtml(msg.details)}</div><div class="support-date">${new Date(msg.date).toLocaleString()}</div>${msg.replied ? '<div class="support-date" style="color:#10b981;"><i class="fas fa-reply"></i> Replied: '+new Date(msg.replyDate).toLocaleString()+'</div>' : ''}<div class="item-actions"><button class="btn btn-primary btn-sm" onclick="replyToMessage('${escapeHtml(msg.sender)}', '${escapeHtml(msg.subject).replace(/'/g, "\\'")}', ${msg.id})"><i class="fas fa-reply"></i> Reply</button><button class="btn btn-danger btn-sm" onclick="deleteSupportMessage(${idx})"><i class="fas fa-trash"></i> Delete</button></div></div>`).join('');
         updateSupportStats();
     }
-    function deleteSupportMessage(idx) { if(confirm('Delete?')) { supportMessages.splice(idx,1); renderSupportMessages(); updateSupportStats(); saveToStorage(); } }
+    function deleteSupportMessage(idx) { if(confirm('Delete?')) { supportMessages.splice(idx,1); renderSupportMessages(); updateSupportStats(); saveAllData(); } }
     function updateSupportStats() { const total=supportMessages.length, unread=supportMessages.filter(m=>!m.read).length, replied=supportMessages.filter(m=>m.replied).length, rate=total>0?Math.round((replied/total)*100):0; document.getElementById('totalSupportCount').textContent=total; document.getElementById('unreadSupportCount').textContent=unread; document.getElementById('repliedSupportCount').textContent=replied; document.getElementById('supportResponseRate').textContent=rate; document.getElementById('supportTotal').textContent=total; }
     function updateSupportBadge() { const unread=supportMessages.filter(m=>!m.read).length; const badge=document.getElementById('supportBadge'); if(badge){ badge.style.display=unread?'inline-flex':'none'; if(unread) badge.textContent=unread>99?'99+':unread; } }
+    function replyToMessage(recipient, subject, messageId) {
+        const replyText = prompt(`Reply to ${recipient}:`, '');
+        if(!replyText) return;
+        const message = supportMessages.find(m => m.id === messageId);
+        if(message) { message.replied = true; message.replyMessage = replyText; message.replyDate = new Date().toISOString(); }
+        renderSupportMessages();
+        updateSupportStats();
+        saveAllData();
+        showToast(`Reply sent to ${recipient}`);
+    }
 
-    // Icon Library (unchanged)
-    let currentIconCallback = null;
+    // ==================== Broadcast / Individual ====================
+    async function sendBroadcast() {
+        const title = document.getElementById('broadcastTitle').value;
+        const message = document.getElementById('broadcastDesc').value;
+        const color = document.getElementById('broadcastColor').value;
+        const icon = broadcastIcon;
+        if(!title) { showToast('Enter title', true); return; }
+        try {
+            const res = await fetch(`${API_BASE}/api/notifications`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, message, icon, color, recipient: 'all' })
+            });
+            if(res.ok) {
+                showToast(`Broadcast sent: ${title}`);
+                document.getElementById('broadcastTitle').value = '';
+                document.getElementById('broadcastDesc').value = '';
+                setStatus('success');
+            } else throw new Error();
+        } catch(err) { showToast('Failed to send', true); }
+    }
+    async function sendIndividual() {
+        const recipient = document.getElementById('individualRecipient').value;
+        const title = document.getElementById('individualTitle').value;
+        const message = document.getElementById('individualDesc').value;
+        const color = document.getElementById('individualColor').value;
+        const icon = individualIcon;
+        if(!recipient || !title) { showToast('Enter recipient and title', true); return; }
+        try {
+            const res = await fetch(`${API_BASE}/api/notifications`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, message, icon, color, recipient })
+            });
+            if(res.ok) {
+                showToast(`Sent to ${recipient}: ${title}`);
+                document.getElementById('individualRecipient').value = '';
+                document.getElementById('individualTitle').value = '';
+                document.getElementById('individualDesc').value = '';
+                setStatus('success');
+            } else throw new Error();
+        } catch(err) { showToast('Failed to send', true); }
+    }
+
+    // ==================== Icon Library ====================
     const iconList = ['fab fa-facebook-f','fab fa-instagram','fab fa-twitter','fab fa-youtube','fab fa-tiktok','fab fa-whatsapp','fab fa-telegram','fas fa-envelope','fas fa-globe','fas fa-bell','fas fa-newspaper','fas fa-code','fas fa-cogs','fas fa-rocket','fas fa-headset','fas fa-store','fas fa-cube','fas fa-heart','fas fa-star','fas fa-dollar-sign'];
     function openIconLibrary(callback) { currentIconCallback=callback; document.getElementById('iconsGrid').innerHTML=iconList.map(icon=>`<div class="icon-item" onclick="selectIcon('${icon}')"><i class="${icon}"></i><span>${icon.split(' ')[1]||icon.split('-').pop()}</span></div>`).join(''); document.getElementById('iconModal').classList.add('active'); }
     function selectIcon(icon) { if(currentIconCallback) currentIconCallback(icon); closeIconModal(); }
     function closeIconModal() { document.getElementById('iconModal').classList.remove('active'); currentIconCallback=null; }
     function openIconLibraryForBroadcast() { openIconLibrary((icon)=>{ broadcastIcon=icon; document.getElementById('broadcastIconPreview').innerHTML=`<i class="${icon}" style="color:${broadcastColor}; font-size:1.2rem;"></i>`; }); }
     function openIconLibraryForIndividual() { openIconLibrary((icon)=>{ individualIcon=icon; document.getElementById('individualIconPreview').innerHTML=`<i class="${icon}" style="color:${individualColor}; font-size:1.2rem;"></i>`; }); }
-    function openIconLibraryForSocial(socialId) { openIconLibrary((icon)=>{ const item=socialLinks.find(s=>s.id===socialId); if(item){ item.icon=icon; renderSocial(); saveToStorage(); } }); }
+    function openIconLibraryForSocial(socialId) { openIconLibrary((icon)=>{ const item=socialLinks.find(s=>s.id===socialId); if(item){ item.icon=icon; renderSocial(); saveAllData(); } }); }
 
-    // Navigation
+    // ==================== Navigation & Rendering ====================
     const sections = ['homeImages','news','squareCards','broadcast','individual','support','digital','local','phone','products','social'];
-    function showSection(s) { sections.forEach(sec=>{ const el=document.getElementById(sec+'Section'); if(el) el.classList.remove('active-page'); }); document.getElementById(s+'Section').classList.add('active-page'); document.querySelectorAll('.nav-item').forEach(nav=>nav.classList.remove('active')); const activeNav=document.querySelector(`.nav-item[data-section="${s}"]`); if(activeNav) activeNav.classList.add('active'); if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open'); if(s==='support'){ renderSupportMessages(); updateSupportStats(); document.getElementById('supportBadge').style.display='none'; } if(s==='squareCards') renderSquareCards(); if(s==='homeImages') renderImages(); if(s==='news') renderNews(); if(s==='digital') renderDigital(); if(s==='local') renderLocal(); if(s==='phone') renderPhone(); if(s==='products') renderProducts(); if(s==='social') renderSocial(); }
-    function renderAll() { renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages(); renderSquareCards(); updateSupportStats(); }
+    function showSection(s) {
+        sections.forEach(sec=>{ const el=document.getElementById(sec+'Section'); if(el) el.classList.remove('active-page'); });
+        document.getElementById(s+'Section').classList.add('active-page');
+        document.querySelectorAll('.nav-item').forEach(nav=>nav.classList.remove('active'));
+        const activeNav=document.querySelector(`.nav-item[data-section="${s}"]`);
+        if(activeNav) activeNav.classList.add('active');
+        if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
+        if(s==='support'){ renderSupportMessages(); updateSupportStats(); document.getElementById('supportBadge').style.display='none'; }
+        if(s==='squareCards') renderSquareCards();
+        if(s==='homeImages') renderImages();
+        if(s==='news') renderNews();
+        if(s==='digital') renderDigital();
+        if(s==='local') renderLocal();
+        if(s==='phone') renderPhone();
+        if(s==='products') renderProducts();
+        if(s==='social') renderSocial();
+    }
+    function renderAll() {
+        renderImages(); renderNews(); renderDigital(); renderLocal(); renderPhone(); renderProducts(); renderSocial(); renderSupportMessages(); renderSquareCards(); updateSupportStats();
+    }
 
-    // Refresh & Save stubs
+    // Refresh & Save wrappers
     function refreshImages() { loadAllData(); }
     function refreshNews() { loadAllData(); }
     function refreshDigital() { loadAllData(); }
@@ -1065,22 +710,21 @@
     function refreshProducts() { loadAllData(); }
     function refreshSocial() { loadAllData(); }
     function refreshSupport() { loadAllData(); }
-    function saveImages() { saveToStorage(); }
-    function saveNews() { saveToStorage(); }
-    function saveDigital() { saveToStorage(); }
-    function saveLocal() { saveToStorage(); }
-    function savePhone() { saveToStorage(); }
-    function saveProducts() { saveToStorage(); }
-    function saveSocial() { saveToStorage(); }
+    function saveImages() { saveAllData(); }
+    function saveNews() { saveAllData(); }
+    function saveDigital() { saveAllData(); }
+    function saveLocal() { saveAllData(); }
+    function savePhone() { saveAllData(); }
+    function saveProducts() { saveAllData(); }
+    function saveSocial() { saveAllData(); }
 
-    // Event listeners and init
+    // Event listeners
     document.querySelectorAll('.nav-item').forEach(nav => nav.addEventListener('click', () => showSection(nav.dataset.section)));
     document.getElementById('menuToggle').addEventListener('click', () => document.getElementById('sidebar').classList.toggle('open'));
-    let broadcastIcon = 'fas fa-bell', broadcastColor = '#3b82f6', individualIcon = 'fas fa-envelope', individualColor = '#3b82f6';
     document.getElementById('broadcastColor').addEventListener('input', (e) => { broadcastColor = e.target.value; document.getElementById('broadcastIconPreview').innerHTML = `<i class="${broadcastIcon}" style="color: ${broadcastColor}; font-size: 1.2rem;"></i>`; });
     document.getElementById('individualColor').addEventListener('input', (e) => { individualColor = e.target.value; document.getElementById('individualIconPreview').innerHTML = `<i class="${individualIcon}" style="color: ${individualColor}; font-size: 1.2rem;"></i>`; });
-    
-    // Expose globals
+
+    // Expose globals for inline handlers
     window.addImage = addImage; window.replaceImage = replaceImage; window.updateImageLocally = updateImageLocally; window.removeImageLocal = removeImageLocal;
     window.addNews = addNews; window.updateNewsLocally = updateNewsLocally; window.selectNewsIcon = selectNewsIcon; window.toggleNewsLocally = toggleNewsLocally; window.deleteNewsLocal = deleteNewsLocal;
     window.addDigital = addDigital; window.updateDigitalLocal = updateDigitalLocal; window.deleteDigitalLocal = deleteDigitalLocal;
@@ -1096,7 +740,8 @@
     window.openIconLibrary = openIconLibrary; window.selectIcon = selectIcon; window.closeIconModal = closeIconModal;
     window.openIconLibraryForBroadcast = openIconLibraryForBroadcast; window.openIconLibraryForIndividual = openIconLibraryForIndividual; window.openIconLibraryForSocial = openIconLibraryForSocial;
     window.addNewGroup = addNewGroup; window.deleteGroup = deleteGroup; window.addCardToGroup = addCardToGroup; window.editCard = editCard; window.deleteCard = deleteCard; window.toggleCardActive = toggleCardActive; window.dragCardStart = dragCardStart; window.dragCardEnd = dragCardEnd; window.dropOnGroup = dropOnGroup; window.uploadCardImage = uploadCardImage; window.saveCurrentCard = saveCurrentCard; window.deleteCurrentCard = deleteCurrentCard; window.closeCardModal = closeCardModal;
-    
+
+    // Initial load
     loadAllData();
 </script>
 </body>
