@@ -1,181 +1,450 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <link rel="icon" href="https://by-pro.kesug.com/App.png?v=3" type="image/png">
+    <link rel="apple-touch-icon" href="https://by-pro.kesug.com/App.png?v=3">
+    <link rel="manifest" href="/B.Y-PRO-App/public/manifest.json">
+    <base href="/B.Y-PRO-App/public/">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="B.Y PRO App">
+    <meta name="application-name" content="B.Y PRO App">
     <title>B.Y PRO App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
+        /* All styles as before (same as the original app) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --bg: #ffffff; --surface: #f8f9fa; --text: #111; --text-muted: #4a4a4a; --border: #e5e5e5; --primary: #0066cc; --primary-dark: #0052a3; --danger: #ef4444; --success: #10b981; }
-        .dark-theme { --bg: #000000; --surface: #1a1a1a; --text: #fff; --text-muted: #b0b0b0; --border: #333; --primary: #3b82f6; --primary-dark: #2563eb; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.2s; font-size: 14px; }
-        .menu-trigger { position: fixed; left: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 70px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12); border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem; color: var(--primary); }
+        :root {
+            --bg: #ffffff;
+            --surface: #f8f9fa;
+            --text: #111111;
+            --text-muted: #4a4a4a;
+            --border: #e5e5e5;
+            --primary: #0066cc;
+            --primary-dark: #0052a3;
+            --danger: #ef4444;
+            --success: #10b981;
+            --shimmer-bg: #e0e0e0;
+            --shimmer-highlight: #f0f0f0;
+        }
+        .dark-theme {
+            --bg: #000000;
+            --surface: #1a1a1a;
+            --text: #ffffff;
+            --text-muted: #b0b0b0;
+            --border: #333333;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --shimmer-bg: #2a2a2a;
+            --shimmer-highlight: #3a3a3a;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.2s; overflow-x: hidden; overflow-y: auto; font-size: 14px; line-height: 1.4; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .menu-trigger { position: fixed; left: 0; top: 50%; transform: translateY(-50%); width: 44px; height: 70px; background: rgba(255,255,255,0.96); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1000; border: 1px solid rgba(0,0,0,0.12); border-left: none; border-radius: 0 20px 20px 0; font-size: 1.3rem; color: var(--primary); transition: all 0.2s; }
         .dark-theme .menu-trigger { background: rgba(30,30,40,0.85); }
-        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform 0.25s; overflow-y: auto; }
+        .menu-trigger.hidden { opacity: 0; visibility: hidden; }
+        .menu-dot { position: absolute; top: 6px; right: 8px; width: 8px; height: 8px; background: var(--danger); border-radius: 50%; display: none; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.6;transform:scale(1.2);} }
+        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; transform: translateX(-100%); transition: transform 0.25s ease; overflow-y: auto; }
         .sidebar.mobile-open { transform: translateX(0); }
-        .sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-        .sidebar-logo img { width: 36px; height: 36px; }
-        .sidebar-title { font-weight: 700; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .sidebar-nav { padding: 12px; }
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 4px; border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 500; font-size: 0.85rem; }
-        .nav-item i { width: 24px; }
+        .sidebar-header { padding: 16px 14px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+        .sidebar-logo img { width: 36px; height: 36px; object-fit: contain; }
+        .sidebar-title { font-weight: 700; font-size: 1rem; background: linear-gradient(135deg, var(--primary), #6c5ce7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .sidebar-nav { padding: 12px 10px; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; margin-bottom: 4px; border-radius: 12px; color: var(--text-muted); cursor: pointer; font-weight: 500; font-size: 0.85rem; transition: all 0.2s; }
+        .nav-item i { width: 24px; font-size: 1rem; }
+        .nav-item img { width: 22px; height: 22px; object-fit: contain; }
         .nav-item:hover, .nav-item.active { background: rgba(0,102,204,0.08); color: var(--primary); }
-        .theme-switch-sidebar { margin: 12px; padding: 10px; background: var(--bg); border-radius: 12px; display: flex; justify-content: space-between; border: 1px solid var(--border); }
+        .theme-switch-sidebar { margin: 12px 10px; padding: 10px; background: var(--bg); border-radius: 12px; display: flex; justify-content: space-between; border: 1px solid var(--border); font-size: 0.8rem; cursor: pointer; }
         .toggle-switch { position: relative; display: inline-block; width: 44px; height: 22px; }
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; border-radius: 22px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; border-radius: 50%; transition: 0.2s; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: 0.2s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: 0.2s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(22px); }
-        .main-content { padding: 12px 16px; }
+        .main-content { flex: 1; margin-left: 0; padding: 12px 16px; width: 100%; }
         .section-page { display: none; }
         .section-page.active-page { display: block; }
         .home-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
         .greeting-section { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .avatar-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), #6c5ce7); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; overflow: hidden; }
+        .avatar-icon { width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), #6c5ce7); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: white; overflow: hidden; }
+        .greeting-text { font-size: 0.85rem; font-weight: 500; }
+        .greeting-text .user-name { font-weight: 700; color: var(--primary); }
         .wallet-badge, .bell-icon { background: var(--surface); border: 1px solid var(--border); border-radius: 40px; padding: 4px 10px; display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 600; cursor: pointer; }
-        .carousel-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 20px; aspect-ratio: 16/9; max-height: 300px; background: var(--surface); }
+        .wallet-badge { color: var(--success); }
+        .bell-icon { color: var(--text-muted); }
+        .bell-count { background: var(--danger); color: white; border-radius: 20px; padding: 0px 6px; font-size: 0.6rem; }
+        .carousel-container { position: relative; width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 20px; background: var(--surface); aspect-ratio: 16 / 9; max-height: 300px; }
         .carousel-slides { position: relative; width: 100%; height: 100%; }
-        .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s; }
+        .carousel-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease; }
         .carousel-slide.active { opacity: 1; }
-        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .carousel-indicators { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 2; }
         .indicator { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.6); cursor: pointer; }
         .indicator.active { background: var(--primary); width: 16px; border-radius: 4px; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .section-title { font-size: 1rem; font-weight: 700; }
-        .section-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 30px; font-size: 0.6rem; }
+        .section-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 30px; font-size: 0.6rem; font-weight: 600; }
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
-        /* البطاقات المربعة - صورة + اسم فقط */
+        /* Square Cards (Groups) */
         .group-wrapper { margin-bottom: 28px; border: 2px solid var(--primary); border-radius: 24px; background: rgba(59,130,246,0.02); overflow: hidden; }
         .group-cards-container { display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; }
         .square-card-item { width: 160px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; text-decoration: none; display: block; color: inherit; }
-        .square-card-item:hover { transform: translateY(-4px); border-color: var(--primary); }
+        .square-card-item:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .square-card-img { width: 100%; height: 120px; object-fit: cover; background: var(--bg); }
         .square-card-content { padding: 10px; text-align: center; }
-        .square-card-name { font-weight: 600; font-size: 0.85rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        @media (max-width: 640px) { .square-card-item { width: calc(50% - 8px); min-width: 130px; } }
-        /* البطاقات العادية */
-        .slim-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; }
-        .card-media { height: 160px; overflow: hidden; }
-        .card-media img { width: 100%; height: 100%; object-fit: cover; }
+        .square-card-name { font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        @media (max-width: 640px) { .square-card-item { width: calc(50% - 8px); flex: 1 1 calc(50% - 8px); min-width: 130px; } .group-cards-container { padding: 12px; gap: 12px; } }
+        /* Promotion Cards */
+        .promo-card { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 12px 16px; margin-bottom: 24px; display: flex; flex-direction: row; align-items: center; gap: 16px; flex-wrap: wrap; transition: all 0.2s; }
+        .promo-card:hover { transform: translateY(-2px); border-color: var(--success); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .promo-content { flex: 2; }
+        .promo-content h3 { font-size: 1rem; margin-bottom: 6px; color: var(--text); }
+        .promo-content p { color: var(--text-muted); font-size: 0.8rem; line-height: 1.4; }
+        .promo-image { flex: 0 0 70px; text-align: center; }
+        .promo-image img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .facebook-btn { display: inline-flex; align-items: center; gap: 6px; background: #1877f2; color: white; padding: 6px 16px; border-radius: 40px; text-decoration: none; font-weight: 600; font-size: 0.75rem; margin-top: 8px; transition: 0.2s; }
+        .facebook-btn:hover { background: #0e63b3; transform: translateY(-2px); }
+        .barmejli-btn { background: #10b981; }
+        .barmejli-btn:hover { background: #059669; }
+        @media (max-width: 768px) { .promo-card { flex-direction: column; text-align: center; } .promo-image { order: -1; } }
+        .slim-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; }
+        .slim-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+        .card-media { height: 160px; overflow: hidden; background: var(--bg); }
+        .card-media img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
         .card-content { padding: 12px; }
         .card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-        .card-desc { color: var(--text-muted); font-size: 0.75rem; }
-        .toast-notification { position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%); background: var(--surface); border-radius: 40px; padding: 8px 16px; display: none; align-items: center; gap: 8px; z-index: 2000; border-left: 3px solid var(--success); }
+        .card-desc { color: var(--text-muted); font-size: 0.75rem; line-height: 1.4; }
+        .notification-card-wrapper { position: relative; overflow: hidden; border-radius: 14px; margin-bottom: 10px; }
+        .notification-card { background: var(--surface); border-radius: 14px; border: 1px solid var(--border); padding: 12px; }
+        .notification-card.unread { border-left: 3px solid var(--primary); background: rgba(59,130,246,0.05); }
+        .notification-delete { position: absolute; right: 0; top: 0; bottom: 0; width: 45px; background: var(--danger); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; border-radius: 14px; opacity: 0; transition: opacity 0.2s; }
+        .notification-card-wrapper:hover .notification-delete { opacity: 1; }
+        .notification-time { font-size: 0.55rem; color: var(--text-muted); margin-top: 6px; }
+        .notification-actions { display: flex; gap: 8px; margin-top: 8px; justify-content: flex-end; }
+        .notification-actions button { background: transparent; padding: 4px 12px; border: 1px solid var(--border); border-radius: 30px; cursor: pointer; font-size: 0.7rem; font-weight: 500; transition: all 0.2s; color: var(--text); }
+        .notification-actions button:hover { background: var(--primary); color: white; border-color: var(--primary); }
+        .support-form { margin-top: 12px; }
+        .form-group { margin-bottom: 10px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 0.8rem; font-family: inherit; transition: border 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); }
+        .btn-submit { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 40px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; transition: all 0.2s; }
+        .btn-submit:hover { background: var(--primary-dark); transform: scale(0.98); }
+        .hours-badge { background: var(--success); color: white; padding: 5px 10px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; font-size: 0.65rem; margin-bottom: 12px; }
+        .card-info-row { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 50px; padding: 6px 12px; margin-bottom: 14px; border: 1px solid var(--border); }
+        .card-info-left { display: flex; align-items: center; gap: 8px; }
+        .card-code { font-family: monospace; font-size: 0.65rem; background: var(--bg); padding: 2px 6px; border-radius: 20px; }
+        .copy-card-btn { background: transparent; border: 1px solid var(--border); border-radius: 30px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
+        .balance-card { background: var(--surface); border-radius: 18px; padding: 16px; text-align: center; border: 1px solid var(--border); margin-bottom: 14px; }
+        .balance-label { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 4px; }
+        .balance-amount { font-size: 1.8rem; font-weight: 700; color: var(--success); }
+        .balance-loading { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 60px; }
+        .action-buttons { display: flex; gap: 8px; margin-bottom: 16px; }
+        .btn-deposit, .btn-refresh { flex: 1; padding: 8px; border-radius: 40px; font-weight: 600; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
+        .btn-deposit { background: var(--success); color: white; border: none; }
+        .btn-deposit:hover { background: #0d9668; }
+        .btn-refresh { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+        .transactions-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .transactions-title { font-size: 0.75rem; font-weight: 600; }
+        .transactions-count { font-size: 0.6rem; color: var(--text-muted); }
+        .transactions-list { display: flex; flex-direction: column; gap: 6px; }
+        .transaction-item { background: var(--surface); padding: 8px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        .transaction-info { display: flex; align-items: center; gap: 8px; }
+        .transaction-icon { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; background: rgba(16,185,129,0.1); color: var(--success); }
+        .transaction-amount { font-weight: 700; font-size: 0.7rem; color: var(--success); }
+        .empty-transactions { background: var(--surface); padding: 20px; text-align: center; border-radius: 14px; border: 1px solid var(--border); }
+        .empty-icon { font-size: 1.5rem; margin-bottom: 4px; opacity: 0.5; }
+        .empty-text { font-size: 0.65rem; }
+        .toast-notification { position: fixed; bottom: 5%; left: 50%; transform: translateX(-50%); background: var(--surface); border-radius: 40px; padding: 8px 16px; display: none; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2000; border-left: 3px solid var(--success); }
         .toast-notification.show { display: flex; }
+        .toast-icon { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: #d1fae5; color: var(--success); }
+        .toast-message { font-size: 0.7rem; font-weight: 500; }
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: 0.2s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-card { background: var(--surface); border-radius: 24px; padding: 20px; width: 85%; max-width: 300px; text-align: center; }
         .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.75rem; }
-        .close-modal { margin-top: 12px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; }
-        @media (max-width: 768px) { .cards-grid { grid-template-columns: 1fr; } .carousel-container { aspect-ratio: 4/3; max-height: 200px; } }
-        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        .avatar-row { display: flex; justify-content: center; margin-bottom: 16px; }
+        .modal-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); }
+        .close-modal { margin-top: 12px; background: var(--primary); color: white; border: none; padding: 8px; border-radius: 40px; width: 100%; cursor: pointer; font-size: 0.8rem; transition: all 0.2s; }
+        .close-modal:hover { background: var(--primary-dark); }
+        #logoutBtn { background: var(--danger); margin-top: 8px; }
+        #logoutBtn:hover { background: #dc2626; }
+        @media (max-width: 768px) { .main-content { padding: 10px; } .cards-grid { grid-template-columns: 1fr; gap: 12px; } .menu-trigger { width: 38px; height: 60px; font-size: 1.1rem; } .carousel-container { aspect-ratio: 4 / 3; max-height: 200px; } .card-media { height: 140px; } }
+        @media (min-width: 1200px) { .cards-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); } .card-media { height: 180px; } }
+        .payment-modal { max-width: 350px; }
+        .payment-input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 40px; width: 100%; margin-top: 10px; cursor: pointer; }
+        .btn-danger { background: var(--danger); }
+        .shimmer { background: linear-gradient(90deg, var(--shimmer-bg) 25%, var(--shimmer-highlight) 50%, var(--shimmer-bg) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        .social-card { text-decoration: none; display: block; }
+        .social-card .card-content { text-align: center; }
+        .social-card .card-title { justify-content: center; color: var(--text); }
+        .social-card i { font-size: 1.6rem; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 <div class="app-wrapper">
-    <div class="menu-trigger" id="menuTrigger"><i class="fas fa-chevron-right"></i><div class="menu-dot" id="menuDot"></div></div>
+    <div class="menu-trigger" id="menuTrigger"><span><i class="fas fa-chevron-right"></i></span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3"></div><span class="sidebar-title">B.Y PRO App</span></div>
+        <div class="sidebar-header"><div class="sidebar-logo"><img src="https://by-pro.kesug.com/App.png?v=3" alt="Logo"></div><span class="sidebar-title">B.Y PRO App</span></div>
         <nav class="sidebar-nav">
-            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>الرئيسية</span></div>
-            <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>خدمات رقمية</span></div>
-            <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>خدمات محلية</span></div>
-            <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>خدمات الهاتف</span></div>
-            <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>منتجات</span></div>
-            <div class="nav-item" data-page="wallet"><i class="fas fa-wallet"></i><span>المحفظة</span></div>
-            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>وسائل التواصل</span></div>
-            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>الدعم</span></div>
+            <div class="nav-item active" data-page="home"><i class="fas fa-home"></i><span>Home</span></div>
+            <div class="nav-item" data-page="notifications"><i class="fas fa-bell"></i><span>Notifications</span><span id="notificationsCount" class="bell-count" style="display: none;">0</span></div>
+            <div class="nav-item" data-page="digital"><i class="fas fa-code"></i><span>Digital Services</span></div>
+            <div class="nav-item" data-page="local"><i class="fas fa-print"></i><span>Local Services</span></div>
+            <div class="nav-item" data-page="phone"><i class="fas fa-mobile-alt"></i><span>Phone Services</span></div>
+            <div class="nav-item" data-page="products"><i class="fas fa-cubes"></i><span>Products</span></div>
+            <a href="https://store-pro.great-site.net" target="_blank" class="nav-item"><img src="https://store-pro.great-site.net/favicon.png"><span>Store PRO</span><i class="fas fa-external-link-alt" style="margin-left: auto; font-size: 0.65rem;"></i></a>
+            <div class="nav-item" data-page="wallet"><img src="https://b-y-pro-app.onrender.com/wallet.png" style="width: 22px; height: 22px;"><span>Wallet</span></div>
+            <div class="nav-item" data-page="social"><i class="fas fa-share-alt"></i><span>Social Media</span></div>
+            <div class="nav-item" data-page="support"><i class="fas fa-headset"></i><span>Support</span></div>
         </nav>
-        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> الوضع الليلي</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
+        <div class="theme-switch-sidebar"><span><i class="fas fa-moon"></i> Dark Mode</span><label class="toggle-switch"><input type="checkbox" id="themeToggleSidebar"><span class="slider"></span></label></div>
     </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
     <main class="main-content">
         <div id="homePage" class="section-page active-page">
             <div class="home-header">
-                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">مرحباً، <span id="userName" class="user-name">زائر</span></div></div>
-                <div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount"><span class="spinner"></span></span></div>
+                <div class="greeting-section" id="greetingAvatar"><div class="avatar-icon" id="avatarIcon"><i class="fas fa-user"></i></div><div class="greeting-text">Hello, <span id="userName" class="user-name">User</span></div></div>
+                <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount"><span class="spinner" style="width:12px;height:12px;"></span></span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
-            <!-- البطاقات المربعة -->
+            <!-- Square Cards Groups Section -->
             <div id="squareGroupsSection" style="margin-bottom: 20px;"></div>
-            <div class="section-header"><h2 class="section-title">آخر الأخبار</h2><span class="section-badge">جديد</span></div>
+            <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
-        <div id="digitalPage" class="section-page"><div class="section-header"><h1 class="section-title">الخدمات الرقمية</h1></div><div id="digitalContainer" class="cards-grid"></div></div>
-        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">الخدمات المحلية</h1></div><div id="localContainer" class="cards-grid"></div></div>
-        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">خدمات الهاتف</h1></div><div id="phoneContainer" class="cards-grid"></div></div>
-        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">المنتجات</h1></div><div id="productsContainer" class="cards-grid"></div></div>
-        <div id="walletPage" class="section-page"><div class="section-header"><h1 class="section-title">المحفظة</h1></div><div id="walletInfo">جاري التحميل...</div></div>
-        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">وسائل التواصل</h1></div><div id="socialContainer" class="cards-grid"></div></div>
-        <div id="supportPage" class="section-page"><div class="section-header"><h1 class="section-title">الدعم الفني</h1></div><form id="supportForm"><input type="text" id="supportName" placeholder="الاسم" required><input type="text" id="supportSubject" placeholder="الموضوع" required><textarea id="supportMessage" placeholder="الرسالة" rows="3"></textarea><button type="submit">إرسال</button></form><div id="supportResult"></div></div>
+        <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
+        <div id="digitalPage" class="section-page">
+            <div class="promo-card"><div class="promo-content"><h3><i class="fas fa-code"></i> Need development or digital services?</h3><p>Submit your requests on the <strong>BarmejLi (برمجلي)</strong> platform. Our team will handle your project with professional care.</p><a href="https://barmejli.kesug.com/" target="_blank" class="facebook-btn barmejli-btn"><i class="fas fa-external-link-alt"></i> Visit BarmejLi Platform</a></div><div class="promo-image"><i class="fas fa-laptop-code" style="font-size: 2.5rem; color: var(--primary);"></i></div></div>
+            <div class="promo-card"><div class="promo-content"><h3><i class="fab fa-facebook-messenger"></i> Need direct assistance?</h3><p>Contact our commercial agent on Facebook for immediate support. Fast response, full support 24/7.</p><a href="https://www.facebook.com/profile.php?id=61561793138138" target="_blank" class="facebook-btn"><i class="fab fa-facebook-f"></i> Message on Facebook</a></div><div class="promo-image"><img src="https://github.com/Yacine2007/-by_pro_marketing_agent/blob/main/MA.jpg?raw=true" alt="Agent" onerror="this.src='https://via.placeholder.com/60?text=Agent'"></div></div>
+            <div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div>
+            <div id="digitalContainer" class="cards-grid"></div>
+        </div>
+        <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
+        <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
+        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
+        <div id="walletPage" class="section-page">
+            <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card"></i><span class="card-code" id="userCardCode"><span class="spinner" style="width:12px;height:12px;"></span></span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
+            <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div id="walletBalanceContainer" class="balance-loading"><span class="spinner"></span><span>Loading...</span></div><div id="walletBalanceValue" class="balance-amount" style="display: none;">$<span id="walletBalance">0.00</span></div></div>
+            <div class="action-buttons"><button class="btn-deposit" id="depositBtn"><i class="fas fa-plus-circle"></i> Deposit</button><button class="btn-refresh" id="refreshWalletBtn"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+            <hr class="divider" style="margin: 12px 0; border-color: var(--border);">
+            <div class="transactions-header"><div class="transactions-title"><i class="fas fa-history"></i> Transaction History</div><div class="transactions-count" id="walletTransactionsCount">0</div></div>
+            <div id="walletTransactionsContainer"><div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div></div>
+        </div>
+        <div id="socialPage" class="section-page"><div class="section-header"><h1 class="section-title">Social Media</h1><span class="section-badge">Connect</span></div><div id="socialContainer" class="cards-grid"></div></div>
+        <div id="supportPage" class="section-page">
+            <div class="section-header"><h1 class="section-title">Support</h1><span class="section-badge">24/7</span></div>
+            <div class="slim-card"><div class="card-content"><div class="hours-badge"><i class="fas fa-clock"></i> Available 24/7</div>
+            <form id="supportRequestForm"><div class="form-group"><select id="serviceSelect"><option value="">Select service</option><option>Digital Services</option><option>Local Services</option><option>Phone Services</option><option>Products</option><option>Other</option></select></div><div class="form-group"><input type="text" id="topicInput" placeholder="Subject" required></div><div class="form-group"><textarea id="detailsInput" rows="2" placeholder="Details"></textarea></div><button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send</button></form><div id="formMessage" style="margin-top: 8px; font-size: 0.7rem;"></div></div></div>
+        </div>
     </main>
 </div>
-<div class="modal-overlay" id="accountModal"><div class="modal-card"><h3>بيانات الحساب</h3><div class="info-row"><span>الاسم:</span><span id="modalUserName"></span></div><div class="info-row"><span>البريد:</span><span id="modalUserEmail"></span></div><button class="close-modal" id="closeModalBtn">إغلاق</button><button class="close-modal" id="logoutBtn" style="background:#ef4444;">تسجيل خروج</button></div></div>
-<div class="toast-notification" id="toast"><div class="toast-icon">✓</div><div class="toast-message"></div></div>
+<div class="modal-overlay" id="accountModal">
+    <div class="modal-card"><h3><i class="fas fa-user-circle"></i> Account Details</h3><div class="avatar-row"><img id="modalAvatar" class="modal-avatar" src="https://i.ibb.co/SDxkt40s/user.png" alt="Avatar"></div><div class="info-row"><span>Name:</span><span id="modalUserName">User</span></div><div class="info-row"><span>ID:</span><span id="modalUserId">—</span></div><div class="info-row"><span>Email:</span><span id="modalUserEmail">—</span></div><button class="close-modal" id="closeModalBtn">Close</button><button class="close-modal" id="logoutBtn" style="margin-top: 8px; background: #ef4444;">Logout</button></div>
+</div>
+<div class="modal-overlay" id="paymentModal"><div class="modal-card payment-modal"><h3><i class="fas fa-money-bill-wave"></i> Deposit Funds</h3><input type="number" id="depositAmount" class="payment-input" placeholder="Amount in USD" step="0.01" min="1"><input type="password" id="depositPassword" class="payment-input" placeholder="Password"><button class="btn-primary" id="confirmDepositBtn">Confirm Deposit</button><button class="btn-primary btn-danger" id="closePaymentModal">Cancel</button></div></div>
+<div class="toast-notification" id="toast"><div class="toast-icon" id="toastIcon"><i class="fas fa-check"></i></div><div class="toast-message" id="toastMessage"></div></div>
+
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    const API_BASE = 'https://b-y-pro-app.onrender.com';
-    let currentUser = null, auth = null;
-    let contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
+    // ==================== SERVER CONFIGURATION ====================
+    const API_BASE = "https://b-y-pro-app.onrender.com";
+    const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com/api/financial";
+    const ACCOUNTS_API = "https://b-y-pro-acounts-login.onrender.com/api";
+
+    let currentUser = null, auth = null, userWalletData = null, userNotifications = [], contentData = { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] };
     let squareGroups = [];
+    let welcomeShown = false;
+    let eventSource = null;
+    let toastTimeout = null;
+    let accountBlockCheckInterval = null;
 
-    function showToast(msg, isErr) {
-        const toast = document.getElementById('toast'), tMsg = document.querySelector('.toast-message');
+    function showToast(msg, isErr = false) {
+        const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
         tMsg.textContent = msg;
-        toast.style.borderLeftColor = isErr ? '#ef4444' : '#10b981';
+        if (isErr) { tIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>'; tIcon.style.background = '#fee2e2'; tIcon.style.color = '#ef4444'; toast.style.borderLeftColor = '#ef4444'; } 
+        else { tIcon.innerHTML = '<i class="fas fa-check"></i>'; tIcon.style.background = '#d1fae5'; tIcon.style.color = '#10b981'; toast.style.borderLeftColor = '#10b981'; }
         toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 2500);
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => toast.classList.remove('show'), 3000);
     }
+    function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])) : ''; }
 
-    async function fetchData() {
+    async function checkAccountBlocked() {
+        if (!currentUser || !currentUser.id) return false;
         try {
-            const res = await fetch(`${API_BASE}/api/data`);
-            if(!res.ok) throw new Error();
-            const data = await res.json();
-            contentData = {
-                images: data.images || [],
-                news: data.news || [],
-                digital: data.digital || [],
-                local: data.local || [],
-                phone: data.phone || [],
-                products: data.products || [],
-                social: data.social || []
+            const response = await fetch(`${ACCOUNTS_API}/accounts/${currentUser.id}`);
+            if (!response.ok) return false;
+            const data = await response.json();
+            if (data.success && data.account && data.account.blocked === true) {
+                showToast('Your account has been blocked. Please contact support.', true);
+                if (auth) auth.logout();
+                return true;
+            }
+            return false;
+        } catch (err) { return false; }
+    }
+    function startAccountBlockChecker() { if (accountBlockCheckInterval) clearInterval(accountBlockCheckInterval); accountBlockCheckInterval = setInterval(() => { if (currentUser) checkAccountBlocked(); }, 30000); }
+    function stopAccountBlockChecker() { if (accountBlockCheckInterval) { clearInterval(accountBlockCheckInterval); accountBlockCheckInterval = null; } }
+
+    async function fetchContentData() {
+        try { const res = await fetch(`${API_BASE}/api/data`); if (!res.ok) throw new Error(); const data = await res.json(); return data; } catch (e) { return { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; }
+    }
+    async function fetchSquareGroups() {
+        try { const res = await fetch(`${API_BASE}/api/square-groups`); if (!res.ok) throw new Error(); const groups = await res.json(); return groups || []; } catch (e) { console.warn('Square groups API not ready', e); return []; }
+    }
+
+    async function loadUserWallet() {
+        if (!currentUser) return;
+        document.getElementById('walletBalanceContainer').style.display = 'flex';
+        document.getElementById('walletBalanceValue').style.display = 'none';
+        document.getElementById('userCardCode').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
+        document.getElementById('homeWalletAmount').innerHTML = '<span class="spinner" style="width:12px;height:12px;"></span>';
+        try {
+            const userId = currentUser.id || currentUser.userId || '1';
+            const response = await fetch(`${FINANCIAL_API}/${userId}`);
+            if (!response.ok) throw new Error();
+            const result = await response.json();
+            if (result.success && result.data) { userWalletData = result.data; updateWalletUI(); }
+            else throw new Error();
+        } catch (error) {
+            const saved = localStorage.getItem('bypro_wallet');
+            if (saved) { try { userWalletData = JSON.parse(saved); updateWalletUI(); } catch(e) { userWalletData = null; } }
+            if (!userWalletData) { userWalletData = { id: currentUser?.id || "1", name: currentUser?.name || "User", balance: 0, cardCode: "byppcn-fallback", transactions: [] }; updateWalletUI(); }
+            showToast('Failed to load wallet', true);
+        }
+    }
+    async function refreshWallet() { if (currentUser) await loadUserWallet(); }
+    function updateWalletUI() {
+        if (!userWalletData) return;
+        document.getElementById('walletBalanceContainer').style.display = 'none';
+        document.getElementById('walletBalanceValue').style.display = 'block';
+        document.getElementById('walletBalance').textContent = userWalletData.balance.toFixed(2);
+        document.getElementById('homeWalletAmount').innerHTML = `$${userWalletData.balance.toFixed(2)}`;
+        document.getElementById('userCardCode').textContent = userWalletData.cardCode || 'No card';
+        localStorage.setItem('bypro_wallet', JSON.stringify(userWalletData));
+        const tx = userWalletData.transactions || [];
+        document.getElementById('walletTransactionsCount').textContent = tx.length;
+        const container = document.getElementById('walletTransactionsContainer');
+        if (!tx.length) { container.innerHTML = `<div class="empty-transactions"><div class="empty-icon"><i class="fas fa-inbox"></i></div><div class="empty-text">No transactions yet</div></div>`; return; }
+        container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
+    }
+
+    const depositBtn = document.getElementById('depositBtn'), paymentModal = document.getElementById('paymentModal'), closePaymentModal = document.getElementById('closePaymentModal'), confirmDepositBtn = document.getElementById('confirmDepositBtn'), depositAmount = document.getElementById('depositAmount'), depositPassword = document.getElementById('depositPassword');
+    depositBtn.onclick = () => paymentModal.classList.add('active');
+    closePaymentModal.onclick = () => { paymentModal.classList.remove('active'); depositAmount.value = ''; depositPassword.value = ''; };
+    confirmDepositBtn.onclick = async () => {
+        const amount = parseFloat(depositAmount.value), password = depositPassword.value;
+        if (isNaN(amount) || amount <= 0) { showToast('Enter a valid amount', true); return; }
+        if (!password) { showToast('Enter your password', true); return; }
+        try {
+            const verifyRes = await fetch(`${API_BASE}/api/verify-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accountId: currentUser?.id || '1', password }) });
+            const verifyResult = await verifyRes.json();
+            if (!verifyResult.success) { showToast('Incorrect password', true); return; }
+            userWalletData.balance += amount;
+            if (!userWalletData.transactions) userWalletData.transactions = [];
+            userWalletData.transactions.unshift({ type: 'deposit', amount: amount, description: `Deposit $${amount}`, date: new Date().toISOString() });
+            updateWalletUI();
+            addNotification('Deposit Successful', `$${amount} added`, 'fas fa-money-bill-wave', '#10b981');
+            showToast(`$${amount} deposited`);
+            paymentModal.classList.remove('active');
+            depositAmount.value = ''; depositPassword.value = '';
+        } catch (error) { showToast('Deposit failed', true); }
+    };
+
+    const supportForm = document.getElementById('supportRequestForm'), formMsg = document.getElementById('formMessage');
+    if (supportForm) {
+        supportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const topic = document.getElementById('topicInput').value.trim();
+            const service = document.getElementById('serviceSelect').value;
+            const details = document.getElementById('detailsInput').value.trim();
+            if (!topic) { formMsg.innerHTML = '<span style="color:#ef4444;">Enter a subject</span>'; return; }
+            const btn = supportForm.querySelector('button');
+            btn.disabled = true;
+            formMsg.innerHTML = '<span style="color:#3b82f6;">Sending...</span>';
+            const senderName = currentUser ? (currentUser.name || currentUser.username || 'User') : 'App User';
+            const senderId = currentUser?.id || 'guest';
+            const senderEmail = currentUser?.email || '';
+            try {
+                const payload = { sender: `${senderName} (ID: ${senderId})`, name: senderName, userId: senderId, email: senderEmail, field: service, subject: topic, details: details || 'No details', date: new Date().toISOString() };
+                const res = await fetch(`${API_BASE}/api/support`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const result = await res.json();
+                if (res.ok && result.success) { formMsg.innerHTML = '<span style="color:#10b981;">✓ Sent! We will reply within 24h.</span>'; supportForm.reset(); setTimeout(() => formMsg.innerHTML = '', 3000); addNotification('Support Request Sent', `"${topic}" received`, 'fas fa-headset', '#10b981'); }
+                else throw new Error(result.error || 'Server error');
+            } catch (err) { formMsg.innerHTML = '<span style="color:#ef4444;">Failed to send. Try again.</span>'; setTimeout(() => formMsg.innerHTML = '', 3000); }
+            finally { btn.disabled = false; }
+        });
+    }
+
+    function updateUIForUser(user) {
+        currentUser = user;
+        document.getElementById('userName').textContent = user.name || user.username || 'User';
+        document.getElementById('modalUserName').textContent = user.name || user.username || 'User';
+        document.getElementById('modalUserId').textContent = user.id || user.userId || 'Unknown';
+        document.getElementById('modalUserEmail').textContent = user.email || 'No email';
+        const avatarUrl = user.avatar || 'https://i.ibb.co/SDxkt40s/user.png';
+        document.getElementById('modalAvatar').src = avatarUrl;
+        const avatarDiv = document.getElementById('avatarIcon');
+        if (user.avatar) avatarDiv.innerHTML = `<img src="${user.avatar}" style="width:100%;height:100%;object-fit:cover;">`;
+        else avatarDiv.innerHTML = '<i class="fas fa-user"></i>';
+        loadUserWallet();
+        connectToSSE();
+        loadAllContent();
+        startAccountBlockChecker();
+        if (!welcomeShown) welcomeShown = true;
+    }
+    auth = new BYPROAuth({ loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html', onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); }, onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').innerHTML = '$0.00'; welcomeShown = false; disconnectSSE(); stopAccountBlockChecker(); auth.show(); } });
+    setTimeout(() => { if (auth && auth.isAuthenticated && auth.isAuthenticated()) { const u = auth.getCurrentUser(); if (u) updateUIForUser(u); else auth.show(); } else auth.show(); }, 500);
+
+    function connectToSSE() {
+        if (eventSource) { eventSource.close(); eventSource = null; }
+        if (!currentUser) return;
+        try {
+            eventSource = new EventSource(`${API_BASE}/api/events`);
+            eventSource.onopen = () => console.log('✅ SSE Connected');
+            eventSource.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === 'support_reply') { showToast(`Reply: ${data.message?.substring(0,50)}...`); addNotification(`Reply: ${data.subject}`, data.message, 'fas fa-reply', '#10b981'); }
+                    else if (data.type === 'notification_new') { const recipient = data.recipient; if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id || !recipient) { showToast(data.title); addNotification(data.title, data.message, data.icon, data.color); } }
+                    else if (data.type === 'data_update') loadAllContent();
+                    else if (data.type === 'payment_completed') { if (data.accountId === currentUser?.id) { showToast(`💰 Payment completed: $${data.amount}`); addNotification('Payment Completed', `$${data.amount} - ${data.description || 'Transaction'}`, 'fas fa-credit-card', '#10b981'); refreshWallet(); } }
+                } catch (err) { console.error('SSE parse error:', err); }
             };
-            squareGroups = data.squareGroups || [];
-            renderAll();
-        } catch(e) { console.error('فشل جلب البيانات', e); }
+            eventSource.onerror = () => { eventSource.close(); eventSource = null; if (currentUser) setTimeout(() => connectToSSE(), 5000); };
+        } catch (err) { console.error('SSE error:', err); }
     }
+    function disconnectSSE() { if (eventSource) { eventSource.close(); eventSource = null; } }
 
-    function renderCarousel(images) {
-        const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators');
-        if(!slides || !inds) return;
-        if(!images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO"></div>'; inds.innerHTML = ''; return; }
-        slides.innerHTML = images.map((img,idx) => `<div class="carousel-slide ${idx===0?'active':''}"><img src="${img.imageUrl}" alt="${img.alt}"></div>`).join('');
-        inds.innerHTML = images.map((_,idx) => `<div class="indicator ${idx===0?'active':''}" data-index="${idx}"></div>`).join('');
-        document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const i = parseInt(ind.dataset.index); if(!isNaN(i)) goToSlide(i); }));
-        startAutoSlide();
+    async function loadAllContent() {
+        try {
+            const data = await fetchContentData();
+            contentData = { images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || [] };
+            squareGroups = await fetchSquareGroups();
+            renderCarousel(contentData.images);
+            renderSquareGroups(squareGroups);
+            renderAllContent();
+        } catch (error) { console.error('Error loading content:', error); }
     }
-    let currentSlide=0, slideInterval;
-    function goToSlide(i) { const slides=document.querySelectorAll('.carousel-slide'), inds=document.querySelectorAll('.indicator'); if(!slides.length) return; slides[currentSlide].classList.remove('active'); if(inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide=(i+slides.length)%slides.length; slides[currentSlide].classList.add('active'); if(inds[currentSlide]) inds[currentSlide].classList.add('active'); }
-    function nextSlide() { goToSlide(currentSlide+1); }
-    function startAutoSlide() { if(slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
-
     function renderSquareGroups(groups) {
         const container = document.getElementById('squareGroupsSection');
-        if(!container) return;
-        if(!groups || groups.length===0) { container.innerHTML = ''; return; }
+        if (!container) return;
+        if (!groups || groups.length === 0) { container.innerHTML = ''; return; }
         let html = '';
-        for(const group of groups) {
-            if(!group.cards || group.cards.length===0) continue;
-            const activeCards = group.cards.filter(c => c.active !== false);
-            if(activeCards.length===0) continue;
+        for (const group of groups) {
+            if (!group.cards || group.cards.length === 0) continue;
+            const activeCards = group.cards.filter(card => card.active !== false);
+            if (activeCards.length === 0) continue;
             html += `<div class="group-wrapper"><div class="group-cards-container">`;
-            for(const card of activeCards) {
+            for (const card of activeCards) {
                 html += `<a href="${escapeHtml(card.link || '#')}" target="_blank" class="square-card-item">
                             <img class="square-card-img" src="${escapeHtml(card.imageUrl || 'https://placehold.co/400x200/1a1a1a/3b82f6?text=Card')}" alt="${escapeHtml(card.name)}" onerror="this.src='https://placehold.co/400x200/1a1a1a/3b82f6?text=Image'">
                             <div class="square-card-content">
@@ -187,71 +456,63 @@
         }
         container.innerHTML = html;
     }
+    function renderAllContent() { renderNews(contentData.news); renderServices('digitalContainer', contentData.digital, 'fas fa-code'); renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt'); renderProducts(contentData.products); renderSocial(contentData.social); }
+    function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No News</div><div class="card-desc">Check back later for updates</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
+    function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No Services</div><div class="card-desc">No services available yet</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
+    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
+    function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card social-card"><div class="card-content"><i class="${escapeHtml(i.icon)}" style="color: ${i.color};"></i><div class="card-title">${escapeHtml(i.name)}</div></div></a>`).join(''); }
 
-    function renderNews(news) {
-        const c = document.getElementById('newsContainer');
-        if(!c) return;
-        const active = news.filter(n => n.enabled !== false);
-        if(!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content">لا توجد أخبار</div></div>'; return; }
-        c.innerHTML = active.map(n => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${n.icon||'fas fa-newspaper'}" style="color:${n.color||'#3b82f6'}"></i> ${escapeHtml(n.title)}</div><div class="card-desc">${escapeHtml(n.description)}</div></div></div>`).join('');
-    }
+    let carouselImages = [], currentSlide = 0, slideInterval = null;
+    function renderCarousel(images) { const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators'); if (!slides || !inds) return; if (!images || !images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>'; inds.innerHTML = ''; return; } carouselImages = images; slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'Slide'}"></div>`).join(''); inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join(''); document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if (!isNaN(idx)) goToSlide(idx); })); startAutoSlide(); }
+    function goToSlide(i) { const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator'); if (!slides.length) return; slides[currentSlide].classList.remove('active'); if (inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide = (i + slides.length) % slides.length; slides[currentSlide].classList.add('active'); if (inds[currentSlide]) inds[currentSlide].classList.add('active'); }
+    function nextSlide() { goToSlide(currentSlide + 1); }
+    function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
-    function renderServices(containerId, items, icon) {
-        const c = document.getElementById(containerId);
-        if(!c) return;
-        const active = items.filter(i => i.enabled !== false);
-        if(!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content">لا توجد خدمات</div></div>'; return; }
-        c.innerHTML = active.map(i => `<div class="slim-card">${i.imageUrl ? `<div class="card-media"><img src="${i.imageUrl}" alt="${escapeHtml(i.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(i.name)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join('');
-    }
+    function loadNotificationsFromStorage() { const saved = localStorage.getItem('bypro_notifications'); if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} } if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'Welcome!', message: 'You will receive updates here.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }]; saveNotificationsToStorage(); }
+    function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
+    function formatDate(d) { const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000); if (diff < 1) return 'Just now'; if (diff < 60) return `${diff}m ago`; if (diff < 1440) return `${Math.floor(diff / 60)}h ago`; return date.toLocaleDateString(); }
+    function addNotification(title, msg, icon = 'fas fa-bell', color = '#3b82f6') { userNotifications.unshift({ id: Date.now(), title, message: msg, icon, color, date: new Date().toISOString(), read: false }); saveNotificationsToStorage(); showToast(title); }
+    function updateNotificationUI() { const container = document.getElementById('notificationsContainer'), countSpan = document.getElementById('notificationsCount'), pageBadge = document.getElementById('notificationsPageBadge'), homeBellCount = document.getElementById('homeBellCount'), menuDot = document.getElementById('menuDot'); const unread = userNotifications.filter(n => !n.read).length; if (countSpan) { countSpan.style.display = unread ? 'inline-block' : 'none'; if (unread) countSpan.textContent = unread; } if (pageBadge) pageBadge.textContent = `${unread} new`; if (homeBellCount) { homeBellCount.style.display = unread ? 'inline-block' : 'none'; if (unread) homeBellCount.textContent = unread; } if (menuDot) menuDot.style.display = unread ? 'block' : 'none'; if (!container) return; if (!userNotifications.length) { container.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-bell-slash"></i> No notifications</div></div></div>'; return; } container.innerHTML = userNotifications.sort((a,b)=>new Date(b.date)-new Date(a.date)).map(n => `<div class="notification-card-wrapper" data-id="${n.id}"><div class="notification-delete" onclick="deleteNotification(${n.id})"><i class="fas fa-trash-alt"></i></div><div class="notification-card ${!n.read ? 'unread' : ''}"><div class="card-title"><i class="${n.icon}" style="color:${n.color}"></i> ${escapeHtml(n.title)}${!n.read ? '<span class="section-badge" style="background:var(--primary); margin-left:6px;">New</span>' : ''}</div><div class="card-desc">${escapeHtml(n.message)}</div><div class="notification-time">${formatDate(n.date)}</div><div class="notification-actions">${!n.read ? `<button onclick="markRead(${n.id})">Read</button>` : ''}<button onclick="deleteNotification(${n.id})">Delete</button></div></div></div>`).join(''); document.querySelectorAll('.notification-card-wrapper').forEach(w => { let sx = 0; w.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }); w.addEventListener('touchend', e => { if (Math.abs(e.changedTouches[0].clientX - sx) > 70) deleteNotification(parseInt(w.dataset.id)); }); }); }
+    function markRead(id) { const n = userNotifications.find(n => n.id === id); if (n) { n.read = true; saveNotificationsToStorage(); } }
+    function deleteNotification(id) { userNotifications = userNotifications.filter(n => n.id !== id); saveNotificationsToStorage(); showToast('Notification deleted'); }
+    window.markRead = markRead; window.deleteNotification = deleteNotification;
+    document.getElementById('homeBellIcon').addEventListener('click', () => navigateTo('notifications'));
+    document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
+    document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
 
-    function renderSocial(social) {
-        const c = document.getElementById('socialContainer');
-        if(!c) return;
-        if(!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content">لا توجد روابط</div></div>'; return; }
-        c.innerHTML = social.map(s => `<a href="${escapeHtml(s.url)}" target="_blank" class="slim-card social-card" style="text-align:center; display:block; text-decoration:none;"><div class="card-content"><i class="${escapeHtml(s.icon)}" style="font-size:1.6rem; color:${s.color}"></i><div class="card-title">${escapeHtml(s.name)}</div></div></a>`).join('');
-    }
+    const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
+    function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
+    function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
+    menuTrigger.addEventListener('click', e => { e.stopPropagation(); sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar(); });
+    overlay.addEventListener('click', closeSidebar);
+    document.addEventListener('click', e => { if (sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !menuTrigger.contains(e.target)) closeSidebar(); });
 
-    function renderAll() {
-        renderCarousel(contentData.images);
-        renderSquareGroups(squareGroups);
-        renderNews(contentData.news);
-        renderServices('digitalContainer', contentData.digital, 'fas fa-code');
-        renderServices('localContainer', contentData.local, 'fas fa-print');
-        renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt');
-        renderServices('productsContainer', contentData.products, 'fas fa-cubes');
-        renderSocial(contentData.social);
-    }
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = { home: document.getElementById('homePage'), notifications: document.getElementById('notificationsPage'), digital: document.getElementById('digitalPage'), local: document.getElementById('localPage'), phone: document.getElementById('phonePage'), products: document.getElementById('productsPage'), wallet: document.getElementById('walletPage'), social: document.getElementById('socialPage'), support: document.getElementById('supportPage') };
+    function navigateTo(p) { Object.values(pages).forEach(v => v.classList.remove('active-page')); pages[p].classList.add('active-page'); navItems.forEach(n => n.classList.remove('active')); const a = document.querySelector(`.nav-item[data-page="${p}"]`); if (a) a.classList.add('active'); window.scrollTo({ top: 0, behavior: 'smooth' }); closeSidebar(); }
+    navItems.forEach(i => { if (!i.hasAttribute('href')) i.addEventListener('click', () => { const p = i.getAttribute('data-page'); if (p && pages[p]) navigateTo(p); }); });
 
-    function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])) : ''; }
+    const gAvatar = document.getElementById('greetingAvatar'), accModal = document.getElementById('accountModal'), closeModal = document.getElementById('closeModalBtn'), logout = document.getElementById('logoutBtn');
+    if (gAvatar) gAvatar.addEventListener('click', () => accModal.classList.add('active'));
+    closeModal.addEventListener('click', () => accModal.classList.remove('active'));
+    logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
+    accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // محاكاة بسيطة للمحفظة (للتجربة)
-    function updateUIForUser(user) {
-        currentUser = user;
-        document.getElementById('userName').textContent = user.name || user.username || 'زائر';
-        document.getElementById('modalUserName').textContent = user.name || user.username;
-        document.getElementById('modalUserEmail').textContent = user.email || 'غير متوفر';
-        document.getElementById('homeWalletAmount').innerHTML = '$0.00';
-    }
-
-    auth = new BYPROAuth({
-        loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html',
-        onLogin: (user) => { updateUIForUser(user); fetchData(); },
-        onLogout: () => { auth.show(); }
-    });
-    setTimeout(() => { if(auth.isAuthenticated()) updateUIForUser(auth.getCurrentUser()); else auth.show(); fetchData(); }, 500);
-
-    // التنقل
-    const pages = { home: 'homePage', digital: 'digitalPage', local: 'localPage', phone: 'phonePage', products: 'productsPage', wallet: 'walletPage', social: 'socialPage', support: 'supportPage' };
-    function navigateTo(p) { Object.keys(pages).forEach(k => document.getElementById(pages[k]).classList.remove('active-page')); document.getElementById(pages[p]).classList.add('active-page'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); document.querySelector(`.nav-item[data-page="${p}"]`).classList.add('active'); document.getElementById('sidebar').classList.remove('mobile-open'); }
-    document.querySelectorAll('.nav-item').forEach(n => { if(n.dataset.page) n.addEventListener('click',()=>navigateTo(n.dataset.page)); });
-    document.getElementById('menuTrigger').addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('mobile-open'));
-    document.getElementById('greetingAvatar').addEventListener('click',()=>document.getElementById('accountModal').classList.add('active'));
-    document.getElementById('closeModalBtn').addEventListener('click',()=>document.getElementById('accountModal').classList.remove('active'));
-    document.getElementById('logoutBtn').addEventListener('click',()=>{ if(auth) auth.logout(); });
     const themeToggle = document.getElementById('themeToggleSidebar');
-    if(localStorage.getItem('darkTheme')==='true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked=true; }
-    themeToggle.addEventListener('change', e => { if(e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
-    fetchData();
+    if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
+    themeToggle.addEventListener('change', e => { if (e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
+
+    const refreshBtn = document.getElementById('refreshWalletBtn');
+    refreshBtn.onclick = refreshWallet;
+    setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
+
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(registrations => { for(let registration of registrations) { if (registration.scope !== '/B.Y-PRO-App/public/') { registration.unregister(); } } });
+        navigator.serviceWorker.register('/B.Y-PRO-App/public/sw.js', { scope: '/B.Y-PRO-App/public/' }).then(reg => console.log('✅ Service Worker registered')).catch(err => console.error('❌ Service Worker registration failed:', err));
+    }
+    function debugData() { console.log('Content Data:', contentData); console.log('Square Groups:', squareGroups); }
+    window.debugData = debugData;
+    loadAllContent();
 </script>
 </body>
 </html>
