@@ -113,7 +113,11 @@
         .group-wrapper::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
         .group-wrapper::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
         @media (max-width: 768px) { .scroll-btn { width: 24px; height: 24px; } .group-wrapper::before, .group-wrapper::after { width: 25px; } }
-        /* Products grid (separate) */
+        /* Show more button */
+        .show-more-container { text-align: center; margin: 20px 0; }
+        .btn-show-more { background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-show-more:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        /* Products grid */
         .products-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
         .product-card-item { width: 160px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; text-decoration: none; display: block; color: inherit; }
         .product-card-item:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
@@ -242,8 +246,26 @@
         </div>
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
         <div id="digitalPage" class="section-page">
-            <div class="promo-card"><div class="promo-content"><h3><i class="fas fa-code"></i> Need development or digital services?</h3><p>Submit your requests on the <strong>BarmejLi (برمجلي)</strong> platform. Our team will handle your project with professional care.</p><a href="https://barmejli.kesug.com/" target="_blank" class="facebook-btn barmejli-btn"><i class="fas fa-external-link-alt"></i> Visit BarmejLi Platform</a></div><div class="promo-image"><i class="fas fa-laptop-code" style="font-size: 2.5rem; color: var(--primary);"></i></div></div>
-            <div class="promo-card"><div class="promo-content"><h3><i class="fab fa-facebook-messenger"></i> Need direct assistance?</h3><p>Contact our commercial agent on Facebook for immediate support. Fast response, full support 24/7.</p><a href="https://www.facebook.com/profile.php?id=61561793138138" target="_blank" class="facebook-btn"><i class="fab fa-facebook-f"></i> Message on Facebook</a></div><div class="promo-image"><img src="https://github.com/Yacine2007/-by_pro_marketing_agent/blob/main/MA.jpg?raw=true" alt="Agent" onerror="this.src='https://via.placeholder.com/60?text=Agent'"></div></div>
+            <div class="promo-card">
+                <div class="promo-content">
+                    <h3><i class="fas fa-code"></i> Need development or digital services?</h3>
+                    <p>Submit your requests on the <strong>BarmejLi (برمجلي)</strong> platform. Our team will handle your project with professional care.</p>
+                    <a href="https://barmejli.kesug.com/" target="_blank" class="facebook-btn barmejli-btn"><i class="fas fa-external-link-alt"></i> Visit BarmejLi Platform</a>
+                </div>
+                <div class="promo-image">
+                    <img src="https://i.ibb.co/Y4xf02m7/bac51aa72496.png" alt="BarmejLi" style="width: 60px; height: 60px; object-fit: contain; border-radius: 12px;">
+                </div>
+            </div>
+            <div class="promo-card">
+                <div class="promo-content">
+                    <h3><i class="fab fa-facebook-messenger"></i> Need direct assistance?</h3>
+                    <p>Contact our commercial agent on Facebook for immediate support. Fast response, full support 24/7.</p>
+                    <a href="https://www.facebook.com/profile.php?id=61561793138138" target="_blank" class="facebook-btn"><i class="fab fa-facebook-f"></i> Message on Facebook</a>
+                </div>
+                <div class="promo-image">
+                    <img src="https://github.com/Yacine2007/-by_pro_marketing_agent/blob/main/MA.jpg?raw=true" alt="Agent" onerror="this.src='https://via.placeholder.com/60?text=Agent'">
+                </div>
+            </div>
             <div class="section-header"><h1 class="section-title">Digital Services</h1><span class="section-badge">Essential</span></div>
             <div id="digitalContainer" class="cards-grid"></div>
         </div>
@@ -285,6 +307,7 @@
     let eventSource = null;
     let toastTimeout = null;
     let accountBlockCheckInterval = null;
+    let allSquareGroups = []; // Store all groups for "Show More" functionality
 
     function showToast(msg, isErr = false) {
         const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
@@ -433,7 +456,13 @@
             eventSource.onmessage = (event) => {
                 try {
                     const data = JSON.parse(event.data);
-                    if (data.type === 'support_reply') { showToast(`Reply: ${data.message?.substring(0,50)}...`); addNotification(`Reply: ${data.subject}`, data.message, 'fas fa-reply', '#10b981'); }
+                    if (data.type === 'support_reply') {
+                        // FIX: properly extract reply message content
+                        const replyContent = data.replyMessage || data.message || data.data?.replyMessage || 'No content';
+                        const replySubject = data.subject || data.data?.subject || 'Support Reply';
+                        showToast(`Reply: ${replyContent.substring(0, 50)}...`);
+                        addNotification(`Reply: ${replySubject}`, replyContent, 'fas fa-reply', '#10b981');
+                    }
                     else if (data.type === 'notification_new') { const recipient = data.recipient; if (recipient === 'all' || recipient === currentUser?.name || recipient === currentUser?.id || !recipient) { showToast(data.title); addNotification(data.title, data.message, data.icon, data.color); } }
                     else if (data.type === 'data_update') loadAllContent();
                     else if (data.type === 'payment_completed') { if (data.accountId === currentUser?.id) { showToast(`💰 Payment completed: $${data.amount}`); addNotification('Payment Completed', `$${data.amount} - ${data.description || 'Transaction'}`, 'fas fa-credit-card', '#10b981'); refreshWallet(); } }
@@ -444,48 +473,84 @@
     }
     function disconnectSSE() { if (eventSource) { eventSource.close(); eventSource = null; } }
 
-    async function loadAllContent() {
-        try {
-            const data = await fetchContentData();
-            contentData = { images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || [] };
-            squareGroups = await fetchSquareGroups();
-            renderCarousel(contentData.images);
-            renderSquareGroups(squareGroups);
-            renderAllContent();
-        } catch (error) { console.error('Error loading content:', error); }
+    // ==================== SQUARE CARDS WITH SHOW MORE ====================
+    function renderGroupHTML(group, groupId) {
+        const activeCards = group.cards.filter(card => card.active !== false);
+        if (activeCards.length === 0) return '';
+        return `<div class="group-wrapper" data-group-id="${group.id}">
+                    <div class="group-cards-container" id="${groupId}">
+                        ${activeCards.map(card => `
+                            <a href="${escapeHtml(card.link || '#')}" target="_blank" class="square-card-item">
+                                <img class="square-card-img" src="${escapeHtml(card.imageUrl || 'https://placehold.co/400x200/1a1a1a/3b82f6?text=Card')}" alt="${escapeHtml(card.name)}" onerror="this.src='https://placehold.co/400x200/1a1a1a/3b82f6?text=Image'">
+                                <div class="square-card-content">
+                                    <div class="square-card-name">${escapeHtml(card.name)}</div>
+                                </div>
+                            </a>
+                        `).join('')}
+                    </div>
+                    <button class="scroll-btn scroll-left" onclick="scrollGroup('${groupId}', -1)"><i class="fas fa-chevron-left"></i></button>
+                    <button class="scroll-btn scroll-right" onclick="scrollGroup('${groupId}', 1)"><i class="fas fa-chevron-right"></i></button>
+                </div>`;
     }
-    
+
     function renderSquareGroups(groups) {
         const container = document.getElementById('squareGroupsSection');
         if (!container) return;
         if (!groups || groups.length === 0) { container.innerHTML = ''; return; }
+        
+        // Store all groups globally for show more
+        allSquareGroups = groups;
+        
+        // Show first 2 groups only
+        const visibleGroups = groups.slice(0, 2);
+        const hasMore = groups.length > 2;
+        
         let html = '';
-        for (const group of groups) {
+        for (const group of visibleGroups) {
             if (!group.cards || group.cards.length === 0) continue;
-            const activeCards = group.cards.filter(card => card.active !== false);
-            if (activeCards.length === 0) continue;
             const groupId = `group-${group.id}-${Date.now()}`;
-            html += `<div class="group-wrapper" data-group-id="${group.id}">
-                        <div class="group-cards-container" id="${groupId}">
-                            ${activeCards.map(card => `
-                                <a href="${escapeHtml(card.link || '#')}" target="_blank" class="square-card-item">
-                                    <img class="square-card-img" src="${escapeHtml(card.imageUrl || 'https://placehold.co/400x200/1a1a1a/3b82f6?text=Card')}" alt="${escapeHtml(card.name)}" onerror="this.src='https://placehold.co/400x200/1a1a1a/3b82f6?text=Image'">
-                                    <div class="square-card-content">
-                                        <div class="square-card-name">${escapeHtml(card.name)}</div>
-                                    </div>
-                                </a>
-                            `).join('')}
-                        </div>
-                        <button class="scroll-btn scroll-left" onclick="scrollGroup('${groupId}', -1)"><i class="fas fa-chevron-left"></i></button>
-                        <button class="scroll-btn scroll-right" onclick="scrollGroup('${groupId}', 1)"><i class="fas fa-chevron-right"></i></button>
+            html += renderGroupHTML(group, groupId);
+        }
+        
+        if (hasMore) {
+            html += `<div class="show-more-container" id="showMoreGroupsBtn">
+                        <button class="btn-show-more" onclick="showAllGroups()">
+                            <i class="fas fa-plus-circle"></i> Show More (${groups.length - 2} more)
+                        </button>
                     </div>`;
         }
+        
         container.innerHTML = html;
-        groups.forEach((group, idx) => {
+        
+        // Attach scroll listeners to visible groups
+        visibleGroups.forEach((group, idx) => {
             const groupId = `group-${group.id}-${Date.now()}`;
             setTimeout(() => checkScrollButtons(groupId), 100);
         });
     }
+    
+    window.showAllGroups = function() {
+        const container = document.getElementById('squareGroupsSection');
+        if (!container || !allSquareGroups) return;
+        
+        let html = '';
+        for (const group of allSquareGroups) {
+            if (!group.cards || group.cards.length === 0) continue;
+            const groupId = `group-${group.id}-${Date.now()}`;
+            html += renderGroupHTML(group, groupId);
+        }
+        container.innerHTML = html;
+        
+        // Re-attach scroll listeners
+        allSquareGroups.forEach((group, idx) => {
+            const groupId = `group-${group.id}-${Date.now()}`;
+            setTimeout(() => checkScrollButtons(groupId), 100);
+        });
+        
+        // Hide the show more button after click
+        const btnContainer = document.querySelector('.show-more-container');
+        if (btnContainer) btnContainer.style.display = 'none';
+    };
     
     window.scrollGroup = function(containerId, direction) {
         const container = document.getElementById(containerId);
@@ -508,10 +573,6 @@
         const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
         leftBtn.style.opacity = atStart ? '0.3' : '0.8';
         rightBtn.style.opacity = atEnd ? '0.3' : '0.8';
-        if (atStart) wrapper.classList.add('at-start');
-        else wrapper.classList.remove('at-start');
-        if (atEnd) wrapper.classList.add('at-end');
-        else wrapper.classList.remove('at-end');
     }
     
     function attachScrollListeners() {
@@ -525,6 +586,18 @@
         document.querySelectorAll('.group-cards-container').forEach(container => {
             checkScrollButtons(container.id);
         });
+    }
+
+    // ==================== CONTENT LOADING ====================
+    async function loadAllContent() {
+        try {
+            const data = await fetchContentData();
+            contentData = { images: data.images || [], news: data.news || [], digital: data.digital || [], local: data.local || [], phone: data.phone || [], products: data.products || [], social: data.social || [] };
+            squareGroups = await fetchSquareGroups();
+            renderCarousel(contentData.images);
+            renderSquareGroups(squareGroups);
+            renderAllContent();
+        } catch (error) { console.error('Error loading content:', error); }
     }
     
     function renderAllContent() { renderNews(contentData.news); renderServices('digitalContainer', contentData.digital, 'fas fa-code'); renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt'); renderProducts(contentData.products); renderSocial(contentData.social); }
