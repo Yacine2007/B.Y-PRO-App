@@ -27,9 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-// ==================== DEFAULT DATA STRUCTURE (شامل squareGroups) ====================
+// ==================== DEFAULT DATA STRUCTURE ====================
 const DEFAULT_DATA = {
-    users: {},
     images: [],
     news: [],
     digital: [],
@@ -39,7 +38,7 @@ const DEFAULT_DATA = {
     social: [],
     support: [],
     notifications: [],
-    squareGroups: [],      // [{ id, cards: [{ id, imageUrl, name, link, active }] }]
+    squareGroups: [],
     nextId: { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1, squareCard: 1, squareGroup: 1 }
 };
 
@@ -56,12 +55,8 @@ async function fetchLocalData() {
             headers: { 'X-Master-Key': process.env.JSON_BIN_MASTER_KEY }
         });
         const rawData = response.data.record;
-        // دمج مع القيم الافتراضية لضمان وجود جميع الحقول
         cachedData = { ...DEFAULT_DATA, ...rawData };
-        if (!cachedData.squareGroups) cachedData.squareGroups = [];
-        if (!cachedData.nextId.squareCard) cachedData.nextId.squareCard = 1;
-        if (!cachedData.nextId.squareGroup) cachedData.nextId.squareGroup = 1;
-        // التأكد من وجود المصفوفات الأخرى
+        // Ensure arrays exist
         cachedData.images = cachedData.images || [];
         cachedData.news = cachedData.news || [];
         cachedData.digital = cachedData.digital || [];
@@ -71,8 +66,8 @@ async function fetchLocalData() {
         cachedData.social = cachedData.social || [];
         cachedData.support = cachedData.support || [];
         cachedData.notifications = cachedData.notifications || [];
+        cachedData.squareGroups = cachedData.squareGroups || [];
         if (!cachedData.nextId) cachedData.nextId = DEFAULT_DATA.nextId;
-        
         lastFetch = now;
         return cachedData;
     } catch (error) {
@@ -315,9 +310,7 @@ app.post('/api/process-payment', async (req, res) => {
     }
 });
 
-// ==================== LOCAL DATA ENDPOINTS (بما في ذلك squareGroups) ====================
-
-// جلب جميع البيانات (بما فيها squareGroups)
+// ==================== LOCAL DATA ENDPOINTS ====================
 app.get('/api/data', async (req, res) => {
     try {
         const data = await fetchLocalData();
@@ -328,7 +321,6 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
-// حفظ جميع البيانات (بما فيها squareGroups)
 app.put('/api/data', async (req, res) => {
     try {
         await saveLocalData(req.body);
@@ -340,7 +332,6 @@ app.put('/api/data', async (req, res) => {
     }
 });
 
-// جلب المجموعات والبطاقات المربعة فقط
 app.get('/api/square-groups', async (req, res) => {
     try {
         const data = await fetchLocalData();
@@ -351,12 +342,10 @@ app.get('/api/square-groups', async (req, res) => {
     }
 });
 
-// حفظ المجموعات والبطاقات المربعة (يمكن استخدامه بدلاً من PUT /api/data كامل)
 app.put('/api/square-groups', async (req, res) => {
     try {
-        const newGroups = req.body;
         const currentData = await fetchLocalData();
-        currentData.squareGroups = newGroups;
+        currentData.squareGroups = req.body;
         await saveLocalData(currentData);
         broadcastUpdate('data_update', { type: 'square_groups', timestamp: Date.now() });
         res.json({ success: true });
@@ -575,13 +564,66 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     }
 });
 
-// ==================== INITIALIZE DEFAULT DATA (مع بطاقات مربعة افتراضية) ====================
+// ==================== INITIALIZE DEFAULT DATA ====================
 async function initializeDefaultData() {
     try {
         const currentData = await fetchLocalData();
         let needsSave = false;
-        
-        // الصور الدائرية (carousel)
+
+        // Local Services
+        if (!currentData.local || currentData.local.length === 0) {
+            currentData.local = [
+                { id: 1, name: 'Maintenance & Hardware', description: 'Computer hardware repair and maintenance. Technical troubleshooting and diagnostics. Hardware upgrades and optimization. Network setup and configuration. Preventive maintenance services.', imageUrl: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=600&auto=format', enabled: true },
+                { id: 2, name: 'Document Services', description: 'Printing, copying, scanning, and document binding. Official document translation.', imageUrl: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format', enabled: true }
+            ];
+            needsSave = true;
+        }
+
+        // Phone Services
+        if (!currentData.phone || currentData.phone.length === 0) {
+            currentData.phone = [
+                { id: 1, name: 'Local Recharge Services - Algeria', description: 'Mobile phone recharge for Mobilis, Djezzy, Ooredoo. Fast and secure.', imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format', enabled: true },
+                { id: 2, name: 'Flexy-Li Remote Recharge', description: 'Flexy-Li platform for remote mobile recharge and bill payments.', imageUrl: 'https://by-pro.kesug.com/Flexy-Li%20Alg/favicon.png', enabled: true, link: 'https://by-pro.kesug.com/Flexy-Li%20Alg/' }
+            ];
+            needsSave = true;
+        }
+
+        // Digital Services
+        if (!currentData.digital || currentData.digital.length === 0) {
+            currentData.digital = [
+                { id: 1, name: 'Programming & Development', description: 'Custom software application development. Website and e-commerce solutions. Mobile applications (iOS & Android). Telegram bot development and automation. AI solutions and intelligent systems. System integration and API development. Chatbot development with AI capabilities. Payment processing systems. Notification and alert systems.', imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format', enabled: true },
+                { id: 2, name: 'Design & Graphics', description: 'Logo design and brand identity. UI/UX design for applications and websites. Graphic design for print and digital media. Marketing materials and advertising design. 3D modeling and animation.', imageUrl: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format', enabled: true },
+                { id: 3, name: 'Editing & Montage', description: 'Professional video editing and montage. Audio editing and sound design. Motion graphics and visual effects. Color correction and grading. Voiceover recording and editing.', imageUrl: 'https://images.pexels.com/photos/257904/pexels-photo-257904.jpeg?w=600&auto=format', enabled: true },
+                { id: 4, name: 'Marketing & Digital Brokerage', description: 'Social media followers and engagement growth. Digital marketing campaigns. Influencer marketing and collaborations. Content marketing strategy. Brand awareness and reputation management. Marketing of digital products and services. Account brokerage and management services. Digital asset trading and brokerage. Partnership and collaboration facilitation.', imageUrl: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format', enabled: true },
+                { id: 5, name: 'Cyber & Internet Services', description: 'Internet browsing and research services. Document printing, copying, and editing. Online form filling and submissions. Email setup and management. Digital registration and online transactions.', imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&auto=format', enabled: true }
+            ];
+            needsSave = true;
+        }
+
+        // Products
+        if (!currentData.products || currentData.products.length === 0) {
+            currentData.products = [
+                { id: 1, name: 'B.Y PRO Digital Card', description: 'Prepaid digital card for online payments.', imageUrl: 'https://by-pro.kesug.com/App.png?v=3', enabled: true, link: 'https://by-pro.kesug.com' },
+                { id: 2, name: 'Premium Subscription', description: 'Access all premium services.', imageUrl: 'https://placehold.co/400x200/3b82f6/white?text=Premium', enabled: true, link: 'https://by-pro.kesug.com' }
+            ];
+            needsSave = true;
+        }
+
+        // Social Media
+        if (!currentData.social || currentData.social.length === 0) {
+            currentData.social = [
+                { id: 1, name: 'Facebook', icon: 'fab fa-facebook-f', color: '#1877f2', url: 'https://www.facebook.com/bypro2007', order: 0 },
+                { id: 2, name: 'Telegram', icon: 'fab fa-telegram', color: '#26A5E4', url: 'https://t.me/ycnbnmkrn', order: 1 },
+                { id: 3, name: 'TikTok', icon: 'fab fa-tiktok', color: '#000000', url: 'https://tiktok.com/@b.yprotiktok', order: 2 },
+                { id: 4, name: 'WhatsApp', icon: 'fab fa-whatsapp', color: '#25D366', url: 'https://wa.me/213795082763', order: 3 },
+                { id: 5, name: 'YouTube', icon: 'fab fa-youtube', color: '#FF0000', url: 'https://www.youtube.com/@technoYT2024', order: 4 },
+                { id: 6, name: 'Instagram', icon: 'fab fa-instagram', color: '#E4405F', url: 'https://www.instagram.com/yacine20072025', order: 5 },
+                { id: 7, name: 'Marketing Agent', icon: 'fab fa-facebook-messenger', color: '#0084ff', url: 'https://www.facebook.com/profile.php?id=61561793138138', order: 6, imageUrl: 'https://github.com/Yacine2007/-by_pro_marketing_agent/blob/main/MA.jpg?raw=true' }
+            ];
+            needsSave = true;
+        }
+
+        // Home Images
         if (!currentData.images || currentData.images.length === 0) {
             currentData.images = [
                 { id: 1, imageUrl: 'https://by-pro.kesug.com/banner1.png', alt: 'B.Y PRO Services' },
@@ -590,8 +632,8 @@ async function initializeDefaultData() {
             ];
             needsSave = true;
         }
-        
-        // الأخبار
+
+        // News
         if (!currentData.news || currentData.news.length === 0) {
             currentData.news = [
                 { id: 1, title: 'Welcome to B.Y PRO App', description: 'Your all-in-one digital services platform', enabled: true, icon: 'fas fa-star', color: '#3b82f6' },
@@ -599,85 +641,24 @@ async function initializeDefaultData() {
             ];
             needsSave = true;
         }
-        
-        // الخدمات الرقمية
-        if (!currentData.digital || currentData.digital.length === 0) {
-            currentData.digital = [
-                { id: 1, name: 'Web Development', description: 'Professional website development services', imageUrl: 'https://placehold.co/400x200/0066cc/white?text=Web+Dev', enabled: true },
-                { id: 2, name: 'Mobile Apps', description: 'iOS and Android app development', imageUrl: 'https://placehold.co/400x200/0066cc/white?text=Mobile+Apps', enabled: true }
-            ];
-            needsSave = true;
-        }
-        
-        // الخدمات المحلية
-        if (!currentData.local || currentData.local.length === 0) {
-            currentData.local = [
-                { id: 1, name: 'Document Translation', description: 'Official document translation services', imageUrl: 'https://placehold.co/400x200/10b981/white?text=Translation', enabled: true },
-                { id: 2, name: 'Legal Consulting', description: 'Professional legal advice', imageUrl: 'https://placehold.co/400x200/10b981/white?text=Legal', enabled: true }
-            ];
-            needsSave = true;
-        }
-        
-        // خدمات الهاتف
-        if (!currentData.phone || currentData.phone.length === 0) {
-            currentData.phone = [
-                { id: 1, name: 'Mobile Recharge', description: 'Quick mobile credit top-up', imageUrl: 'https://placehold.co/400x200/f59e0b/white?text=Recharge', enabled: true },
-                { id: 2, name: 'Internet Packages', description: 'Data packages for all operators', imageUrl: 'https://placehold.co/400x200/f59e0b/white?text=Internet', enabled: true }
-            ];
-            needsSave = true;
-        }
-        
-        // المنتجات
-        if (!currentData.products || currentData.products.length === 0) {
-            currentData.products = [
-                { id: 1, name: 'B.Y PRO Card', description: 'Digital payment card with exclusive benefits', imageUrl: 'https://placehold.co/400x200/ef4444/white?text=BYPRO+Card', enabled: true },
-                { id: 2, name: 'Premium Subscription', description: 'Access all premium features', imageUrl: 'https://placehold.co/400x200/ef4444/white?text=Premium', enabled: true }
-            ];
-            needsSave = true;
-        }
-        
-        // روابط التواصل الاجتماعي
-        if (!currentData.social || currentData.social.length === 0) {
-            currentData.social = [
-                { id: 1, name: 'Facebook', icon: 'fab fa-facebook-f', color: '#1877f2', url: 'https://facebook.com/bypro', order: 0 },
-                { id: 2, name: 'Instagram', icon: 'fab fa-instagram', color: '#e4405f', url: 'https://instagram.com/bypro', order: 1 },
-                { id: 3, name: 'Twitter', icon: 'fab fa-twitter', color: '#1da1f2', url: 'https://twitter.com/bypro', order: 2 }
-            ];
-            needsSave = true;
-        }
-        
-        // المجموعات والبطاقات المربعة (Square Cards) - مجموعة افتراضية واحدة تحتوي على بطاقتين
+
+        // Square Groups (example)
         if (!currentData.squareGroups || currentData.squareGroups.length === 0) {
             currentData.squareGroups = [
-                {
-                    id: (currentData.nextId?.squareGroup || 1),
-                    cards: [
-                        {
-                            id: (currentData.nextId?.squareCard || 1),
-                            name: 'Example Service 1',
-                            link: 'https://example.com/service1',
-                            imageUrl: 'https://placehold.co/400x200/3b82f6/white?text=Service+1',
-                            active: true
-                        },
-                        {
-                            id: (currentData.nextId?.squareCard || 1) + 1,
-                            name: 'Example Service 2',
-                            link: 'https://example.com/service2',
-                            imageUrl: 'https://placehold.co/400x200/10b981/white?text=Service+2',
-                            active: true
-                        }
-                    ]
-                }
+                { id: 1, cards: [
+                    { id: 1, name: 'B.Y PRO Card', link: 'https://by-pro.kesug.com', imageUrl: 'https://by-pro.kesug.com/App.png?v=3', active: true },
+                    { id: 2, name: 'Store PRO', link: 'https://store-pro.great-site.net', imageUrl: 'https://store-pro.great-site.net/favicon.png', active: true }
+                ] }
             ];
             if (!currentData.nextId) currentData.nextId = DEFAULT_DATA.nextId;
-            currentData.nextId.squareGroup = (currentData.nextId.squareGroup || 1) + 1;
-            currentData.nextId.squareCard = (currentData.nextId.squareCard || 1) + 2;
+            currentData.nextId.squareGroup = 2;
+            currentData.nextId.squareCard = 3;
             needsSave = true;
         }
-        
+
         if (needsSave) {
             await saveLocalData(currentData);
-            console.log('✅ Default data (including square groups) initialized in JSONBin');
+            console.log('✅ Default data initialized with all requested services');
         }
     } catch (error) {
         console.error('Error initializing default data:', error);
