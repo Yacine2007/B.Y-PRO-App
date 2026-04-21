@@ -117,13 +117,13 @@
         .show-more-container { text-align: center; margin: 20px 0; }
         .btn-show-more { background: var(--primary); color: white; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
         .btn-show-more:hover { background: var(--primary-dark); transform: translateY(-2px); }
-        /* Products grid */
+        /* Products grid - images smaller and contain */
         .products-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
         .product-card-item { width: 160px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; text-decoration: none; display: block; color: inherit; }
         .product-card-item:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .product-card-img { width: 100%; height: 120px; object-fit: cover; background: var(--bg); }
-        .product-card-content { padding: 10px; text-align: center; }
-        .product-card-name { font-weight: 600; font-size: 0.85rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .product-card-img { width: 100%; height: 100px; object-fit: contain; background: var(--bg); padding: 8px; }
+        .product-card-content { padding: 8px 6px 12px; text-align: center; }
+        .product-card-name { font-weight: 600; font-size: 0.8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         @media (max-width: 640px) { .product-card-item { width: calc(50% - 8px); flex: 1 1 calc(50% - 8px); min-width: 130px; } }
         /* Promotion Cards */
         .promo-card { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 12px 16px; margin-bottom: 24px; display: flex; flex-direction: row; align-items: center; gap: 16px; flex-wrap: wrap; transition: all 0.2s; }
@@ -307,7 +307,7 @@
     let eventSource = null;
     let toastTimeout = null;
     let accountBlockCheckInterval = null;
-    let allSquareGroups = []; // Store all groups for "Show More" functionality
+    let allSquareGroups = [];
 
     function showToast(msg, isErr = false) {
         const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
@@ -457,7 +457,6 @@
                 try {
                     const data = JSON.parse(event.data);
                     if (data.type === 'support_reply') {
-                        // FIX: properly extract reply message content
                         const replyContent = data.replyMessage || data.message || data.data?.replyMessage || 'No content';
                         const replySubject = data.subject || data.data?.subject || 'Support Reply';
                         showToast(`Reply: ${replyContent.substring(0, 50)}...`);
@@ -497,21 +496,15 @@
         const container = document.getElementById('squareGroupsSection');
         if (!container) return;
         if (!groups || groups.length === 0) { container.innerHTML = ''; return; }
-        
-        // Store all groups globally for show more
         allSquareGroups = groups;
-        
-        // Show first 2 groups only
         const visibleGroups = groups.slice(0, 2);
         const hasMore = groups.length > 2;
-        
         let html = '';
         for (const group of visibleGroups) {
             if (!group.cards || group.cards.length === 0) continue;
             const groupId = `group-${group.id}-${Date.now()}`;
             html += renderGroupHTML(group, groupId);
         }
-        
         if (hasMore) {
             html += `<div class="show-more-container" id="showMoreGroupsBtn">
                         <button class="btn-show-more" onclick="showAllGroups()">
@@ -519,10 +512,7 @@
                         </button>
                     </div>`;
         }
-        
         container.innerHTML = html;
-        
-        // Attach scroll listeners to visible groups
         visibleGroups.forEach((group, idx) => {
             const groupId = `group-${group.id}-${Date.now()}`;
             setTimeout(() => checkScrollButtons(groupId), 100);
@@ -532,7 +522,6 @@
     window.showAllGroups = function() {
         const container = document.getElementById('squareGroupsSection');
         if (!container || !allSquareGroups) return;
-        
         let html = '';
         for (const group of allSquareGroups) {
             if (!group.cards || group.cards.length === 0) continue;
@@ -540,14 +529,10 @@
             html += renderGroupHTML(group, groupId);
         }
         container.innerHTML = html;
-        
-        // Re-attach scroll listeners
         allSquareGroups.forEach((group, idx) => {
             const groupId = `group-${group.id}-${Date.now()}`;
             setTimeout(() => checkScrollButtons(groupId), 100);
         });
-        
-        // Hide the show more button after click
         const btnContainer = document.querySelector('.show-more-container');
         if (btnContainer) btnContainer.style.display = 'none';
     };
