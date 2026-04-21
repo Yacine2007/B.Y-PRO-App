@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        /* ========== جميع الأنماط السابقة مع تعديل حجم المربعات فقط ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -91,156 +90,38 @@
         .section-title { font-size: 1rem; font-weight: 700; }
         .section-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 30px; font-size: 0.6rem; font-weight: 600; }
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
-        
-        /* ========== الأنماط الجديدة للبطاقات المربعة (حجم أصغر يتسع لـ 3 في الصف) ========== */
-        .group-wrapper {
-            margin-bottom: 28px;
-            border: 2px solid var(--primary);
-            border-radius: 24px;
-            background: rgba(59,130,246,0.02);
-            overflow: hidden;
-            position: relative;
-        }
-        .group-cards-container {
-            display: flex;
-            flex-direction: row;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            gap: 12px; /* تقليل المسافة بين المربعات */
-            padding: 16px 12px;
-            scrollbar-width: thin;
-            -webkit-overflow-scrolling: touch;
-        }
-        .group-cards-container::-webkit-scrollbar {
-            height: 4px;
-        }
-        .group-cards-container::-webkit-scrollbar-track {
-            background: var(--border);
-            border-radius: 10px;
-        }
-        .group-cards-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 10px;
-        }
-        @media (max-width: 768px) {
-            .group-cards-container {
-                scrollbar-width: none;
-                gap: 10px;
-                padding: 12px 10px;
-            }
-            .group-cards-container::-webkit-scrollbar {
-                display: none;
-            }
-        }
-        .square-card-item {
-            flex: 0 0 105px; /* عرض أصغر على الجوال يتسع لـ 3 مربعات */
-            background: var(--surface);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: block;
-            color: inherit;
-        }
-        @media (min-width: 480px) {
-            .square-card-item {
-                flex: 0 0 120px; /* على الشاشات المتوسطة */
-            }
-        }
-        @media (min-width: 768px) {
-            .square-card-item {
-                flex: 0 0 130px; /* على الأجهزة اللوحية */
-            }
-        }
-        @media (min-width: 1024px) {
-            .square-card-item {
-                flex: 0 0 150px; /* على سطح المكتب */
-            }
-        }
-        .square-card-item:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-        .square-card-img {
-            width: 100%;
-            height: 90px; /* تقليل ارتفاع الصورة قليلاً لتناسب العرض الأصغر */
-            object-fit: contain;
-            background: var(--bg);
-            padding: 6px;
-        }
-        .square-card-content {
-            padding: 6px 4px 10px;
-            text-align: center;
-        }
-        .square-card-name {
-            font-weight: 600;
-            font-size: 0.7rem; /* تصغير الخط قليلاً */
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        /* أزرار التمرير */
-        .scroll-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 28px;
-            height: 28px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 2;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .scroll-btn:hover {
-            opacity: 1;
-        }
-        .scroll-left {
-            left: 4px;
-        }
-        .scroll-right {
-            right: 4px;
-        }
-        /* تأثير تلاشي عند الأطراف */
-        .group-wrapper::before,
-        .group-wrapper::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 30px;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .group-wrapper::before {
-            left: 0;
-            background: linear-gradient(to right, var(--bg), transparent);
-        }
-        .group-wrapper::after {
-            right: 0;
-            background: linear-gradient(to left, var(--bg), transparent);
-        }
-        @media (max-width: 768px) {
-            .scroll-btn {
-                width: 24px;
-                height: 24px;
-            }
-            .group-wrapper::before,
-            .group-wrapper::after {
-                width: 25px;
-            }
-        }
-        
-        /* باقي الأنماط كما هي (بدون تغيير) */
+        /* Square Cards (Horizontal scroll) */
+        .group-wrapper { margin-bottom: 28px; border: 2px solid var(--primary); border-radius: 24px; background: rgba(59,130,246,0.02); overflow: hidden; position: relative; }
+        .group-cards-container { display: flex; flex-direction: row; overflow-x: auto; scroll-behavior: smooth; gap: 12px; padding: 16px 12px; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
+        .group-cards-container::-webkit-scrollbar { height: 4px; }
+        .group-cards-container::-webkit-scrollbar-track { background: var(--border); border-radius: 10px; }
+        .group-cards-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        @media (max-width: 768px) { .group-cards-container { scrollbar-width: none; gap: 10px; padding: 12px 10px; } .group-cards-container::-webkit-scrollbar { display: none; } }
+        .square-card-item { flex: 0 0 105px; background: var(--surface); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; text-decoration: none; display: block; color: inherit; }
+        @media (min-width: 480px) { .square-card-item { flex: 0 0 120px; } }
+        @media (min-width: 768px) { .square-card-item { flex: 0 0 130px; } }
+        @media (min-width: 1024px) { .square-card-item { flex: 0 0 150px; } }
+        .square-card-item:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .square-card-img { width: 100%; height: 90px; object-fit: contain; background: var(--bg); padding: 6px; }
+        .square-card-content { padding: 6px 4px 10px; text-align: center; }
+        .square-card-name { font-weight: 600; font-size: 0.7rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .scroll-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; opacity: 0.7; transition: opacity 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .scroll-btn:hover { opacity: 1; }
+        .scroll-left { left: 4px; }
+        .scroll-right { right: 4px; }
+        .group-wrapper::before, .group-wrapper::after { content: ''; position: absolute; top: 0; bottom: 0; width: 30px; pointer-events: none; z-index: 1; }
+        .group-wrapper::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+        .group-wrapper::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+        @media (max-width: 768px) { .scroll-btn { width: 24px; height: 24px; } .group-wrapper::before, .group-wrapper::after { width: 25px; } }
+        /* Products grid (separate) */
+        .products-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; }
+        .product-card-item { width: 160px; background: var(--surface); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; text-decoration: none; display: block; color: inherit; }
+        .product-card-item:hover { transform: translateY(-4px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .product-card-img { width: 100%; height: 120px; object-fit: cover; background: var(--bg); }
+        .product-card-content { padding: 10px; text-align: center; }
+        .product-card-name { font-weight: 600; font-size: 0.85rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        @media (max-width: 640px) { .product-card-item { width: calc(50% - 8px); flex: 1 1 calc(50% - 8px); min-width: 130px; } }
+        /* Promotion Cards */
         .promo-card { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 12px 16px; margin-bottom: 24px; display: flex; flex-direction: row; align-items: center; gap: 16px; flex-wrap: wrap; transition: all 0.2s; }
         .promo-card:hover { transform: translateY(-2px); border-color: var(--success); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .promo-content { flex: 2; }
@@ -329,7 +210,6 @@
     </style>
 </head>
 <body>
-<!-- بقية جسم الصفحة كما هو (بدون تغيير) -->
 <div class="app-wrapper">
     <div class="menu-trigger" id="menuTrigger"><span><i class="fas fa-chevron-right"></i></span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
@@ -360,7 +240,6 @@
             <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
-        <!-- باقي الصفحات كما هي (لم تتغير) -->
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
         <div id="digitalPage" class="section-page">
             <div class="promo-card"><div class="promo-content"><h3><i class="fas fa-code"></i> Need development or digital services?</h3><p>Submit your requests on the <strong>BarmejLi (برمجلي)</strong> platform. Our team will handle your project with professional care.</p><a href="https://barmejli.kesug.com/" target="_blank" class="facebook-btn barmejli-btn"><i class="fas fa-external-link-alt"></i> Visit BarmejLi Platform</a></div><div class="promo-image"><i class="fas fa-laptop-code" style="font-size: 2.5rem; color: var(--primary);"></i></div></div>
@@ -370,7 +249,7 @@
         </div>
         <div id="localPage" class="section-page"><div class="section-header"><h1 class="section-title">Local Services</h1><span class="section-badge">Document Center</span></div><div id="localContainer" class="cards-grid"></div></div>
         <div id="phonePage" class="section-page"><div class="section-header"><h1 class="section-title">Phone Services</h1><span class="section-badge">Algeria</span></div><div id="phoneContainer" class="cards-grid"></div></div>
-        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="cards-grid"></div></div>
+        <div id="productsPage" class="section-page"><div class="section-header"><h1 class="section-title">Products</h1><span class="section-badge">Available</span></div><div id="productsContainer" class="products-grid"></div></div>
         <div id="walletPage" class="section-page">
             <div class="card-info-row"><div class="card-info-left"><i class="fas fa-credit-card"></i><span class="card-code" id="userCardCode"><span class="spinner" style="width:12px;height:12px;"></span></span></div><button class="copy-card-btn" id="copyCardBtn"><i class="fas fa-copy"></i></button></div>
             <div class="balance-card"><div class="balance-label"><i class="fas fa-wallet"></i> TOTAL BALANCE</div><div id="walletBalanceContainer" class="balance-loading"><span class="spinner"></span><span>Loading...</span></div><div id="walletBalanceValue" class="balance-amount" style="display: none;">$<span id="walletBalance">0.00</span></div></div>
@@ -395,8 +274,7 @@
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    // ==================== باقي سكريبت التطبيق كما هو (نفس السابق) ====================
-    // (لم يتم تغيير أي شيء في الـ JavaScript)
+    // ==================== SERVER CONFIGURATION ====================
     const API_BASE = "https://b-y-pro-app.onrender.com";
     const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com/api/financial";
     const ACCOUNTS_API = "https://b-y-pro-acounts-login.onrender.com/api";
@@ -652,7 +530,21 @@
     function renderAllContent() { renderNews(contentData.news); renderServices('digitalContainer', contentData.digital, 'fas fa-code'); renderServices('localContainer', contentData.local, 'fas fa-print'); renderServices('phoneContainer', contentData.phone, 'fas fa-mobile-alt'); renderProducts(contentData.products); renderSocial(contentData.social); }
     function renderNews(news) { const c = document.getElementById('newsContainer'); if (!c) return; const active = news.filter(n => n.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-newspaper"></i> No News</div><div class="card-desc">Check back later for updates</div></div></div>'; return; } c.innerHTML = active.map(i => `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${i.icon || 'fas fa-newspaper'}" style="color:${i.color || '#3b82f6'}"></i> ${escapeHtml(i.title)}</div><div class="card-desc">${escapeHtml(i.description)}</div></div></div>`).join(''); }
     function renderServices(cid, services, icon) { const c = document.getElementById(cid); if (!c) return; const active = services.filter(s => s.enabled !== false); if (!active.length) { c.innerHTML = `<div class="slim-card"><div class="card-content"><div class="card-title"><i class="${icon}"></i> No Services</div><div class="card-desc">No services available yet</div></div></div>`; return; } c.innerHTML = active.map(s => `<div class="slim-card">${s.imageUrl ? `<div class="card-media"><img src="${s.imageUrl}" alt="${escapeHtml(s.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="${icon}"></i> ${escapeHtml(s.name)}</div><div class="card-desc">${escapeHtml(s.description)}</div></div></div>`).join(''); }
-    function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
+    function renderProducts(products) { 
+        const c = document.getElementById('productsContainer'); 
+        if (!c) return; 
+        const active = products.filter(p => p.enabled !== false); 
+        if (!active.length) { 
+            c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; 
+            return; 
+        } 
+        c.innerHTML = active.map(p => `<a href="${escapeHtml(p.link || '#')}" target="_blank" class="product-card-item">
+            <img class="product-card-img" src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(p.name)}" onerror="this.src='https://placehold.co/400x200/1a1a1a/3b82f6?text=Image'">
+            <div class="product-card-content">
+                <div class="product-card-name">${escapeHtml(p.name)}</div>
+            </div>
+        </a>`).join('');
+    }
     function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card social-card"><div class="card-content"><i class="${escapeHtml(i.icon)}" style="color: ${i.color};"></i><div class="card-title">${escapeHtml(i.name)}</div></div></a>`).join(''); }
 
     let carouselImages = [], currentSlide = 0, slideInterval = null;
