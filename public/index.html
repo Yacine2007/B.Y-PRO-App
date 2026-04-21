@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        /* ========== جميع الأنماط السابقة ========== */
+        /* ========== جميع الأنماط السابقة مع تعديل حجم المربعات فقط ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --bg: #ffffff;
@@ -92,7 +92,7 @@
         .section-badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 30px; font-size: 0.6rem; font-weight: 600; }
         .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
         
-        /* ========== الأنماط الجديدة للبطاقات المربعة (شريط أفقي قابل للتمرير) ========== */
+        /* ========== الأنماط الجديدة للبطاقات المربعة (حجم أصغر يتسع لـ 3 في الصف) ========== */
         .group-wrapper {
             margin-bottom: 28px;
             border: 2px solid var(--primary);
@@ -106,8 +106,8 @@
             flex-direction: row;
             overflow-x: auto;
             scroll-behavior: smooth;
-            gap: 16px;
-            padding: 16px;
+            gap: 12px; /* تقليل المسافة بين المربعات */
+            padding: 16px 12px;
             scrollbar-width: thin;
             -webkit-overflow-scrolling: touch;
         }
@@ -122,19 +122,20 @@
             background: var(--primary);
             border-radius: 10px;
         }
-        /* إخفاء شريط التمرير في بعض المتصفحات مع الاحتفاظ بالقابلية */
         @media (max-width: 768px) {
             .group-cards-container {
                 scrollbar-width: none;
+                gap: 10px;
+                padding: 12px 10px;
             }
             .group-cards-container::-webkit-scrollbar {
                 display: none;
             }
         }
         .square-card-item {
-            flex: 0 0 140px; /* عرض ثابت على الجوال */
+            flex: 0 0 105px; /* عرض أصغر على الجوال يتسع لـ 3 مربعات */
             background: var(--surface);
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid var(--border);
             overflow: hidden;
             transition: all 0.2s;
@@ -142,9 +143,19 @@
             display: block;
             color: inherit;
         }
+        @media (min-width: 480px) {
+            .square-card-item {
+                flex: 0 0 120px; /* على الشاشات المتوسطة */
+            }
+        }
         @media (min-width: 768px) {
             .square-card-item {
-                flex: 0 0 160px; /* عرض ثابت أكبر على سطح المكتب */
+                flex: 0 0 130px; /* على الأجهزة اللوحية */
+            }
+        }
+        @media (min-width: 1024px) {
+            .square-card-item {
+                flex: 0 0 150px; /* على سطح المكتب */
             }
         }
         .square-card-item:hover {
@@ -154,30 +165,30 @@
         }
         .square-card-img {
             width: 100%;
-            height: 120px;
-            object-fit: contain; /* إظهار الصورة كاملة دون قص */
+            height: 90px; /* تقليل ارتفاع الصورة قليلاً لتناسب العرض الأصغر */
+            object-fit: contain;
             background: var(--bg);
-            padding: 8px;
+            padding: 6px;
         }
         .square-card-content {
-            padding: 8px 6px 12px;
+            padding: 6px 4px 10px;
             text-align: center;
         }
         .square-card-name {
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.7rem; /* تصغير الخط قليلاً */
             color: var(--text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* أزرار التمرير (يمين/يسار) */
+        /* أزرار التمرير */
         .scroll-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 50%;
@@ -194,19 +205,19 @@
             opacity: 1;
         }
         .scroll-left {
-            left: 8px;
+            left: 4px;
         }
         .scroll-right {
-            right: 8px;
+            right: 4px;
         }
-        /* تأثير تلاشي عند الأطراف للإشارة إلى وجود محتوى إضافي */
+        /* تأثير تلاشي عند الأطراف */
         .group-wrapper::before,
         .group-wrapper::after {
             content: '';
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 40px;
+            width: 30px;
             pointer-events: none;
             z-index: 1;
         }
@@ -220,16 +231,16 @@
         }
         @media (max-width: 768px) {
             .scroll-btn {
-                width: 28px;
-                height: 28px;
+                width: 24px;
+                height: 24px;
             }
             .group-wrapper::before,
             .group-wrapper::after {
-                width: 30px;
+                width: 25px;
             }
         }
         
-        /* باقي الأنماط كما هي */
+        /* باقي الأنماط كما هي (بدون تغيير) */
         .promo-card { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 12px 16px; margin-bottom: 24px; display: flex; flex-direction: row; align-items: center; gap: 16px; flex-wrap: wrap; transition: all 0.2s; }
         .promo-card:hover { transform: translateY(-2px); border-color: var(--success); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
         .promo-content { flex: 2; }
@@ -318,6 +329,7 @@
     </style>
 </head>
 <body>
+<!-- بقية جسم الصفحة كما هو (بدون تغيير) -->
 <div class="app-wrapper">
     <div class="menu-trigger" id="menuTrigger"><span><i class="fas fa-chevron-right"></i></span><div class="menu-dot" id="menuDot"></div></div>
     <aside class="sidebar" id="sidebar">
@@ -344,11 +356,11 @@
                 <div style="display: flex; gap: 6px;"><div class="wallet-badge" id="homeWalletBadge"><i class="fas fa-wallet"></i> <span id="homeWalletAmount"><span class="spinner" style="width:12px;height:12px;"></span></span></div><div class="bell-icon" id="homeBellIcon"><i class="fas fa-bell"></i><span id="homeBellCount" class="bell-count" style="display: none;">0</span></div></div>
             </div>
             <div class="carousel-container" id="carouselContainer"><div class="carousel-slides" id="carouselSlides"></div><div class="carousel-indicators" id="carouselIndicators"></div></div>
-            <!-- Square Cards Groups Section -->
             <div id="squareGroupsSection" style="margin-bottom: 20px;"></div>
             <div class="section-header"><h2 class="section-title">Latest News</h2><span class="section-badge">Updates</span></div>
             <div id="newsContainer" class="cards-grid"></div>
         </div>
+        <!-- باقي الصفحات كما هي (لم تتغير) -->
         <div id="notificationsPage" class="section-page"><div class="section-header"><h1 class="section-title">Notifications</h1><span id="notificationsPageBadge" class="section-badge"></span></div><div id="notificationsContainer" class="cards-grid"></div></div>
         <div id="digitalPage" class="section-page">
             <div class="promo-card"><div class="promo-content"><h3><i class="fas fa-code"></i> Need development or digital services?</h3><p>Submit your requests on the <strong>BarmejLi (برمجلي)</strong> platform. Our team will handle your project with professional care.</p><a href="https://barmejli.kesug.com/" target="_blank" class="facebook-btn barmejli-btn"><i class="fas fa-external-link-alt"></i> Visit BarmejLi Platform</a></div><div class="promo-image"><i class="fas fa-laptop-code" style="font-size: 2.5rem; color: var(--primary);"></i></div></div>
@@ -383,7 +395,8 @@
 
 <script src="https://yacine2007.github.io/secure-auth-app/bypro-auth.js"></script>
 <script>
-    // ==================== SERVER CONFIGURATION ====================
+    // ==================== باقي سكريبت التطبيق كما هو (نفس السابق) ====================
+    // (لم يتم تغيير أي شيء في الـ JavaScript)
     const API_BASE = "https://b-y-pro-app.onrender.com";
     const FINANCIAL_API = "https://b-y-pro-acounts-login.onrender.com/api/financial";
     const ACCOUNTS_API = "https://b-y-pro-acounts-login.onrender.com/api";
@@ -395,7 +408,6 @@
     let toastTimeout = null;
     let accountBlockCheckInterval = null;
 
-    // ==================== UTILITIES ====================
     function showToast(msg, isErr = false) {
         const toast = document.getElementById('toast'), tMsg = document.getElementById('toastMessage'), tIcon = document.getElementById('toastIcon');
         tMsg.textContent = msg;
@@ -407,7 +419,6 @@
     }
     function escapeHtml(s) { return s ? s.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])) : ''; }
 
-    // ==================== ACCOUNT BLOCK CHECK ====================
     async function checkAccountBlocked() {
         if (!currentUser || !currentUser.id) return false;
         try {
@@ -425,7 +436,6 @@
     function startAccountBlockChecker() { if (accountBlockCheckInterval) clearInterval(accountBlockCheckInterval); accountBlockCheckInterval = setInterval(() => { if (currentUser) checkAccountBlocked(); }, 30000); }
     function stopAccountBlockChecker() { if (accountBlockCheckInterval) { clearInterval(accountBlockCheckInterval); accountBlockCheckInterval = null; } }
 
-    // ==================== DATA API ====================
     async function fetchContentData() {
         try { const res = await fetch(`${API_BASE}/api/data`); if (!res.ok) throw new Error(); const data = await res.json(); return data; } catch (e) { return { images: [], news: [], digital: [], local: [], phone: [], products: [], social: [] }; }
     }
@@ -433,7 +443,6 @@
         try { const res = await fetch(`${API_BASE}/api/square-groups`); if (!res.ok) throw new Error(); const groups = await res.json(); return groups || []; } catch (e) { console.warn('Square groups API not ready', e); return []; }
     }
 
-    // ==================== WALLET ====================
     async function loadUserWallet() {
         if (!currentUser) return;
         document.getElementById('walletBalanceContainer').style.display = 'flex';
@@ -470,7 +479,6 @@
         container.innerHTML = `<div class="transactions-list">${tx.slice().reverse().map(t => `<div class="transaction-item"><div class="transaction-info"><div class="transaction-icon"><i class="fas fa-${t.type === 'deposit' ? 'plus-circle' : 'exchange-alt'}"></i></div><div class="transaction-details"><div class="transaction-name">${escapeHtml(t.description)}</div><div class="transaction-date">${new Date(t.date).toLocaleString()}</div></div></div><div class="transaction-amount">${t.type === 'deposit' ? '+' : ''}$${t.amount.toFixed(2)}</div></div>`).join('')}</div>`;
     }
 
-    // ==================== DEPOSIT ====================
     const depositBtn = document.getElementById('depositBtn'), paymentModal = document.getElementById('paymentModal'), closePaymentModal = document.getElementById('closePaymentModal'), confirmDepositBtn = document.getElementById('confirmDepositBtn'), depositAmount = document.getElementById('depositAmount'), depositPassword = document.getElementById('depositPassword');
     depositBtn.onclick = () => paymentModal.classList.add('active');
     closePaymentModal.onclick = () => { paymentModal.classList.remove('active'); depositAmount.value = ''; depositPassword.value = ''; };
@@ -493,7 +501,6 @@
         } catch (error) { showToast('Deposit failed', true); }
     };
 
-    // ==================== SUPPORT FORM ====================
     const supportForm = document.getElementById('supportRequestForm'), formMsg = document.getElementById('formMessage');
     if (supportForm) {
         supportForm.addEventListener('submit', async (e) => {
@@ -519,7 +526,6 @@
         });
     }
 
-    // ==================== AUTHENTICATION ====================
     function updateUIForUser(user) {
         currentUser = user;
         document.getElementById('userName').textContent = user.name || user.username || 'User';
@@ -540,7 +546,6 @@
     auth = new BYPROAuth({ loginUrl: 'https://yacine2007.github.io/secure-auth-app/login.html', onLogin: (user) => { updateUIForUser(user); loadNotificationsFromStorage(); }, onLogout: () => { currentUser = null; userWalletData = null; document.getElementById('userName').textContent = 'User'; document.getElementById('avatarIcon').innerHTML = '<i class="fas fa-user"></i>'; document.getElementById('homeWalletAmount').innerHTML = '$0.00'; welcomeShown = false; disconnectSSE(); stopAccountBlockChecker(); auth.show(); } });
     setTimeout(() => { if (auth && auth.isAuthenticated && auth.isAuthenticated()) { const u = auth.getCurrentUser(); if (u) updateUIForUser(u); else auth.show(); } else auth.show(); }, 500);
 
-    // ==================== SSE CONNECTION ====================
     function connectToSSE() {
         if (eventSource) { eventSource.close(); eventSource = null; }
         if (!currentUser) return;
@@ -561,7 +566,6 @@
     }
     function disconnectSSE() { if (eventSource) { eventSource.close(); eventSource = null; } }
 
-    // ==================== CONTENT LOADING & RENDERING ====================
     async function loadAllContent() {
         try {
             const data = await fetchContentData();
@@ -573,7 +577,6 @@
         } catch (error) { console.error('Error loading content:', error); }
     }
     
-    // دالة عرض البطاقات المربعة مع أزرار تمرير وإشارات بصرية
     function renderSquareGroups(groups) {
         const container = document.getElementById('squareGroupsSection');
         if (!container) return;
@@ -600,14 +603,12 @@
                     </div>`;
         }
         container.innerHTML = html;
-        // بعد إضافة العناصر، نتحقق من الحاجة لإظهار/إخفاء الأزرار
         groups.forEach((group, idx) => {
             const groupId = `group-${group.id}-${Date.now()}`;
             setTimeout(() => checkScrollButtons(groupId), 100);
         });
     }
     
-    // دالة التمرير الأفقي
     window.scrollGroup = function(containerId, direction) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -629,14 +630,12 @@
         const atEnd = container.scrollLeft + container.clientWidth >= container.scrollWidth - 5;
         leftBtn.style.opacity = atStart ? '0.3' : '0.8';
         rightBtn.style.opacity = atEnd ? '0.3' : '0.8';
-        // إضافة تأثير التلاشي عند الأطراف
         if (atStart) wrapper.classList.add('at-start');
         else wrapper.classList.remove('at-start');
         if (atEnd) wrapper.classList.add('at-end');
         else wrapper.classList.remove('at-end');
     }
     
-    // ربط حدث التمرير لكل حاوية
     function attachScrollListeners() {
         document.querySelectorAll('.group-cards-container').forEach(container => {
             container.removeEventListener('scroll', () => checkScrollButtons(container.id));
@@ -644,7 +643,6 @@
         });
     }
     
-    // تحديث بعد تحميل المحتوى
     function refreshScrollButtons() {
         document.querySelectorAll('.group-cards-container').forEach(container => {
             checkScrollButtons(container.id);
@@ -657,14 +655,12 @@
     function renderProducts(products) { const c = document.getElementById('productsContainer'); if (!c) return; const active = products.filter(p => p.enabled !== false); if (!active.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> No Products</div><div class="card-desc">Products coming soon</div></div></div>'; return; } c.innerHTML = active.map(p => `<div class="slim-card">${p.imageUrl ? `<div class="card-media"><img src="${p.imageUrl}" alt="${escapeHtml(p.name)}"></div>` : ''}<div class="card-content"><div class="card-title"><i class="fas fa-cube"></i> ${escapeHtml(p.name)}</div><div class="card-desc">${escapeHtml(p.description)}</div></div></div>`).join(''); }
     function renderSocial(social) { const c = document.getElementById('socialContainer'); if (!c) return; if (!social.length) { c.innerHTML = '<div class="slim-card"><div class="card-content"><div class="card-title"><i class="fas fa-share-alt"></i> No Social Links</div><div class="card-desc">Follow us on social media</div></div></div>'; return; } c.innerHTML = social.map(i => `<a href="${escapeHtml(i.url)}" target="_blank" class="slim-card social-card"><div class="card-content"><i class="${escapeHtml(i.icon)}" style="color: ${i.color};"></i><div class="card-title">${escapeHtml(i.name)}</div></div></a>`).join(''); }
 
-    // ==================== CAROUSEL ====================
     let carouselImages = [], currentSlide = 0, slideInterval = null;
     function renderCarousel(images) { const slides = document.getElementById('carouselSlides'), inds = document.getElementById('carouselIndicators'); if (!slides || !inds) return; if (!images || !images.length) { slides.innerHTML = '<div class="carousel-slide active"><img src="https://placehold.co/800x400/1a1a1a/3b82f6?text=B.Y+PRO+App"></div>'; inds.innerHTML = ''; return; } carouselImages = images; slides.innerHTML = images.map((img, idx) => `<div class="carousel-slide ${idx === 0 ? 'active' : ''}"><img src="${img.imageUrl}" alt="${img.alt || 'Slide'}"></div>`).join(''); inds.innerHTML = images.map((_, idx) => `<div class="indicator ${idx === 0 ? 'active' : ''}" data-index="${idx}"></div>`).join(''); document.querySelectorAll('.indicator').forEach(ind => ind.addEventListener('click', () => { const idx = parseInt(ind.dataset.index); if (!isNaN(idx)) goToSlide(idx); })); startAutoSlide(); }
     function goToSlide(i) { const slides = document.querySelectorAll('.carousel-slide'), inds = document.querySelectorAll('.indicator'); if (!slides.length) return; slides[currentSlide].classList.remove('active'); if (inds[currentSlide]) inds[currentSlide].classList.remove('active'); currentSlide = (i + slides.length) % slides.length; slides[currentSlide].classList.add('active'); if (inds[currentSlide]) inds[currentSlide].classList.add('active'); }
     function nextSlide() { goToSlide(currentSlide + 1); }
     function startAutoSlide() { if (slideInterval) clearInterval(slideInterval); slideInterval = setInterval(nextSlide, 5000); }
 
-    // ==================== NOTIFICATIONS ====================
     function loadNotificationsFromStorage() { const saved = localStorage.getItem('bypro_notifications'); if (saved) { try { userNotifications = JSON.parse(saved); } catch(e) {} } if (!userNotifications.length) userNotifications = [{ id: Date.now(), title: 'Welcome!', message: 'You will receive updates here.', date: new Date().toISOString(), read: false, icon: 'fas fa-smile-wink', color: '#3b82f6' }]; saveNotificationsToStorage(); }
     function saveNotificationsToStorage() { localStorage.setItem('bypro_notifications', JSON.stringify(userNotifications)); updateNotificationUI(); }
     function formatDate(d) { const date = new Date(d), diff = Math.floor((Date.now() - date) / 60000); if (diff < 1) return 'Just now'; if (diff < 60) return `${diff}m ago`; if (diff < 1440) return `${Math.floor(diff / 60)}h ago`; return date.toLocaleDateString(); }
@@ -677,7 +673,6 @@
     document.getElementById('homeWalletBadge').addEventListener('click', () => navigateTo('wallet'));
     document.getElementById('copyCardBtn')?.addEventListener('click', () => { if (userWalletData?.cardCode) { navigator.clipboard.writeText(userWalletData.cardCode); showToast('Card code copied!'); } else showToast('No card code', true); });
 
-    // ==================== NAVIGATION ====================
     const menuTrigger = document.getElementById('menuTrigger'), sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
     function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); menuTrigger.classList.add('hidden'); }
     function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); menuTrigger.classList.remove('hidden'); }
@@ -696,7 +691,6 @@
     logout.addEventListener('click', () => { if (auth) auth.logout(); accModal.classList.remove('active'); });
     accModal.addEventListener('click', e => { if (e.target === accModal) accModal.classList.remove('active'); });
 
-    // ==================== DARK MODE ====================
     const themeToggle = document.getElementById('themeToggleSidebar');
     if (localStorage.getItem('darkTheme') === 'true') { document.documentElement.classList.add('dark-theme'); themeToggle.checked = true; }
     themeToggle.addEventListener('change', e => { if (e.target.checked) document.documentElement.classList.add('dark-theme'); else document.documentElement.classList.remove('dark-theme'); localStorage.setItem('darkTheme', e.target.checked); });
@@ -705,7 +699,6 @@
     refreshBtn.onclick = refreshWallet;
     setInterval(() => { if (document.hasFocus() && currentUser) loadAllContent(); }, 30000);
 
-    // ==================== PWA ====================
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(registrations => { for(let registration of registrations) { if (registration.scope !== '/B.Y-PRO-App/public/') { registration.unregister(); } } });
         navigator.serviceWorker.register('/B.Y-PRO-App/public/sw.js', { scope: '/B.Y-PRO-App/public/' }).then(reg => console.log('✅ Service Worker registered')).catch(err => console.error('❌ Service Worker registration failed:', err));
@@ -714,13 +707,8 @@
     function debugData() { console.log('Content Data:', contentData); console.log('Square Groups:', squareGroups); }
     window.debugData = debugData;
     
-    // استدعاء أولي
     loadAllContent();
-    // إعادة ربط أحداث التمرير بعد تحميل المحتوى (باستخدام MutationObserver)
-    const observer = new MutationObserver(() => {
-        attachScrollListeners();
-        refreshScrollButtons();
-    });
+    const observer = new MutationObserver(() => { attachScrollListeners(); refreshScrollButtons(); });
     observer.observe(document.getElementById('squareGroupsSection'), { childList: true, subtree: true });
 </script>
 </body>
