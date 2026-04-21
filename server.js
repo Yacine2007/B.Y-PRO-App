@@ -13,12 +13,6 @@ const PORT = process.env.PORT || 3000;
 const BYPRO_API = 'https://b-y-pro-acounts-login.onrender.com/api';
 const BYPRO_API_KEY = process.env.BYPRO_INTERNAL_KEY || 'bypro-internal-key-2025';
 
-const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
-const JSON_BIN_HEADERS = {
-    'Content-Type': 'application/json',
-    'X-Master-Key': process.env.JSON_BIN_MASTER_KEY,
-};
-
 // Middleware
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -80,65 +74,30 @@ const DEFAULT_COMPLETE_DATA = {
     nextId: { img: 4, news: 3, digital: 6, local: 3, phone: 3, product: 3, social: 8, support: 1, squareCard: 3, squareGroup: 2 }
 };
 
-// ==================== LOCAL CACHE ====================
-let cachedData = null;
-let lastFetch = 0;
-const CACHE_TTL = 30000;
+// ==================== IN-MEMORY DATABASE (for Render) ====================
+let MEMORY_DB = { ...DEFAULT_COMPLETE_DATA };
+let lastSaveTime = Date.now();
 
 async function fetchLocalData() {
-    const now = Date.now();
-    if (cachedData && (now - lastFetch) < CACHE_TTL) return cachedData;
-    
-    // If JSON_BIN_ID is not configured, return default data directly
-    if (!process.env.JSON_BIN_ID || !process.env.JSON_BIN_MASTER_KEY) {
-        console.log('⚠️ JSONBin not configured, using default data');
-        cachedData = { ...DEFAULT_COMPLETE_DATA };
-        lastFetch = now;
-        return cachedData;
-    }
-    
-    try {
-        const response = await axios.get(JSON_BIN_URL, {
-            headers: { 'X-Master-Key': process.env.JSON_BIN_MASTER_KEY }
-        });
-        const rawData = response.data.record;
-        // Merge with defaults, but don't overwrite existing data
-        cachedData = { ...DEFAULT_COMPLETE_DATA, ...rawData };
-        // Ensure arrays exist
-        cachedData.images = cachedData.images || DEFAULT_COMPLETE_DATA.images;
-        cachedData.news = cachedData.news || DEFAULT_COMPLETE_DATA.news;
-        cachedData.digital = cachedData.digital || DEFAULT_COMPLETE_DATA.digital;
-        cachedData.local = cachedData.local || DEFAULT_COMPLETE_DATA.local;
-        cachedData.phone = cachedData.phone || DEFAULT_COMPLETE_DATA.phone;
-        cachedData.products = cachedData.products || DEFAULT_COMPLETE_DATA.products;
-        cachedData.social = cachedData.social || DEFAULT_COMPLETE_DATA.social;
-        cachedData.squareGroups = cachedData.squareGroups || DEFAULT_COMPLETE_DATA.squareGroups;
-        if (!cachedData.nextId) cachedData.nextId = DEFAULT_COMPLETE_DATA.nextId;
-        lastFetch = now;
-        return cachedData;
-    } catch (error) {
-        console.error('Error fetching local data:', error.message);
-        console.log('⚠️ Using default data due to error');
-        return { ...DEFAULT_COMPLETE_DATA };
-    }
+    // Return memory DB directly (no external storage needed for Render)
+    console.log('📦 Returning data from memory (total records:', {
+        images: MEMORY_DB.images?.length || 0,
+        news: MEMORY_DB.news?.length || 0,
+        digital: MEMORY_DB.digital?.length || 0,
+        local: MEMORY_DB.local?.length || 0,
+        phone: MEMORY_DB.phone?.length || 0,
+        products: MEMORY_DB.products?.length || 0,
+        social: MEMORY_DB.social?.length || 0,
+        squareGroups: MEMORY_DB.squareGroups?.length || 0
+    });
+    return { ...MEMORY_DB };
 }
 
 async function saveLocalData(data) {
-    if (!process.env.JSON_BIN_ID || !process.env.JSON_BIN_MASTER_KEY) {
-        console.log('⚠️ JSONBin not configured, data saved to memory only');
-        cachedData = data;
-        lastFetch = Date.now();
-        return { success: true };
-    }
-    try {
-        const response = await axios.put(JSON_BIN_URL, data, { headers: JSON_BIN_HEADERS });
-        cachedData = data;
-        lastFetch = Date.now();
-        return response.data;
-    } catch (error) {
-        console.error('Error saving local data:', error.message);
-        throw error;
-    }
+    MEMORY_DB = { ...data };
+    lastSaveTime = Date.now();
+    console.log('💾 Data saved to memory');
+    return { success: true };
 }
 
 // ==================== B.Y PRO FINANCIAL API HELPERS ====================
@@ -625,7 +584,8 @@ app.get('/api/health', (req, res) => {
         clients: clients.length,
         uptime: process.uptime(),
         bypro_server: BYPRO_API,
-        financial_integration: 'active'
+        financial_integration: 'active',
+        data_in_memory: true
     });
 });
 
@@ -637,14 +597,24 @@ app.get('*', (req, res) => {
 // ==================== START SERVER ====================
 app.listen(PORT, async () => {
     console.log(`✅ Server running on port ${PORT}`);
-    console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing (uploads may fail)'}`);
-    console.log(`💾 Local JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing (using memory storage)'}`);
+    console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing (uploads will fail)'}`);
+    console.log(`💾 Storage: In-memory (data resets on restart)`);
     console.log(`🔗 B.Y PRO Server: ${BYPRO_API}`);
     console.log(`📡 SSE endpoint: /api/events`);
     console.log(`💰 Financial endpoints: /api/financial/*`);
     console.log(`📦 Square groups endpoint: /api/square-groups`);
     
-    // Initialize data cache
+    // Initialize data
     await fetchLocalData();
     console.log('✅ Default data loaded with all requested services');
+    console.log('📊 Total records in memory:', {
+        images: MEMORY_DB.images.length,
+        news: MEMORY_DB.news.length,
+        digital: MEMORY_DB.digital.length,
+        local: MEMORY_DB.local.length,
+        phone: MEMORY_DB.phone.length,
+        products: MEMORY_DB.products.length,
+        social: MEMORY_DB.social.length,
+        squareGroups: MEMORY_DB.squareGroups.length
+    });
 });
