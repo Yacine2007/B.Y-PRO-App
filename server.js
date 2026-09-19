@@ -784,4 +784,39 @@ app.get('/api/health', async (req, res) => {
     });
 });
 
-// ==================== SERVE STATIC FILES - SPA FALLBACK ===================
+// ==================== SERVE STATIC FILES - SPA FALLBACK ====================
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// ==================== START SERVER ====================
+app.listen(PORT, async () => {
+    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`🐙 GitHub Token: ${GITHUB_TOKEN ? '✓ Configured' : '✗ Missing'}`);
+    console.log(`🔗 B.Y PRO Server: ${BYPRO_API}`);
+    console.log(`📡 SSE endpoint: /api/events`);
+    console.log(`💰 Financial endpoints: /api/financial/*`);
+    console.log(`📦 Square groups endpoint: /api/square-groups`);
+    console.log(`💾 Storage: MongoDB (${MONGO_DB_NAME}.${MONGO_COLLECTION})`);
+    console.log(`⏱️  Broadcast cooldown: ${BROADCAST_COOLDOWN}ms`);
+
+    // اختبار الاتصال الأولي بـ MongoDB
+    try {
+        await getMongoClient();
+        await initializeDefaultData();
+        console.log('✅ Server ready');
+    } catch (e) {
+        console.error('❌ فشل الاتصال بـ MongoDB عند البدء:', e.message);
+        console.error('   سيعاد المحاولة عند أول طلب.');
+    }
+});
+
+// ==================== GRACEFUL SHUTDOWN ====================
+process.on('SIGINT', async () => {
+    console.log('\n🛑 إيقاف السيرفر...');
+    if (_mongoClient) {
+        try { await _mongoClient.close(); } catch (_) {}
+    }
+    process.exit(0);
+});
