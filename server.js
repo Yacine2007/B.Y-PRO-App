@@ -4,6 +4,7 @@ const axios = require('axios');
 const multer = require('multer');
 const path = require('path');
 const FormData = require('form-data');
+const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
 const app = express();
@@ -13,11 +14,16 @@ const PORT = process.env.PORT || 3000;
 const BYPRO_API = 'https://b-y-pro-acounts-login.onrender.com/api';
 const BYPRO_API_KEY = process.env.BYPRO_INTERNAL_KEY || 'bypro-internal-key-2025';
 
-const JSON_BIN_URL = `https://api.jsonbin.io/v3/b/${process.env.JSON_BIN_ID}`;
-const JSON_BIN_HEADERS = {
-    'Content-Type': 'application/json',
-    'X-Master-Key': process.env.JSON_BIN_MASTER_KEY,
-};
+// GitHub private repo (source of MONGODB_URI)
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const GITHUB_REPO = 'Yacine2007/APIs-B.YPRO-Managment';
+const GITHUB_FILE_PATH = 'DB/mongodb_params.env';
+const GITHUB_API_URL = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`;
+
+// MongoDB target
+const MONGO_DB_NAME = 'by_pro_app';
+const MONGO_COLLECTION = 'app_data';
+const MONGO_DOC_ID = 'singleton';
 
 // Middleware
 app.use(cors());
@@ -39,53 +45,148 @@ const DEFAULT_DATA = {
     support: [],
     notifications: [],
     squareGroups: [],
-    nextId: { img: 1, news: 1, digital: 1, local: 1, phone: 1, product: 1, social: 1, support: 1, squareCard: 1, squareGroup: 1 }
+    nextId: {
+        img: 1, news: 1, digital: 1, local: 1, phone: 1,
+        product: 1, social: 1, support: 1, squareCard: 1, squareGroup: 1
+    }
 };
 
-// ==================== LOCAL CACHE (JSONBin) ====================
+// ==================== GITHUB: FETCH MONGODB_URI ====================
+let _mongoUriCache = { uri: null, fetchedAt: 0 };
+const MONGO_URI_TTL_MS = 5 * 60 * 1000; // 5 دقائق
+
+async function fetchMongoUri(force = false) {
+    const now = Date.now();
+    if (!force && _mongoUriCache.uri && (now - _mongoUriCache.fetchedAt) < MONGO_URI_TTL_MS) {
+        return _mongoUriCache.uri;
+    }
+
+    if (!GITHUB_TOKEN) {
+        throw new Error('GITHUB_TOKEN غير مضبوط في متغيرات البيئة');
+    }
+
+    const resp = await axios.get(GITHUB_API_URL, {
+        headers: {
+            'Authorization': `Bearer ${GITHUB_TOKEN}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'BYPRO-Server'
+        },
+        timeout: 10000
+    });
+
+    // الرد من GitHub Contents API: { content: "base64...", encoding: "base64", sha, ... }
+    const encoded = resp.data.content;
+    if (!encoded) throw new Error('الملف لا يحتوي على content');
+
+    const fileContent = Buffer.from(encoded, 'base64').toString('utf-8');
+
+    // استخراج MONGODB_URI
+    const match = fileContent.match(/^\s*MONGODB_URI\s*=\s*(.+?)\s*$/m);
+    if (!match) {
+        throw new Error('لم يتم العثور على MONGODB_URI في الملف');
+    }
+
+    let uri = match[1].trim().replace(/^["']|["']$/g, '');
+
+    _mongoUriCache.uri = uri;
+    _mongoUriCache.fetchedAt = now;
+    console.log('🔑 تم جلب MONGODB_URI من GitHub بنجاح');
+    return uri;
+}
+
+// ==================== MONGODB CONNECTION ====================
+let _mongoClient = null;
+let _mongoClientUri = null;
+
+async function getMongoClient() {
+    const uri = await fetchMongoUri();
+
+    // إن كان لدينا client متصل بنفس URI → أعد استخدامه
+    if (_mongoClient && _mongoClientUri === uri) {
+        return _mongoClient;
+    }
+
+    // أغلق القديم إن وُجد
+    if (_mongoClient) {
+        try { await _mongoClient.close(); } catch (_) {}
+        _mongoClient = null;
+        _mongoClientUri = null;
+    }
+
+    console.log('📡 الاتصال بـ MongoDB...');
+    const client = new MongoClient(uri, {
+        serverSelectionTimeoutMS: 10000,
+        connectTimeoutMS: 10000,
+        socketTimeoutMS: 30000,
+    });
+
+    await client.connect();
+    await client.db('admin').command({ ping: 1 });
+
+    _mongoClient = client;
+    _mongoClientUri = uri;
+    console.log(`✅ متصل بـ MongoDB — ${MONGO_DB_NAME}.${MONGO_COLLECTION}`);
+    return client;
+}
+
+async function getCollection() {
+    const client = await getMongoClient();
+    return client.db(MONGO_DB_NAME).collection(MONGO_COLLECTION);
+}
+
+// ==================== LOCAL DATA (MONGO) ====================
 let cachedData = null;
 let lastFetch = 0;
-const CACHE_TTL = 30000; // 30 seconds
+const CACHE_TTL = 30000; // 30 ثانية
+
+function normalizeData(raw) {
+    const data = { ...DEFAULT_DATA, ...(raw || {}) };
+    const arrayKeys = [
+        'images', 'news', 'digital', 'local', 'phone',
+        'products', 'social', 'support', 'notifications', 'squareGroups'
+    ];
+    for (const k of arrayKeys) {
+        if (!Array.isArray(data[k])) data[k] = [];
+    }
+    if (!data.nextId || typeof data.nextId !== 'object') {
+        data.nextId = { ...DEFAULT_DATA.nextId };
+    }
+    return data;
+}
 
 async function fetchLocalData() {
     const now = Date.now();
     if (cachedData && (now - lastFetch) < CACHE_TTL) return cachedData;
+
     try {
-        const response = await axios.get(JSON_BIN_URL, {
-            headers: { 'X-Master-Key': process.env.JSON_BIN_MASTER_KEY }
-        });
-        const rawData = response.data.record;
-        cachedData = { ...DEFAULT_DATA, ...rawData };
-        // Ensure arrays exist
-        cachedData.images = cachedData.images || [];
-        cachedData.news = cachedData.news || [];
-        cachedData.digital = cachedData.digital || [];
-        cachedData.local = cachedData.local || [];
-        cachedData.phone = cachedData.phone || [];
-        cachedData.products = cachedData.products || [];
-        cachedData.social = cachedData.social || [];
-        cachedData.support = cachedData.support || [];
-        cachedData.notifications = cachedData.notifications || [];
-        cachedData.squareGroups = cachedData.squareGroups || [];
-        if (!cachedData.nextId) cachedData.nextId = DEFAULT_DATA.nextId;
+        const col = await getCollection();
+        const doc = await col.findOne({ _id: MONGO_DOC_ID });
+        cachedData = normalizeData(doc && doc.fields ? doc.fields : null);
         lastFetch = now;
         return cachedData;
     } catch (error) {
-        console.error('Error fetching local data:', error.message);
+        console.error('❌ خطأ في جلب البيانات من MongoDB:', error.message);
         return { ...DEFAULT_DATA };
     }
 }
 
 async function saveLocalData(data) {
-    try {
-        const response = await axios.put(JSON_BIN_URL, data, { headers: JSON_BIN_HEADERS });
-        cachedData = data;
-        lastFetch = Date.now();
-        return response.data;
-    } catch (error) {
-        console.error('Error saving local data:', error.message);
-        throw error;
-    }
+    const col = await getCollection();
+    const normalized = normalizeData(data);
+
+    await col.replaceOne(
+        { _id: MONGO_DOC_ID },
+        {
+            _id: MONGO_DOC_ID,
+            fields: normalized,
+            updated_at: new Date().toISOString(),
+        },
+        { upsert: true }
+    );
+
+    cachedData = normalized;
+    lastFetch = Date.now();
+    return { success: true };
 }
 
 // ==================== B.Y PRO FINANCIAL API HELPERS ====================
@@ -177,7 +278,7 @@ function broadcastUpdate(type, data) {
         }
         lastBroadcastTime = now;
     }
-    
+
     console.log(`📢 Broadcasting ${type} to ${clients.length} clients`);
     clients.forEach(client => {
         try {
@@ -196,22 +297,18 @@ app.get('/api/events', (req, res) => {
         'Connection': 'keep-alive',
         'Access-Control-Allow-Origin': '*'
     });
-    
+
     const clientId = Date.now();
     const newClient = { id: clientId, res };
     clients.push(newClient);
-    
+
     console.log(`✅ New SSE client connected: ${clientId}, Total clients: ${clients.length}`);
     res.write(`data: ${JSON.stringify({ type: 'connected', message: 'Connected to server', clientId })}\n\n`);
-    
+
     const pingInterval = setInterval(() => {
-        try {
-            res.write(`: ping\n\n`);
-        } catch (err) {
-            clearInterval(pingInterval);
-        }
+        try { res.write(`: ping\n\n`); } catch (err) { clearInterval(pingInterval); }
     }, 30000);
-    
+
     req.on('close', () => {
         clearInterval(pingInterval);
         clients = clients.filter(client => client.id !== clientId);
@@ -363,13 +460,13 @@ app.post('/api/support', async (req, res) => {
         newMessage.id = Date.now();
         newMessage.read = false;
         newMessage.replied = false;
-        
+
         const currentData = await fetchLocalData();
         const support = currentData.support || [];
         support.unshift(newMessage);
         currentData.support = support;
         await saveLocalData(currentData);
-        
+
         broadcastUpdate('support_new', {
             id: newMessage.id,
             sender: newMessage.sender,
@@ -377,7 +474,7 @@ app.post('/api/support', async (req, res) => {
             message: newMessage.details,
             date: newMessage.date
         });
-        
+
         console.log(`📨 New support message from ${newMessage.sender}`);
         res.json({ success: true, message: 'Support request received' });
     } catch (error) {
@@ -392,7 +489,7 @@ app.post('/api/support/reply', async (req, res) => {
         if (!messageId || !recipient || !replyMessage) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        
+
         const currentData = await fetchLocalData();
         const replyNotification = {
             id: Date.now(),
@@ -405,11 +502,11 @@ app.post('/api/support/reply', async (req, res) => {
             recipient: recipient,
             type: 'support_reply'
         };
-        
+
         const notifications = currentData.notifications || [];
         notifications.unshift(replyNotification);
         currentData.notifications = notifications;
-        
+
         const support = currentData.support || [];
         const originalMessage = support.find(m => m.id === parseInt(messageId));
         if (originalMessage) {
@@ -417,9 +514,9 @@ app.post('/api/support/reply', async (req, res) => {
             originalMessage.replyDate = new Date().toISOString();
             originalMessage.replyMessage = replyMessage;
         }
-        
+
         await saveLocalData(currentData);
-        
+
         broadcastUpdate('support_reply', {
             id: replyNotification.id,
             message: replyMessage,
@@ -428,7 +525,7 @@ app.post('/api/support/reply', async (req, res) => {
             sender: 'Admin',
             date: new Date().toISOString()
         });
-        
+
         broadcastUpdate('notification_new', {
             id: replyNotification.id,
             title: replyNotification.title,
@@ -437,7 +534,7 @@ app.post('/api/support/reply', async (req, res) => {
             color: replyNotification.color,
             recipient: recipient
         });
-        
+
         console.log(`📧 Reply sent to ${recipient} about: ${subject}`);
         res.json({ success: true, message: 'Reply sent successfully', notification: replyNotification });
     } catch (error) {
@@ -477,13 +574,13 @@ app.post('/api/notifications', async (req, res) => {
             read: false,
             recipient: recipient || 'all'
         };
-        
+
         const currentData = await fetchLocalData();
         const notifications = currentData.notifications || [];
         notifications.unshift(newNotification);
         currentData.notifications = notifications;
         await saveLocalData(currentData);
-        
+
         broadcastUpdate('notification_new', {
             id: newNotification.id,
             title: newNotification.title,
@@ -493,7 +590,7 @@ app.post('/api/notifications', async (req, res) => {
             recipient: newNotification.recipient,
             date: newNotification.date
         });
-        
+
         console.log(`🔔 Notification sent: ${title} to ${recipient || 'all'}`);
         res.json({ success: true, notification: newNotification });
     } catch (error) {
@@ -540,17 +637,17 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
     try {
         if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
         console.log('Uploading image:', req.file.originalname, 'Size:', req.file.size);
-        
+
         const base64Image = req.file.buffer.toString('base64');
         const formData = new FormData();
         formData.append('key', process.env.IMGBB_API_KEY);
         formData.append('image', base64Image);
-        
+
         const response = await axios.post('https://api.imgbb.com/1/upload', formData, {
             headers: { ...formData.getHeaders(), 'Accept': 'application/json' },
             timeout: 30000
         });
-        
+
         if (response.data && response.data.success && response.data.data && response.data.data.url) {
             console.log('Image uploaded successfully:', response.data.data.url);
             res.json({ url: response.data.data.url });
@@ -570,7 +667,6 @@ async function initializeDefaultData() {
         const currentData = await fetchLocalData();
         let needsSave = false;
 
-        // Local Services
         if (!currentData.local || currentData.local.length === 0) {
             currentData.local = [
                 { id: 1, name: 'Maintenance & Hardware', description: 'Computer hardware repair and maintenance. Technical troubleshooting and diagnostics. Hardware upgrades and optimization. Network setup and configuration. Preventive maintenance services.', imageUrl: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=600&auto=format', enabled: true },
@@ -579,7 +675,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // Phone Services
         if (!currentData.phone || currentData.phone.length === 0) {
             currentData.phone = [
                 { id: 1, name: 'Local Recharge Services - Algeria', description: 'Mobile phone recharge for Mobilis, Djezzy, Ooredoo. Fast and secure.', imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format', enabled: true },
@@ -588,7 +683,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // Digital Services
         if (!currentData.digital || currentData.digital.length === 0) {
             currentData.digital = [
                 { id: 1, name: 'Programming & Development', description: 'Custom software application development. Website and e-commerce solutions. Mobile applications (iOS & Android). Telegram bot development and automation. AI solutions and intelligent systems. System integration and API development. Chatbot development with AI capabilities. Payment processing systems. Notification and alert systems.', imageUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&auto=format', enabled: true },
@@ -600,7 +694,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // Products
         if (!currentData.products || currentData.products.length === 0) {
             currentData.products = [
                 { id: 1, name: 'B.Y PRO Digital Card', description: 'Prepaid digital card for online payments.', imageUrl: 'https://by-pro.kesug.com/App.png?v=3', enabled: true, link: 'https://by-pro.kesug.com' },
@@ -609,7 +702,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // Social Media
         if (!currentData.social || currentData.social.length === 0) {
             currentData.social = [
                 { id: 1, name: 'Facebook', icon: 'fab fa-facebook-f', color: '#1877f2', url: 'https://www.facebook.com/bypro2007', order: 0 },
@@ -623,7 +715,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // Home Images
         if (!currentData.images || currentData.images.length === 0) {
             currentData.images = [
                 { id: 1, imageUrl: 'https://by-pro.kesug.com/banner1.png', alt: 'B.Y PRO Services' },
@@ -633,7 +724,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // News
         if (!currentData.news || currentData.news.length === 0) {
             currentData.news = [
                 { id: 1, title: 'Welcome to B.Y PRO App', description: 'Your all-in-one digital services platform', enabled: true, icon: 'fas fa-star', color: '#3b82f6' },
@@ -642,7 +732,6 @@ async function initializeDefaultData() {
             needsSave = true;
         }
 
-        // Square Groups (example)
         if (!currentData.squareGroups || currentData.squareGroups.length === 0) {
             currentData.squareGroups = [
                 { id: 1, cards: [
@@ -650,7 +739,7 @@ async function initializeDefaultData() {
                     { id: 2, name: 'Store PRO', link: 'https://store-pro.great-site.net', imageUrl: 'https://store-pro.great-site.net/favicon.png', active: true }
                 ] }
             ];
-            if (!currentData.nextId) currentData.nextId = DEFAULT_DATA.nextId;
+            if (!currentData.nextId) currentData.nextId = { ...DEFAULT_DATA.nextId };
             currentData.nextId.squareGroup = 2;
             currentData.nextId.squareCard = 3;
             needsSave = true;
@@ -658,7 +747,7 @@ async function initializeDefaultData() {
 
         if (needsSave) {
             await saveLocalData(currentData);
-            console.log('✅ Default data initialized with all requested services');
+            console.log('✅ Default data initialized');
         }
     } catch (error) {
         console.error('Error initializing default data:', error);
@@ -666,32 +755,33 @@ async function initializeDefaultData() {
 }
 
 // ==================== HEALTH CHECK ====================
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+    let mongoOk = false;
+    let mongoErr = null;
+    try {
+        const client = await getMongoClient();
+        await client.db('admin').command({ ping: 1 });
+        mongoOk = true;
+    } catch (e) {
+        mongoErr = e.message;
+    }
+
     res.json({
         status: 'ok',
         timestamp: new Date().toISOString(),
         clients: clients.length,
         uptime: process.uptime(),
         bypro_server: BYPRO_API,
-        financial_integration: 'active'
+        financial_integration: 'active',
+        storage: 'mongodb',
+        mongo: {
+            connected: mongoOk,
+            error: mongoErr,
+            db: MONGO_DB_NAME,
+            collection: MONGO_COLLECTION
+        },
+        github_token_configured: !!GITHUB_TOKEN
     });
 });
 
-// ==================== SERVE STATIC FILES - SPA FALLBACK ====================
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// ==================== START SERVER ====================
-app.listen(PORT, async () => {
-    console.log(`✅ Server running on port ${PORT}`);
-    console.log(`🖼️  ImgBB API Key: ${process.env.IMGBB_API_KEY ? '✓ Configured' : '✗ Missing'}`);
-    console.log(`💾 Local JSON Bin: ${process.env.JSON_BIN_ID ? '✓ Configured' : '✗ Missing'}`);
-    console.log(`🔗 B.Y PRO Server: ${BYPRO_API}`);
-    console.log(`📡 SSE endpoint: /api/events`);
-    console.log(`💰 Financial endpoints: /api/financial/*`);
-    console.log(`📦 Square groups endpoint: /api/square-groups`);
-    console.log(`⏱️  Broadcast cooldown: ${BROADCAST_COOLDOWN}ms`);
-    
-    await initializeDefaultData();
-});
+// ==================== SERVE STATIC FILES - SPA FALLBACK ===================
